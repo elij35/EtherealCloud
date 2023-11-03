@@ -11,12 +11,8 @@ To allow everyone to quickly and efficiently access, store and share files with 
 User Stories: https://trello.com/b/5DkP9SsO/ether-storage-user-stories    
 Product Backlog: https://trello.com/b/VfEbrDfz/ether-storage-product-backlog     
 Sprint Plan: https://app.teamgantt.com/projects/gantt?ids=3724665    
+Miro Mindmap: https://miro.com/app/board/uXjVNTayiRk    
+
 
 ### Documents   
 Cloud Storage Architecture: https://docs.google.com/document/d/1PXebKseCa2jYEhngIJ6407LGyNBxNnSLGaAzfkMcyU8/edit   
-User Stories: https://trello.com/b/5DkP9SsO/ether-storage-user-stories   
-Product Backlog: https://trello.com/b/VfEbrDfz/ether-storage-product-backlog   
-Sprint Plan: https://app.teamgantt.com/projects/gantt?ids=3724665   
-
-### Documents
-Cloud Storage Architecture: https://docs.google.com/document/d/1PXebKseCa2jYEhngIJ6407LGyNBxNnSLGaAzfkMcyU8/edit
