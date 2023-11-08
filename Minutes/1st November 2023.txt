@@ -1,0 +1,47 @@
+1/11/23 
+
+14:00 Gathered together into SMB109 
+
+14:05 Planning workload for the day: 
+
+Will – architecture design 
+
+Ben – Trello board/ GitHub set up 
+
+Eli – Research on project components 
+
+Riley – recording and Trello board 
+
+ 
+
+14:30 De-cluttered Trello board (Riley) 
+
+14:32 Group GitHub test successful 
+
+14:39 Adding descriptions to Trello cards (Ben, Riley) 
+
+14:40 Group discussing GitHub processes/flow 
+
+14:45 Group discussion on Trello card/ minimum viable product 
+
+14:46 Developing sprint plan (Eli)  
+
+15:04 Progress update 
+
+Eli is developing a Gantt Chart 
+
+Will has further developed architecture design 
+
+GitHub is set up 
+
+15:20 Trello Board is finalised for this sprint (Riley, Ben) 
+
+15:22 Setting up Gantt Chart for sprint plan (Eli, Ben) 
+
+15:45 Group discussing workload for next sprint 
+
+15:47 Creating Trello board for User stories (Ben, Riley) 
+
+15:48 Pushing ReadMe (Eli) 
+
+16:15 Finalised meeting
