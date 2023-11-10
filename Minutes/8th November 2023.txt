@@ -8,16 +8,15 @@ Ben – Basic UI design, Sprint plan development, logo design
 
 Eli – Taking over user stories 
 
-Riley – recording/timestamping, competitor research 
+Riley – Recording/timestamping, competitor research 
 
+14:11 Decluttered git repository (Eli) 
 
-14:11 Eli decluttered git repository 
+14:31 Working on user map (Eli, Will)
 
-14:31 Eli and Will working on user map 
+14:48 Group discussion of document allocation/merging 
 
-14:48 Discussion of document allocation/merging (group) 
-
-15:14 Discussion of future sprints (group) 
+15:14 Group discussion of future sprints  
 
 15:30 User stories finalised, may change (Eli) 
 
