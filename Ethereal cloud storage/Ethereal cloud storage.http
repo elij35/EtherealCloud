@@ -1,6 +1,0 @@
-@Ethereal_cloud_storage_HostAddress = http://localhost:5235
-
-GET {{Ethereal_cloud_storage_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
