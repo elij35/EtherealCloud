@@ -1,7 +1,17 @@
+using Ethereal_Cloud.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+
+
+
+//for the testing db -----------------------------------------------------
+builder.Services.AddDbContext<TestingDbContext>();
+
+
+
 
 var app = builder.Build();
 

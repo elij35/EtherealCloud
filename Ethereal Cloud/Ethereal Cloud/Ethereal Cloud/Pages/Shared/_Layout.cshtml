@@ -9,38 +9,64 @@
     <link rel="stylesheet" href="~/Ethereal_Cloud.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">Ethereal_Cloud</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2023 - Ethereal_Cloud - <a asp-area="" asp-page="/Privacy">Privacy</a>
+    <!--Screen-->
+    <div class="container-fluid">
+
+
+
+        <!--Sidebar-->
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 d-md-block bg-dark sidebar">
+                <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                    <div class="container-fluid">
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarToggler">
+                            <a class="navbar-brand" href="#">Ethereal Cloud</a>
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0 nav-pills nav-justified">
+                                <li class="nav-item">
+                                    <a class="nav-link @(Context.Request.Path == "/Index" || Context.Request.Path == "/" ? "active" : "")" asp-area="" asp-page="/Index">Index</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @(Context.Request.Path == "/Account" ? "active" : "")" asp-area="" asp-page="/Account">Account</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+                                </li>
+                            </ul>
+                            <form class="d-flex">
+                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                                <button class="btn btn-outline-success" type="submit">Search</button>
+                            </form>
+                        </div>
+                    </div>
+
+                </nav>
+            </nav>
+
+
+            <!--Topbar-->
+            <header class="sticky-top">
+                <h1>hello</h1>
+            </header>
+
+            <!--Page Content-->
+            <main role="main" class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+                @RenderBody()
+
+            </main>
+
+            <!--Footer-->
+            <footer class="footer text-muted col">
+                <div class="container">
+                    &copy; 2023 - Ethereal_Cloud - <a asp-area="" asp-page="/Privacy">Privacy</a>
+                </div>
+            </footer>
         </div>
-    </footer>
+    </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
