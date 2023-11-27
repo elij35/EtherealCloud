@@ -1,0 +1,51 @@
+html {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+header, footer {
+    background: #ffffff;
+    padding: 5rem;
+    text-align: center;
+}
+
+.sidebar {
+    position: sticky;
+    top:0;
+    background: #7045BA;
+    margin: 0;
+    padding: 0;
+    color: #ffffff;
+}
+
+    .sidebar .sidebar-header {
+        padding: 1rem;
+        font-size: 1.5em;
+    }
+
+    .sidebar .sidebar-body {
+        
+    }
+
+
+
+
+.content {
+    background: #E5E5E5;
+    margin: 0;
+    padding: 0;
+    height: 200vh;
+}
+
+.navbar {
+    background: #7045BA;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    font-weight: bold;
+    color: #7045BA;
+    background-color: #ffffff;
+}
+
+.nav-link {
+    color: #ffffff;
+}
