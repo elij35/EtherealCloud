@@ -109,3 +109,4 @@ lint/tmp/
 **/obj
 **/secrets.dev.yaml
 **/values.dev.yaml
+Build_image.bat
