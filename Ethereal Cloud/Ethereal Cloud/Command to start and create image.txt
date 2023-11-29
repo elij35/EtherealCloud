@@ -1,0 +1,3 @@
+Command to start and create image of docker build:
+
+docker build -t etherealcloud .

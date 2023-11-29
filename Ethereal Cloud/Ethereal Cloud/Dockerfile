@@ -9,10 +9,11 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Ethereal Cloud/Ethereal Cloud.csproj", "Ethereal Cloud/"]
-RUN dotnet restore "./Ethereal Cloud/./Ethereal Cloud.csproj"
-COPY . .
+COPY ["Ethereal Cloud.csproj", "Ethereal Cloud/"]
 WORKDIR "/src/Ethereal Cloud"
+RUN dotnet restore "./Ethereal Cloud.csproj"
+COPY . .
+
 RUN dotnet build "./Ethereal Cloud.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
