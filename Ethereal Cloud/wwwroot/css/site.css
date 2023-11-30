@@ -1,0 +1,88 @@
+* {
+    box-sizing: border-box;
+}
+
+/*-------------Debugging-------------*/
+
+/*
+* {
+    border: 1px solid red !important;
+}
+
+    */
+
+html {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.row {
+    --bs-gutter-x: 0rem;
+}
+
+/*Header & Footer*/
+header, footer {
+    background: #ffffff;
+    padding: 3rem;
+}
+
+.logo{
+    width:auto;
+    height: 5rem;
+}
+
+/*Sidebar*/
+
+.sidebar {
+    position: sticky;
+    top: 0;
+    background: #7045BA;
+    margin: 0;
+    padding: 0;
+    color: #ffffff;
+}
+
+    .sidebar .sidebar-header {
+        padding: 1rem;
+        font-size: 1.5em;
+        font-weight: bold;
+    }
+
+    .sidebar .sidebar-body {
+    }
+
+/*Sidebar Buttons*/
+.nav-pills .nav-item:hover .nav-link {
+    background-color: #C594E6;
+    color: #9265CC;
+    font-weight: bold;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    font-weight: bold;
+    color: #7045BA;
+    background-color: #ffffff;
+}
+
+.nav-link {
+    color: #ffffff;
+}
+
+/*Navbar*/
+.navbar {
+    padding: .5rem;
+    background: #7045BA;
+}
+
+
+
+/*Content*/
+.content {
+    background: #E5E5E5;
+    margin: 0;
+    padding: 0;
+    height: 200vh;
+}
+
+.content .render-body{
+    padding: .5rem;
+}
