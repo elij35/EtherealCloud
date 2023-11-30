@@ -8,11 +8,9 @@ To make this product accessible, affordable, and useful for all of our clients. 
 To allow everyone to quickly and efficiently access, store and share files with a user friendly interface.
 
 ## Links
-User Stories: https://trello.com/b/5DkP9SsO/ether-storage-user-stories    
-Product Backlog: https://trello.com/b/VfEbrDfz/ether-storage-product-backlog     
-Sprint Plan: https://app.teamgantt.com/projects/gantt?ids=3724665    
+User Stories and Product Backlog: https://trello.com/b/5DkP9SsO    
+Sprint Plan: https://rileycoulstocks-team.monday.com/boards/1311426237     
 Miro Mindmap: https://miro.com/app/board/uXjVNTayiRk=    
 
-
 ### Documents   
-Cloud Storage Architecture: https://docs.google.com/document/d/1PXebKseCa2jYEhngIJ6407LGyNBxNnSLGaAzfkMcyU8/edit   
+Cloud Storage Architecture: https://docs.google.com/document/d/1PXebKseCa2jYEhngIJ6407LGyNBxNnSLGaAzfkMcyU8/edit    

@@ -26,6 +26,7 @@ Riley – recording and Trello board
 
 14:46 Developing sprint plan (Eli)  
 
+
 15:04 Progress update 
 
 Eli is developing a Gantt Chart 
@@ -33,6 +34,7 @@ Eli is developing a Gantt Chart
 Will has further developed architecture design 
 
 GitHub is set up 
+
 
 15:20 Trello Board is finalised for this sprint (Riley, Ben) 
 
