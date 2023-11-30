@@ -1,4 +1,4 @@
-@echo off
+@echo on
 
 for /f %%i in ('cd') do set base_dir=%%i
 
@@ -11,7 +11,7 @@ docker run -p 8090:8090 --name storage-controller --hostname storage-controller 
 
 cd %base_dir%
 
-cd ./Ethereal\ Cloud
+cd ./"Ethereal Cloud"
 docker build -t ethereal-storage .
 docker run -p 8080:8080 --name ethereal-storage --hostname ethereal-storage -d ethereal-storage
 
