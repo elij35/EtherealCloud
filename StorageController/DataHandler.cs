@@ -1,3 +1,10 @@
+﻿using Microsoft.Data.SqlClient;
+
+namespace StorageController
+{
+    public class DataHandler
+    {
+
         public string connectionString = 
                 "Data Source=localhost;" +
                 "User id=SA;" +
@@ -45,3 +52,5 @@
                 }
             }
         }
+    }
+}
