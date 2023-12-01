@@ -11,7 +11,7 @@ docker image rm storage-controller
 docker build -t storage-controller .
 docker stop storage-controller
 docker rm storage-controller
-docker run -p 8090:8090 --name storage-controller --hostname storage-controller -d storage-controller
+docker run -p 8090:8090 --name storage-controller --network host --hostname storage-controller -d storage-controller
 
 cd %base_dir%
 
