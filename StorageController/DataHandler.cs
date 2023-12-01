@@ -1,3 +1,15 @@
+        public string connectionString = 
+                "Data Source=localhost;" +
+                "User id=SA;" +
+                "Password=EtherealDatabaseStorage!!;" +
+                "TrustServerCertificate=True;";
+
+        public DataHandler()
+        {
+            CreateDatabase();
+            CreateTablesAsync();
+        }
+
         private SqlConnection CreateConnection()
         {
 
