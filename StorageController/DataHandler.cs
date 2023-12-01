@@ -24,6 +24,20 @@ namespace StorageController
             
         }
 
+        private async void CreateDatabase()
+        {
+
+            // making sure the database exists
+            await StaticQuery(
+                "IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'ethereal_storage') BEGIN " +
+                "CREATE DATABASE ethereal_storage;" +
+                "END;"
+            );
+
+            connectionString += "Initial catalog=ethereal_storage;";
+
+        }
+
         /// <summary>
         /// Opens the connection, has a timeout of 5 seconds (attemps to connect each second if failed)
         /// </summary>
