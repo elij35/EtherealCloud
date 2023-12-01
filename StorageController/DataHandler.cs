@@ -1,3 +1,8 @@
+        private SqlConnection CreateConnection()
+        {
+
+            return new SqlConnection(connectionString);
+            
         }
 
         /// <summary>
