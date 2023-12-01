@@ -117,7 +117,7 @@ namespace StorageController
         }
 
         /// <summary>
-        /// Opens the connection, has a timeout of 5 seconds (attemps to connect each second if failed)
+        /// Opens the connection, has a timeout of 10 seconds (attemps to connect each second if failed)
         /// </summary>
         /// <param name="connection">The connection to open</param>
         private void OpenSQLConnection(SqlConnection connection)
