@@ -1,9 +1,16 @@
+
 namespace StorageController
 {
     public class Program
     {
+
+        public static DataHandler dataHandler;
+
         public static void Main(string[] args)
         {
+
+            dataHandler = new DataHandler();
+
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
