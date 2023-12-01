@@ -38,6 +38,58 @@ namespace StorageController
 
         }
 
+        private async void CreateTablesAsync()
+        {
+
+            // make sure the schema exists
+            await StaticQuery(
+                "IF NOT EXISTS (SELECT name FROM sys.schemas WHERE name = N'ethereal') BEGIN " +
+                "EXEC('CREATE SCHEMA ethereal;');" +
+                "END;"
+            );
+
+            await StaticQuery(
+                "IF OBJECT_ID(N'[ethereal].[Users]', N'U') IS NULL " +
+                "CREATE TABLE [ethereal].[Users] (" +
+                "[UserID] INT IDENTITY (1, 1) NOT NULL, " +
+                "[Username] VARCHAR (64) NOT NULL, " +
+                "[Email] VARCHAR (64) NOT NULL, " +
+                "[Password] VARCHAR (64) NOT NULL, " +
+                "[Administrator] BIT NOT NULL, " +
+                "PRIMARY KEY CLUSTERED ([UserID] ASC)" +
+                ");"
+            );
+
+            await StaticQuery(
+                "IF OBJECT_ID(N'[ethereal].[Files]', N'U') IS NULL " +
+                "CREATE TABLE [ethereal].[Files] (" +
+                "[FileID] INT IDENTITY (1, 1) NOT NULL," +
+                "[Folder] BIT NOT NULL," +
+                "[FileType] VARCHAR (20) NULL," +
+                "[FileName] VARCHAR (32) NOT NULL," +
+                "[FilePassword] VARCHAR (64) NULL," +
+                "[FileRoute] INT NULL," +
+                "[Location] VARCHAR (8) NULL," +
+                "[CreationDate] DATE NULL," +
+                "[RedundantID] INT NULL," +
+                "PRIMARY KEY CLUSTERED ([FileID] ASC)" +
+                ");"
+            );
+
+            await StaticQuery(
+                "IF OBJECT_ID(N'[ethereal].[UserFiles]', N'U') IS NULL " +
+                "CREATE TABLE [ethereal].[UserFiles] (" +
+                "[FileID] INT NOT NULL," +
+                "[UserID] INT NOT NULL," +
+                "[Privilege] VARCHAR (10) NOT NULL," +
+                "CONSTRAINT [Link_PK] PRIMARY KEY CLUSTERED ([FileID] ASC, [UserID] ASC)," +
+                "CONSTRAINT [File_FK] FOREIGN KEY ([FileID]) REFERENCES [ethereal].[Files] ([FileID]) ON DELETE CASCADE," +
+                "CONSTRAINT [User_FK] FOREIGN KEY ([UserID]) REFERENCES [ethereal].[Users] ([UserID]) ON DELETE CASCADE" +
+                ");"
+            );
+
+        }
+
         /// <summary>
         /// This is used for queries that do not return data and do not have any parameters.
         /// DO NOT INSERT USER GENERATED STRINGS INTO THE SQL TO USE THIS METHOD.
