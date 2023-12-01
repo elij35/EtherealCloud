@@ -7,6 +7,7 @@ docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=EtherealDatabaseStorage!!" -
 docker start etherealdb
 
 cd ./StorageController
+docker image rm storage-controller
 docker build -t storage-controller .
 docker stop storage-controller
 docker rm storage-controller
@@ -15,6 +16,7 @@ docker run -p 8090:8090 --name storage-controller --hostname storage-controller 
 cd %base_dir%
 
 cd ./"Ethereal Cloud"
+docker image rm ethereal-storage
 docker build -t ethereal-storage .
 docker stop ethereal-storage
 docker rm ethereal-storage
