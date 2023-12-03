@@ -121,6 +121,38 @@ namespace StorageController
         }
 
         /// <summary>
+        /// Use this query if you want to use user input as parameters in the query, this method is used for insert, delete, etc.
+        /// This does not return any row data.
+        /// </summary>
+        /// <param name="sql_query">The SQL command</param>
+        /// <param name="parameters">An array of SQL parameters for your query</param>
+        /// <returns>The amount of rows affected.</returns>
+        public async Task<int> ParametizedNonQuery(string sql_query, SqlParameter[] parameters)
+        {
+
+            using (SqlConnection connection = CreateConnection())
+            {
+
+                OpenSQLConnection(connection);
+
+                SqlCommand command = connection.CreateCommand();
+                command.CommandText = sql_query;
+                command.Prepare();
+                
+                foreach (SqlParameter param in parameters)
+                {
+                    command.Parameters.Add(param);
+                }
+
+                int rows_affected = command.ExecuteNonQuery();
+
+                return rows_affected;
+
+            }
+
+        }
+
+        /// <summary>
         /// Opens the connection, has a timeout of 10 seconds (attemps to connect each second if failed)
         /// </summary>
         /// <param name="connection">The connection to open</param>
