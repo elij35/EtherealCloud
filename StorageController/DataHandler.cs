@@ -6,13 +6,16 @@ namespace StorageController
     {
 
         public string connectionString = 
-                "Data Source=localhost;" +
                 "User id=SA;" +
-                "Password=EtherealDatabaseStorage!!;" +
                 "TrustServerCertificate=True;";
 
-        public DataHandler()
+        public DataHandler(string DB_IP, string DB_PASS)
         {
+
+            connectionString += 
+                $"Data Source={DB_IP};" +
+                $"Password={DB_PASS};";
+
             CreateDatabase();
             CreateTablesAsync();
         }
