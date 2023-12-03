@@ -31,7 +31,7 @@ namespace StorageController
         {
 
             // making sure the database exists
-            await StaticQuery(
+            await StaticNonQuery(
                 "IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'ethereal_storage') BEGIN " +
                 "CREATE DATABASE ethereal_storage;" +
                 "END;"
@@ -45,13 +45,13 @@ namespace StorageController
         {
 
             // make sure the schema exists
-            await StaticQuery(
+            await StaticNonQuery(
                 "IF NOT EXISTS (SELECT name FROM sys.schemas WHERE name = N'ethereal') BEGIN " +
                 "EXEC('CREATE SCHEMA ethereal;');" +
                 "END;"
             );
 
-            await StaticQuery(
+            await StaticNonQuery(
                 "IF OBJECT_ID(N'[ethereal].[Users]', N'U') IS NULL " +
                 "CREATE TABLE [ethereal].[Users] (" +
                 "[UserID] INT IDENTITY (1, 1) NOT NULL, " +
@@ -63,7 +63,7 @@ namespace StorageController
                 ");"
             );
 
-            await StaticQuery(
+            await StaticNonQuery(
                 "IF OBJECT_ID(N'[ethereal].[Files]', N'U') IS NULL " +
                 "CREATE TABLE [ethereal].[Files] (" +
                 "[FileID] INT IDENTITY (1, 1) NOT NULL," +
@@ -79,7 +79,7 @@ namespace StorageController
                 ");"
             );
 
-            await StaticQuery(
+            await StaticNonQuery(
                 "IF OBJECT_ID(N'[ethereal].[UserFiles]', N'U') IS NULL " +
                 "CREATE TABLE [ethereal].[UserFiles] (" +
                 "[FileID] INT NOT NULL," +
@@ -100,7 +100,8 @@ namespace StorageController
         /// Doing that would allow SQL injection, use the methods created specificially for queries with parameters.
         /// </summary>
         /// <param name="sql_query">The SQL statement to run.</param>
-        public async Task<int> StaticQuery(string sql_query)
+        /// <returns>How many rows were affected.</returns>
+        public async Task<int> StaticNonQuery(string sql_query)
         {
 
             using ( SqlConnection connection = CreateConnection() )
