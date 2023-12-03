@@ -220,20 +220,20 @@ namespace StorageController
 
             int attempts = 10;
 
-            while (attempts > 0)
+            while (attempts >= 0)
             {
                 try
                 {
                     connection.Open();
                     return;
                 }
-                catch
+                catch (Exception exception)
                 {
                     Thread.Sleep(1000);
 
                     // Exiting if there is no attempts left as the controller could not connect to the database
                     if (attempts == 0)
-                        Environment.Exit(1);
+                        throw;
 
                     attempts--;
                 }
