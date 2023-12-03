@@ -9,7 +9,15 @@ namespace StorageController
         public static void Main(string[] args)
         {
 
-            dataHandler = new DataHandler();
+            string db_ip = Environment.GetEnvironmentVariable("DB_IP");
+            string db_pass = Environment.GetEnvironmentVariable("DB_PASS");
+
+            if (db_ip == null || db_pass == null )
+            {
+                Environment.Exit(1);
+            }
+
+            dataHandler = new DataHandler(db_ip, db_pass);
 
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
