@@ -180,6 +180,38 @@ namespace StorageController
         }
 
         /// <summary>
+        /// Use this query if you want to use user input as parameters in the query, this method is used for select, etc.
+        /// This returns all the data retrieved according to your query
+        /// </summary>
+        /// <param name="sql_query">The SQL command</param>
+        /// <param name="parameters">An array of SQL parameters for your query</param>
+        /// <returns>The data from the query</returns>
+        public async Task<SqlDataReader> ParametizedQuery(string sql_query, SqlParameter[] parameters)
+        {
+
+            using (SqlConnection connection = CreateConnection())
+            {
+
+                OpenSQLConnection(connection);
+
+                SqlCommand command = connection.CreateCommand();
+                command.CommandText = sql_query;
+                command.Prepare();
+
+                foreach (SqlParameter param in parameters)
+                {
+                    command.Parameters.Add(param);
+                }
+
+                SqlDataReader data_reader = command.ExecuteReader();
+
+                return data_reader;
+
+            }
+
+        }
+
+        /// <summary>
         /// Opens the connection, has a timeout of 10 seconds (attemps to connect each second if failed)
         /// </summary>
         /// <param name="connection">The connection to open</param>
