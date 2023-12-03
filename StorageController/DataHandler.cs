@@ -153,6 +153,33 @@ namespace StorageController
         }
 
         /// <summary>
+        /// This is used for queries that do not have any parameters.
+        /// DO NOT INSERT USER GENERATED STRINGS INTO THE SQL TO USE THIS METHOD.
+        /// Ie. DO NOT PUT "SELECT * FROM ethereal.Users WHERE UserID = " + userInput;
+        /// Doing that would allow SQL injection, use the methods created specificially for queries with parameters.
+        /// </summary>
+        /// <param name="sql_query">The SQL statement to run.</param>
+        /// <returns>The data from your query</returns>
+        public async Task<SqlDataReader> StaticQuery(string sql_query)
+        {
+
+            using (SqlConnection connection = CreateConnection())
+            {
+
+                OpenSQLConnection(connection);
+
+                SqlCommand command = connection.CreateCommand();
+                command.CommandText = sql_query;
+
+                SqlDataReader data_reader = command.ExecuteReader();
+
+                return data_reader;
+
+            }
+
+        }
+
+        /// <summary>
         /// Opens the connection, has a timeout of 10 seconds (attemps to connect each second if failed)
         /// </summary>
         /// <param name="connection">The connection to open</param>
