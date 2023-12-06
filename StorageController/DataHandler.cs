@@ -181,7 +181,7 @@ namespace StorageController
         /// </summary>
         /// <param name="sql_query">The SQL statement to run.</param>
         /// <returns>The data from your query</returns>
-        public async Task<SqlDataReader> StaticQuery(string sql_query)
+        public async Task<DataTable> StaticQuery(string sql_query)
         {
 
             using (SqlConnection connection = CreateConnection())
@@ -194,7 +194,10 @@ namespace StorageController
 
                 SqlDataReader data_reader = command.ExecuteReader();
 
-                return data_reader;
+                DataTable dataTable = new DataTable();
+                dataTable.Load(data_reader);
+
+                return dataTable;
 
             }
 
@@ -207,7 +210,7 @@ namespace StorageController
         /// <param name="sql_query">The SQL command</param>
         /// <param name="parameters">An array of SQL parameters for your query</param>
         /// <returns>The data from the query</returns>
-        public async Task<SqlDataReader> ParametizedQuery(string sql_query, SqlParameter[] parameters)
+        public async Task<DataTable> ParametizedQuery(string sql_query, SqlParameter[] parameters)
         {
 
             using (SqlConnection connection = CreateConnection())
@@ -226,7 +229,10 @@ namespace StorageController
 
                 SqlDataReader data_reader = command.ExecuteReader();
 
-                return data_reader;
+                DataTable dataTable = new DataTable();
+                dataTable.Load(data_reader);
+
+                return dataTable;
 
             }
 
