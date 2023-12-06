@@ -266,5 +266,38 @@ namespace StorageController
                 }
             }
         }
+
+        public async Task<Dictionary<string, string[]>?> DataTableToDictionary(DataTable table)
+        {
+
+            // Returning null if there's no rows
+            if (table.Rows.Count < 1)
+                return null;
+
+            // Getting an array of all the rows
+            DataRow[] rows = new DataRow[table.Rows.Count];
+            table.Rows.CopyTo(rows, 0);
+
+            // Creating the dictionary to return
+            Dictionary<string, string[]> columnData = new Dictionary<string, string[]>();
+
+            // Looping over each column and adding its entry to the dictionary + an empty array that can fit all the rows
+            foreach(object columnName in table.Columns)
+            {
+                columnData.Add(columnName.ToString(), new string[table.Rows.Count]);
+            }
+            
+            // Looping over all the rows and adding all their data into the dictionary in the appropriate column and index
+            for (int columnIndex = 0; columnIndex < table.Columns.Count; columnIndex++)
+            {
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    columnData[table.Columns[columnIndex].ToString()][i] = rows[i][columnIndex].ToString();
+                }
+            }
+
+            return columnData;
+
+        }
     }
 }
