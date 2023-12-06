@@ -6,6 +6,9 @@
 
     <h1>Accounts Page</h1>
 
+    
+
+
     <form method="post">
 
         <input type="number" name="id" />
@@ -28,7 +31,8 @@
         </thead>
         <tbody>
             
-
+        @{ string response = AccountModel.Main().Result; }
+            <t1>@response</t1>
 
 
         </tbody>
