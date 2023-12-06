@@ -1,6 +1,4 @@
-﻿using Azure.Core;
-
-namespace StorageController
+﻿namespace StorageController
 {
     public class HTTPUtils
     {
@@ -46,6 +44,22 @@ namespace StorageController
 
             // Returning the dictionary of key-value pairs
             return form_params;
+
+        }
+
+        public static bool CheckRequestParameters(Dictionary<string, string> parameters, string[] expected_parameters, HttpResponse response) 
+        {
+
+            foreach (string parameter in expected_parameters)
+            {
+                if (!parameters.ContainsKey(parameter))
+                {
+                    response.StatusCode = 400;
+                    return false; ;
+                }
+            }
+
+            return true;
 
         }
 
