@@ -1,15 +1,36 @@
 ﻿using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace StorageController
 {
     public class DataHandler
     {
 
-        public string connectionString = 
-                "User id=SA;" +
-                "TrustServerCertificate=True;";
+        private static DataHandler? _instance;
+        public static DataHandler instance
+        {
+            get 
+            {
+                if (_instance == null)
+                {
+                    string? DB_IP = Environment.GetEnvironmentVariable("DB_IP");
+                    string? DB_PASS = Environment.GetEnvironmentVariable("DB_PASS");
 
-        public DataHandler(string DB_IP, string DB_PASS)
+                    if (DB_IP == null || DB_PASS == null)
+                        Environment.Exit(1);
+
+                    _instance = new DataHandler(DB_IP, DB_PASS);
+                }
+
+                return _instance;
+            }
+        }
+
+        private string connectionString = 
+                "User id=SA;" +
+                "TrustServerCertificate=True;"; 
+
+        private DataHandler(string DB_IP, string DB_PASS)
         {
 
             connectionString += 
