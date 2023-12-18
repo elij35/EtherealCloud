@@ -5,7 +5,7 @@ using System.Data;
 namespace StorageController.Controllers
 {
 
-    [Controller]
+    [ApiController]
     [Route("/user/login")]
     public class LoginController : Controller
     {
@@ -49,7 +49,6 @@ namespace StorageController.Controllers
             // Ensuring there is a user and the passwords match
             if (entries == null || entries["Password"][0] != body_parameters["password"])
             {
-                Response.StatusCode = 404;
                 return false;
             }
 

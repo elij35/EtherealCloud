@@ -4,7 +4,7 @@ using Microsoft.Data.SqlClient;
 namespace StorageController.Controllers
 {
 
-    [Controller]
+    [ApiController]
     [Route("/user/signup")]
     public class SignupController : Controller
     {
