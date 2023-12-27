@@ -8,33 +8,36 @@ namespace Ethereal_Cloud.Pages
     public class AccountModel : PageModel
     {
 
-        private readonly TestingDbContext _context;
 
-        
-        public List<Account> Accounts { get; set; } = new List<Account>();
-
-
-        [BindProperty]
-        public Account NewAccount { get; set; }
-
-        public AccountModel(TestingDbContext context)
+        public static async Task<string> Main()
         {
-            _context = context;
+            return await SendGetRequest();
         }
 
-        public void OnGet()
+        static async Task<string> SendGetRequest()
         {
-            Accounts = _context.Account.ToList();
+            using (HttpClient client = new HttpClient())
+            {
+                string url = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/api/auth";
 
+                HttpResponseMessage response = await client.PostAsync(url, new StringContent("email=test@test.com&password=password123"));
 
+                if (response.IsSuccessStatusCode)
+                {
+                    string content = await response.Content.ReadAsStringAsync();
 
+                    return content;
+                }
+                else
+                {
+                    return response.StatusCode.ToString();
+                }
+            }
         }
+
 
         public IActionResult OnPost()
         {
-            _context.Account.Add(NewAccount);
-
-            _context.SaveChanges();
 
             return RedirectToPage();
         }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Text;
 
 namespace StorageController.Controllers
 {
@@ -8,10 +9,15 @@ namespace StorageController.Controllers
     public class AuthController : Controller
     {
 
-        [HttpGet]
+        [HttpPost]
         public string Index()
         {
-            return "test authorization endpoint";
+
+            Stream body_stream = Request.Body;
+
+            Dictionary<string, string> form_params = HTTPUtils.ConvertParamsToDictionary(body_stream, (int)Request.ContentLength);
+
+            return $"Authorizing user: {form_params["email"]} with password {form_params["password"]}";
         }
     }
 }
