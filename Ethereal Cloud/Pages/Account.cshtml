@@ -6,6 +6,9 @@
 
     <h1>Accounts Page</h1>
 
+    
+
+
     <form method="post">
 
         <input type="number" name="id" />
@@ -28,23 +31,8 @@
         </thead>
         <tbody>
             
-            @foreach(Account Account in Model.Accounts)
-            {
-                <tr>
-                    <td>
-                        @Account.Id
-                    </td>
-                    <td>
-                        @Account.Email
-                    </td>
-                    <td>
-                        @Account.Username
-                    </td>
-                    <td>
-                        @Account.Password
-                    </td>
-                </tr>
-            }
+        @{ string response = AccountModel.Main().Result; }
+            <t1>@response</t1>
 
 
         </tbody>

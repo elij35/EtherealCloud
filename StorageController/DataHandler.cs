@@ -1,15 +1,36 @@
 ﻿using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace StorageController
 {
     public class DataHandler
     {
 
-        public string connectionString = 
-                "User id=SA;" +
-                "TrustServerCertificate=True;";
+        private static DataHandler? _instance;
+        public static DataHandler instance
+        {
+            get 
+            {
+                if (_instance == null)
+                {
+                    string? DB_IP = Environment.GetEnvironmentVariable("DB_IP");
+                    string? DB_PASS = Environment.GetEnvironmentVariable("DB_PASS");
 
-        public DataHandler(string DB_IP, string DB_PASS)
+                    if (DB_IP == null || DB_PASS == null)
+                        Environment.Exit(1);
+
+                    _instance = new DataHandler(DB_IP, DB_PASS);
+                }
+
+                return _instance;
+            }
+        }
+
+        private string connectionString = 
+                "User id=SA;" +
+                "TrustServerCertificate=True;"; 
+
+        private DataHandler(string DB_IP, string DB_PASS)
         {
 
             connectionString += 
@@ -160,7 +181,7 @@ namespace StorageController
         /// </summary>
         /// <param name="sql_query">The SQL statement to run.</param>
         /// <returns>The data from your query</returns>
-        public async Task<SqlDataReader> StaticQuery(string sql_query)
+        public async Task<DataTable> StaticQuery(string sql_query)
         {
 
             using (SqlConnection connection = CreateConnection())
@@ -173,7 +194,10 @@ namespace StorageController
 
                 SqlDataReader data_reader = command.ExecuteReader();
 
-                return data_reader;
+                DataTable dataTable = new DataTable();
+                dataTable.Load(data_reader);
+
+                return dataTable;
 
             }
 
@@ -186,7 +210,7 @@ namespace StorageController
         /// <param name="sql_query">The SQL command</param>
         /// <param name="parameters">An array of SQL parameters for your query</param>
         /// <returns>The data from the query</returns>
-        public async Task<SqlDataReader> ParametizedQuery(string sql_query, SqlParameter[] parameters)
+        public async Task<DataTable> ParametizedQuery(string sql_query, SqlParameter[] parameters)
         {
 
             using (SqlConnection connection = CreateConnection())
@@ -205,7 +229,10 @@ namespace StorageController
 
                 SqlDataReader data_reader = command.ExecuteReader();
 
-                return data_reader;
+                DataTable dataTable = new DataTable();
+                dataTable.Load(data_reader);
+
+                return dataTable;
 
             }
 
@@ -238,6 +265,39 @@ namespace StorageController
                     attempts--;
                 }
             }
+        }
+
+        public async Task<Dictionary<string, string[]>?> DataTableToDictionary(DataTable table)
+        {
+
+            // Returning null if there's no rows
+            if (table.Rows.Count < 1)
+                return null;
+
+            // Getting an array of all the rows
+            DataRow[] rows = new DataRow[table.Rows.Count];
+            table.Rows.CopyTo(rows, 0);
+
+            // Creating the dictionary to return
+            Dictionary<string, string[]> columnData = new Dictionary<string, string[]>();
+
+            // Looping over each column and adding its entry to the dictionary + an empty array that can fit all the rows
+            foreach(object columnName in table.Columns)
+            {
+                columnData.Add(columnName.ToString(), new string[table.Rows.Count]);
+            }
+            
+            // Looping over all the rows and adding all their data into the dictionary in the appropriate column and index
+            for (int columnIndex = 0; columnIndex < table.Columns.Count; columnIndex++)
+            {
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    columnData[table.Columns[columnIndex].ToString()][i] = rows[i][columnIndex].ToString();
+                }
+            }
+
+            return columnData;
+
         }
     }
 }

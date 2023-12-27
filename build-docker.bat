@@ -1,6 +1,6 @@
 @echo off
 
-for /f %%i in ('cd') do set base_dir=%%i
+set "base_dir=%CD%"
 
 docker pull mcr.microsoft.com/mssql/server:2022-latest
 docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=EtherealDatabaseStorage!!" -p 1433:1433 --name etherealdb --hostname etherealdb -d mcr.microsoft.com/mssql/server:2022-latest
