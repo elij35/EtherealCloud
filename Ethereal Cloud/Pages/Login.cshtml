@@ -1,0 +1,24 @@
+﻿@page
+@model Ethereal_Cloud.Pages.LoginModel
+@{
+    <div>
+        <form method="post" asp-page-handler="Login">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required />
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required />
+
+            <button type="submit">login</button>
+        </form>
+
+        <script>
+            var popupStatus = '@ViewData["PopupStatus"]';
+            if (popupStatus === 'Success') {
+                alert('Login successful!');
+            } else if (popupStatus === 'Failure') {
+                alert('Login failed!');
+            }
+        </script>
+    </div>
+}
