@@ -19,4 +19,43 @@
             
         </script>
     </div>
+
+    <h2>Files</h2>
+
+    @if (Model.Files != null)
+    {
+        @foreach (var file in Model.Files)
+        {
+            <div>
+                <span>@file.Filename</span>
+                <form method="post" asp-page-handler="Download">
+                    <input type="hidden" name="filename" value="@file.Filename" />
+                    <button type="submit">Download</button>
+                </form>
+            </div>
+            <h2>other method</h2>
+            <div>
+                <span>@file.Filename</span>
+                <a asp-page-handler="Download" asp-route-filename="@file.Filename">Download</a>
+            </div>
+        }
+    }
+    else
+    {
+        <p>No files available.</p>
+    }
+
+
+
+    <h1>Upload</h1>
+    <form method="post" enctype="multipart/form-data" asp-page-handler="Upload">
+        <div>
+            <label for="fileInput">Choose a file:</label>
+            <input type="file" id="fileInput" name="uploadedFile" />
+        </div>
+        <div>
+            <input type="submit" value="Upload" />
+        </div>
+    </form>
+
 }
