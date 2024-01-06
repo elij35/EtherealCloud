@@ -2,6 +2,21 @@
 @{
     ViewData["Title"] = "Home Page";
 
-    <h1>Index Page</h1>
+    <div>
+        <form method="post" asp-page-handler="File">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required />
 
+            <button type="submit">File</button>
+        </form>
+
+        <script>
+            var popupStatus = '@ViewData["PopupStatus"]';
+            if (popupStatus === 'Success') {
+                alert('Login successful!');
+            } else if (popupStatus === 'Failure') {
+                alert('Login failed!');
+            }
+        </script>
+    </div>
 }
