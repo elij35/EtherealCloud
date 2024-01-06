@@ -8,6 +8,7 @@ namespace Bucket
         public static string DB_IP;
         public static string DB_PASS;
         public static string BUCK_ID;
+        public static string ROOT_FILE_DIR = "/app/data/";
 
         public static void Main(string[] args)
         {
@@ -18,6 +19,8 @@ namespace Bucket
 
             if (DB_IP == null || DB_PASS == null || BUCK_ID == null) { Environment.Exit(1); }
 
+            DatabaseContext db = new DatabaseContext();
+            db.EnsureTablesCreated();
 
             var builder = WebApplication.CreateBuilder(args);
 
