@@ -1,6 +1,9 @@
+using Ethereal_Cloud.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text;
+using System.Text.Json;
+using System.Web;
 
 namespace Ethereal_Cloud.Pages
 {
@@ -17,10 +20,13 @@ namespace Ethereal_Cloud.Pages
             {
                 var content = new StringContent($"{{\"username\":\"test\"}}", Encoding.UTF8, "application/json");
                 var response = await client.PostAsync(apiUrl, content);
+                string stringResponse = await response.Content.ReadAsStringAsync();
+
+                Response<FileModel> file = await Response<FileModel>.DeserializeJSON(stringResponse);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    ShowPopup("Success");
+                    ShowPopup(file.Message.Content);
                 }
                 else
                 {
