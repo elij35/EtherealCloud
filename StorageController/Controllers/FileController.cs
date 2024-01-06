@@ -3,6 +3,8 @@ using StorageController.Data;
 
 namespace StorageController.Controllers
 {
+
+    [Route("/file")]
     public class FileController : Controller
     {
 
