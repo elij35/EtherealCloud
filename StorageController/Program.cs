@@ -1,9 +1,16 @@
+
 namespace StorageController
 {
     public class Program
     {
+
+        public static DataHandler dataHandler;
+
         public static void Main(string[] args)
         {
+
+            DataHandler dataHandler = DataHandler.instance;
+
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
@@ -21,6 +28,7 @@ namespace StorageController
             app.Urls.Add("http://[::]:8090");
 
             app.Run();
+
         }
     }
 }

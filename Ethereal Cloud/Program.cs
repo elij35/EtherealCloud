@@ -7,9 +7,6 @@ builder.Services.AddRazorPages();
 
 
 
-//for the testing db -----------------------------------------------------
-builder.Services.AddDbContext<TestingDbContext>();
-
 
 
 
