@@ -12,7 +12,6 @@ namespace StorageController.Controllers
         public struct FileData
         {
             public string Filename { get; set; }
-            public string Author { get; set; }
             public string Filetype { get; set; }
             public string Content { get; set; }
         }
@@ -30,8 +29,7 @@ namespace StorageController.Controllers
 
             FileData dummyFile = new FileData()
             {
-                Filename = $"{authStruct.Username}'s File",
-                Author = $"{authStruct.Username}",
+                Filename = $"{authStruct.Username}s File",
                 Filetype = "text",
                 Content = $"This is a test text file! Author: {authStruct.Username}"
             };
