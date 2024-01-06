@@ -52,7 +52,7 @@ namespace Ethereal_Cloud.SignupController
             string jsonData = JsonSerializer.Serialize(data);
 
             // Replace the URL with your actual API endpoint
-            string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/user/login";
+            string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/user/signup";
 
             // Send the POST request
             var hi = await SendPostRequestAsync(apiUrl, jsonData);
