@@ -4,6 +4,7 @@ using StorageController.Data;
 namespace StorageController.Controllers
 {
 
+    [ApiController]
     [Route("/file")]
     public class FileController : Controller
     {
