@@ -4,6 +4,9 @@ using Ethereal_Cloud.Models;
 
 namespace Ethereal_Cloud.SignupController
 {
+
+    [ApiController]
+    [Route("/signup")]
     public class SignupController : Controller
     {
         public IActionResult Signup()
@@ -19,7 +22,8 @@ namespace Ethereal_Cloud.SignupController
 
         // POST: /YourController/HandlePost
         [HttpPost]
-        public async Task<IActionResult> SignupPostAsync(SignupModel signup)
+        [Consumes("application/json")]
+        public async Task<IActionResult> SignupPostAsync([FromBody] SignupModel signup)
         {
             // Handle the posted data here, for example, save it to a database.
 
