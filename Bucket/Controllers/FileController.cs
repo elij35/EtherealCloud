@@ -49,6 +49,31 @@ namespace Bucket.Controllers
 
         }
 
+        [HttpGet]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        public async Task<string> GetFile([FromRoute] int id)
+        {
+
+            DatabaseContext database = new();
+            FileData? fileData = database.FileData.Where(file => file.FileID == id).FirstOrDefault();
+
+            if (fileData == null)
+                return await new Response<string>(false, "File doesn't exist.").Serialize();
+
+            string fileContent;
+            try
+            {
+                fileContent = await File.ReadAllTextAsync(fileData.FilePath);
+            }
+            catch
+            {
+                return await new Response<string>(false, "File doesn't exist.").Serialize();
+            }
+
+            return await new Response<string>(true, fileContent).Serialize();
+
+        }
 
         
 
