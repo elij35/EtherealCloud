@@ -9,13 +9,14 @@
             <button type="submit">File</button>
         </form>
 
+        <p id="test-out"></p>
+
         <script>
             var popupStatus = '@ViewData["PopupStatus"]';
-            if (popupStatus === 'Success') {
-                alert('Login successful!');
-            } else if (popupStatus === 'Failure') {
-                alert('Login failed!');
-            }
+
+            let out = document.getElementById("test-out");
+            out.innerText = popupStatus;
+            
         </script>
     </div>
 }
