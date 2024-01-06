@@ -1,0 +1,12 @@
+﻿<!-- Views\Shared\_Popup.cshtml -->
+<div class="popup">
+    <p>@ViewData["Message"]</p>
+    <button onclick="closePopup()">Close</button>
+</div>
+
+<script>
+    function closePopup() {
+        // You can customize this function to close the popup as needed
+        $(".popup").hide();
+    }
+</script>

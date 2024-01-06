@@ -1,4 +1,26 @@
 ﻿@page
 @model Ethereal_Cloud.Pages.LoginModel
 @{
+
+    <!DOCTYPE html>
+    <html>
+    <body>
+
+        @using (Html.BeginForm("LoginPost", "Login", FormMethod.Post))
+        {
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" name="email" required />
+            </div>
+
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" name="password" required />
+            </div>
+
+            <button type="submit">Submit</button>
+        }
+
+    </body>
+    </html>
 }

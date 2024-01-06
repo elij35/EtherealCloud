@@ -1,4 +1,28 @@
 ﻿@page
 @model Ethereal_Cloud.Pages.SignupModel
 @{
+    <!DOCTYPE html>
+    <html>
+    <body>
+
+        @using (Html.BeginForm("SignupPost", "Signup", FormMethod.Post))
+        {
+            <div>
+                <label for="email">Username:</label>
+                <input type="text" name="username" required />
+            </div>
+            <div>
+                <label for="password">Email:</label>
+                <input type="email" name="email" required />
+            </div>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" name="password" required />
+            </div>
+
+            <button type="submit">Submit</button>
+        }
+
+    </body>
+    </html>
 }
