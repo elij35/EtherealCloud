@@ -2,6 +2,7 @@
 using Microsoft.Data.SqlClient;
 using StorageController.Data;
 using System.Data;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace StorageController.Controllers
 {
@@ -10,11 +11,6 @@ namespace StorageController.Controllers
     [Route("/user/login")]
     public class LoginController : Controller
     {
-
-        public struct UserStruct
-        {
-            public string Username { get; set; }
-        }
 
         public struct LoginParams
         {
@@ -51,13 +47,10 @@ namespace StorageController.Controllers
                 return await new Response<string>(false, "Incorrect credentials.").Serialize();
             }
 
-            UserStruct userData = new UserStruct()
-            {
-                Username = entries["Username"][0]
-            };
+            string token = await AuthManager.AuthorizeUser(int.Parse(entries["UserID"][0]));
 
             // If it reached here, all checks passed and the user exists and the password matched
-            return await new Response<UserStruct>(true, userData).Serialize();
+            return await new Response<string>(true, token).Serialize();
         }
     }
 }
