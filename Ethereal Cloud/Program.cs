@@ -1,8 +1,20 @@
+<<<<<<< HEAD
+
+=======
+>>>>>>> website-frontend
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddControllers();
 
+<<<<<<< HEAD
+builder.Services.AddSession();
+
+
+
+=======
+>>>>>>> website-frontend
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -20,6 +32,9 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+app.UseSession();
+
 app.MapRazorPages();
+app.MapControllers();
 
 app.Run();
