@@ -21,7 +21,8 @@ RUN dotnet publish "./Bucket.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:
 
 FROM base AS final
 WORKDIR /app
-RUN mkdir ./data
-RUN chmod 777 ./data
+USER root
+RUN mkdir -p /var/data
+RUN chmod 777 /var/data
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Bucket.dll"]
