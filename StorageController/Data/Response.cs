@@ -9,6 +9,8 @@ namespace StorageController.Data
 
         public T Message { get; set; }
 
+        public Response() { }
+
         public Response(bool _Success, T _Message)
         {
 
@@ -20,6 +22,13 @@ namespace StorageController.Data
         public async Task<string> Serialize()
         {
             return JsonSerializer.Serialize(this);
+        }
+
+        public static async Task<Response<T>> DeserializeJSON(string JSON)
+        {
+            JsonSerializerOptions options = new JsonSerializerOptions();
+            options.PropertyNameCaseInsensitive = true;
+            return JsonSerializer.Deserialize<Response<T>>(JSON.Trim('\"').Replace("\\", ""), options);
         }
 
     }
