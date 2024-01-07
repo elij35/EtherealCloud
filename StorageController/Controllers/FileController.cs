@@ -52,13 +52,16 @@ namespace StorageController.Controllers
             if (entries == null)
                 return await new Response<string>(false, "Invalid file").Serialize();
 
-            string fileContent = (await BucketAPIHandler.GetFileContent(int.Parse(entries["FileID"][0]))).Message;
+            Response<string> fileContent = await BucketAPIHandler.GetFileContent(int.Parse(entries["FileID"][0]));
+
+            if (!fileContent.Success)
+                return await new Response<string>(false, "Cannot find file contents").Serialize();
 
             FileData fileData = new FileData
             {
                 Filename = entries["FileName"][0],
                 Filetype = entries["FileType"][0],
-                Content = fileContent
+                Content = fileContent.Message
             };
 
             return await new Response<FileData>(true, fileData).Serialize();
