@@ -11,23 +11,45 @@
             <div class="main">
                 <input type="checkbox" id="chk" aria-hidden="true">
                 <div class="signup">
-                    <form>
-                        <!--Re add required="" to all the below-->
+                    <form method="post" asp-page-handler="Signup">
                         <label class="labelstart" for="chk" aria-hidden="true">Sign up</label>
-                        <input type="test" name="test" placeholder="Username">
-                        <input type="email" name="email" placeholder="Email">
-                        <input type="password" name="pswd" placeholder="Password">
-                        <input type="password" name="pswd" placeholder="Confirm password">
+                        <input type="Username" name="Username" placeholder="Username" required="">
+                        <input type="email" name="email" placeholder="Email" required="">
+                        <input type="password" name="pswd" placeholder="Password" required="">
+                        <input type="password" name="pswd" placeholder="Confirm password" required="">
+                        <button type ="submit">SignUp</button>
                     </form>
+
+                    <script>
+                        var popupStatus = '@ViewData["PopupStatus"]';
+                        if (popupStatus === 'Success') {
+                            alert('Signup successful!');
+                            // You can customize the alert or use a more sophisticated popup library
+                        } else if (popupStatus === 'Failure') {
+                            alert('Signup failed!');
+                            // You can customize the alert or use a more sophisticated popup library
+                        }
+                    </script>
                 </div>
 
                 <div class="login">
-                    <form>
+                    <form method="post" asp-page-handler="Login">
                         <label class="labelbottom" for="chk" aria-hidden="true">Login</label>
                         <input type="email" name="email" placeholder="Email" required="">
                         <input type="password" name="pswd" placeholder="Password" required="">
-                        <button>Login</button>
+                        <button type="submit">Login</button>
                     </form>
+
+                    <script>
+                        var popupStatus = '@ViewData["PopupStatus"]';
+                        if (popupStatus === 'Success') {
+                            alert('Signup successful!');
+                            // You can customize the alert or use a more sophisticated popup library
+                        } else if (popupStatus === 'Failure') {
+                            alert('Signup failed!');
+                            // You can customize the alert or use a more sophisticated popup library
+                        }
+                    </script>
                 </div>
             </div>            
 
