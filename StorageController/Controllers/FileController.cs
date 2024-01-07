@@ -13,7 +13,13 @@ namespace StorageController.Controllers
 
         public struct FileData
         {
-            public string AuthToken { get; set; }
+            public string Filename { get; set; }
+            public string Filetype { get; set; }
+            public string Content { get; set; }
+        }
+
+        public struct FileDataSave
+        {
             public string Filename { get; set; }
             public string Filetype { get; set; }
             public string Content { get; set; }
