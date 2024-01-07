@@ -1,9 +1,9 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text;
 using System.Text.Json;
 using System.Web;
 using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Ethereal_Cloud.Pages
 {
@@ -47,7 +47,7 @@ namespace Ethereal_Cloud.Pages
 
                 Response<FileModel> file = await Response<FileModel>.DeserializeJSON(stringResponse);
 
-                
+
                 if (response.IsSuccessStatusCode)
                 {
                     var files = Files;
@@ -58,7 +58,7 @@ namespace Ethereal_Cloud.Pages
                 {
                     ShowPopup("Failure");
                 }
-                
+
             }
         }
 
@@ -67,7 +67,7 @@ namespace Ethereal_Cloud.Pages
             ViewData["PopupStatus"] = status;
         }
 
-        
+
 
         public IActionResult OnGetDownload(string filename)
         {

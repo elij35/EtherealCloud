@@ -1,0 +1,138 @@
+﻿* {
+    list-style: none;
+    text-decoration: none;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Open Sans', sans-serif;
+}
+
+body {
+    background: #f5f6fa;
+}
+
+.top-bar {
+    color: white;
+    margin-left: 300px;
+    background: linear-gradient(to right, #0f0c29, #302b63);
+    padding: 25px;
+    text-align: center;
+}
+
+.wrapper .sidebar {
+    background: linear-gradient(to bottom, #0f0c29, #302b63);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 100%;
+    padding: 20px 0;
+}
+
+    .wrapper .sidebar .profile {
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+        .wrapper .sidebar .profile img {
+            display: block;
+            height: 100px;
+            margin: 0 auto;
+        }
+
+        .wrapper .sidebar .profile h3 {
+            color: #ffffff;
+            margin: 10px 0 5px;
+        }
+
+    .wrapper .sidebar ul li a {
+        display: block;
+        padding: 13px 30px;
+        border-bottom: 1px solid #10558d;
+        color: rgb(241, 237, 237);
+        font-size: 16px;
+        position: relative;
+    }
+
+        .wrapper .sidebar ul li a .icon {
+            color: #dee4ec;
+            width: 30px;
+            display: inline-block;
+        }
+
+
+
+        .wrapper .sidebar ul li a:hover,
+        .wrapper .sidebar ul li a.active {
+            color: #0c7db1;
+            background: white;
+            border-right: 2px solid rgb(5, 68, 104);
+        }
+
+            .wrapper .sidebar ul li a:hover .icon,
+            .wrapper .sidebar ul li a.active .icon {
+                color: #0c7db1;
+            }
+
+            .wrapper .sidebar ul li a:hover:before,
+            .wrapper .sidebar ul li a.active:before {
+                display: block;
+            }
+
+body.active .wrapper .sidebar {
+    left: -225px;
+}
+
+body.active .wrapper .section {
+    margin-left: 0;
+    width: 100%;
+}
+
+.text-box {
+    text-align: center;
+    padding: 25px;
+    margin-top: 15px;
+    margin-left: 310px;
+    margin-right: 15px;
+    border-radius: 25px;
+    height: 600px;
+    background-color: #dee4ec;
+}
+
+/* Upload box */
+.upload-box {
+    text-align: center;
+    margin-top: 5px;
+    margin-left: 310px;
+    margin-right: 15px;
+    border-radius: 25px;
+    border: dashed;
+    height: fit-content;
+    background-color: #dee4ec;
+    align-content: center;
+}
+
+.upload-btn-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    margin-top: 5px;
+    padding: 5px;
+}
+
+.btn {
+    background-color: mediumpurple;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: 20px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.upload-btn-wrapper input[type=file] {
+    font-size: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+}
