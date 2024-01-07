@@ -1,9 +1,6 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text;
-using System.Text.Json;
-using System.Web;
-using System.Net.Http.Headers;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Ethereal_Cloud.Pages
 {
