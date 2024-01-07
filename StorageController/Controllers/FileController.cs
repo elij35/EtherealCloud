@@ -62,7 +62,7 @@ namespace StorageController.Controllers
         [Route("/file")]
         [Consumes("application/json")]
         [Produces("application/json")]
-        public async Task<string> GetFile([FromBody] FileData fileData)
+        public async Task<string> SaveFile([FromBody] FileDataSave fileData)
         {
 
             string sql_Save_File = "INSERT INTO ethereal.Files (FileName, FileType, Folder) VALUES (@FileName, @FileType, 0)";
