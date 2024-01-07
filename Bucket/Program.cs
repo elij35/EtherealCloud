@@ -8,7 +8,7 @@ namespace Bucket
         public static string DB_IP;
         public static string DB_PASS;
         public static string BUCK_ID;
-        public static string ROOT_FILE_DIR = "/app/data/";
+        public static string ROOT_FILE_DIR = "/var/data/";
 
         public static void Main(string[] args)
         {
