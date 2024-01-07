@@ -11,11 +11,12 @@ for /f %%i in ('docker inspect -f {{range.NetworkSettings.Networks}}{{.IPAddress
 set buck_id=1
 
 cd ./Bucket
+docker volume create bucket-volume-%buck_id%
 docker image rm storage-bucket
 docker build -t storage-bucket .
 docker stop storage-bucket
 docker rm storage-bucket
-docker run -p 8070:8070 -e "DB_IP=%db_ip%" -e "DB_PASS=EtherealDatabaseStorage!!" -e "BUCK_ID=1" --name storage-bucket --hostname storage-bucket --mount source=bucket-volume-%buck_id%,target=/app/files -d storage-bucket
+docker run -p 8070:8070 -e "DB_IP=%db_ip%" -e "DB_PASS=EtherealDatabaseStorage!!" -e "BUCK_ID=1" --name storage-bucket --hostname storage-bucket -v bucket-volume-%buck_id%:/var/data -d storage-bucket
 
 for /f %%i in ('docker inspect -f {{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}} storage-bucket') do set buck_ip=%%i
 
