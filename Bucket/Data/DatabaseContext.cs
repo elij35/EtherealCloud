@@ -19,7 +19,13 @@ namespace Bucket.Data
 
         public async void EnsureTablesCreated()
         {
-            Database.EnsureCreated();
+            try
+            {
+                Database.EnsureCreated();
+            }catch (Exception ex)
+            {
+                return;
+            }
 
             FileData.FromSql($"SET IDENTITY_INSERT [FileData] ON;");
             await SaveChangesAsync();
