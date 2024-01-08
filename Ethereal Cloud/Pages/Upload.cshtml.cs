@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Web;
 using System.Net.Http.Headers;
 using System.Diagnostics.Metrics;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace Ethereal_Cloud.Pages
 {
@@ -40,7 +41,7 @@ namespace Ethereal_Cloud.Pages
         {
             bool fileFound = true;
             int counter = 1;
-            while (fileFound = true)
+            while (fileFound)
             {
                 string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/file/" + counter;
 
@@ -64,7 +65,7 @@ namespace Ethereal_Cloud.Pages
                         }
                         else
                         {
-                            ShowPopup("HI:" + responseObject.Message);
+                            ShowPopup("Response failed: " + responseObject.Message);
                             fileFound = false;
                         }
 
@@ -101,9 +102,16 @@ namespace Ethereal_Cloud.Pages
                 return NotFound();
             }
 
-            byte[] fileContents = Encoding.UTF8.GetBytes(file.Content);
+            byte[] fileContents = Convert.FromBase64String(file.Content);
 
-            return File(fileContents, "text/plain", file.Filename);
+            // Determine content type based on file extension
+            var contentTypeProvider = new FileExtensionContentTypeProvider();
+            if (!contentTypeProvider.TryGetContentType(file.Filename, out var contentType))
+            {
+                contentType = "application/octet-stream";
+            }
+
+            return File(fileContents, contentType, file.Filename);
         }
 
 
@@ -133,12 +141,21 @@ namespace Ethereal_Cloud.Pages
                             string stringResponse = await response.Content.ReadAsStringAsync();
                             //response: success ,message        message: message, fileid
 
-                            //Response<FileModel> file = await Response<FileModel>.DeserializeJSON(stringResponse);
-                            //ShowPopup(file.Success + " : " + file.Message);
+                            Response<object> responseObject = await Response<object>.DeserializeJSON(stringResponse);
 
-                            var files = Files;
-                            files.Add(newFile);
-                            Files = files;
+                            if (responseObject.Success)
+                            {
+                                Response<FileModel> file = await Response<FileModel>.DeserializeJSON(stringResponse);
+                                ShowPopup(file.Message.Content);
+                                var files = Files;
+                                files.Add(file.Message);
+                                Files = files;
+                            }
+                            else
+                            {
+                                ShowPopup("Response failed:" + responseObject.Message);
+                            }
+
                         }
                         else
                         {
