@@ -35,6 +35,7 @@ namespace Ethereal_Cloud.Pages
                     {
                         //Valid login goto the next page
                         ShowPopup(login.Message);
+                        Redirect("/upload");
                     }
                     else
                     {
@@ -68,6 +69,7 @@ namespace Ethereal_Cloud.Pages
                     {
                         //Valid Signup goto the next page
                         ShowPopup(signup.Message);
+                        Redirect("/upload");
                     }
                     else
                     {
