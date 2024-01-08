@@ -6,56 +6,58 @@
     Layout = "SidebarsLayout";
     <link rel="stylesheet" href="/css/Site.css" asp-append-version="true">
     <link rel="stylesheet" href="/css/Upload.css" asp-append-version="true">
-}
 
-<!-- Box at top of screen -->
-<div class="text-box">
-    <h1>Here are your files:</h1>
-    <form method="get" asp-page-handler="File">
-        <label for="id">Id:</label>
-        <input type="number" id="id" name="id" required />
-        <button type="submit">GetFileOfId</button>
-    </form>
+    <!-- Box at top of screen -->
+    <div class="text-box">
+        <div>
+            <form method="post" asp-page-handler="File">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required />
 
-    <p id="test-out"></p>
+                <button type="submit">File</button>
+            </form>
 
-    <script>
-        var popupStatus = '@ViewData["PopupStatus"]';
+            <p id="test-out"></p>
 
-        let out = document.getElementById("test-out");
-        out.innerText = popupStatus;            
-    </script>
+            <script>
+                var popupStatus = '@ViewData["PopupStatus"]';
 
+                let out = document.getElementById("test-out");
+                out.innerText = popupStatus;
 
-    @if (Model.Files != null)
-    {
-        @foreach (var file in Model.Files)
+            </script>
+        </div>
+
+        <h2>Files</h2>
+
+        @if (Model.Files != null)
         {
-            <div>
-                <span>@file.Filename</span>
-                <a asp-page-handler="Download" asp-route-filename="@file.Filename">Download</a>
-            </div>
+            @foreach (var file in Model.Files)
+            {
+                <div>
+                    <span>@file.Filename</span>
+                    <a asp-page-handler="Download" asp-route-filename="@file.Filename">Download</a>
+                </div>
+            }
         }
-    }
-    else
-    {
-        <p>No files available.</p>
-    }
-</div>
+        else
+        {
+            <p>No files available.</p>
+        }
 
-<!-- Box at bottom of screen -->
-<div class="upload-box">
-    <img src="~/UploadArrow.png" alt="logo" class="logo">
-    <p></p>
+    </div>
 
-    <div class="upload-btn-wrapper">
+    <!-- Box at bottom of screen -->
+    <div class="upload-box">
+        <h1>Upload</h1>
         <form method="post" enctype="multipart/form-data" asp-page-handler="Upload">
-            <button class="btn">Choose a File!</button>
-            <input type="file" id="fileInput" name="uploadedFile" />   
+            <div>
+                <label for="fileInput">Choose a file:</label>
+                <input type="file" id="fileInput" name="uploadedFile" />
+            </div>
+            <div>
+                <input type="submit" value="Upload" />
+            </div>
         </form>
     </div>
-
-    <div class="upload-btn-wrapper">
-        <button class="btn" type="submit" value="Upload">Upload file!</button>
-    </div>
-</div>
+}
