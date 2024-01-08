@@ -15,7 +15,27 @@ namespace Ethereal_Cloud.Pages
         [BindProperty]
         public string Username { get; set; }
 
-        public List<FileModel> Files = new List<FileModel>();
+        // Helper method to get or initialize the Files list from session
+        public List<FileModel> Files
+        {
+            get
+            {
+                if (HttpContext.Session.TryGetValue("Files", out byte[] data) && data != null)
+                {
+                    string json = Encoding.UTF8.GetString(data);
+                    return Newtonsoft.Json.JsonConvert.DeserializeObject<List<FileModel>>(json);
+                }
+                else
+                {
+                    return new List<FileModel>();
+                }
+            }
+            set
+            {
+                string json = Newtonsoft.Json.JsonConvert.SerializeObject(value);
+                HttpContext.Session.Set("Files", Encoding.UTF8.GetBytes(json));
+            }
+        }
 
         public async Task OnPostFileAsync()
         {
@@ -45,7 +65,7 @@ namespace Ethereal_Cloud.Pages
                         }
                         else
                         {
-                            //ShowPopup("Response failed: " + responseObject.Message); //Message to display response from API
+                            ShowPopup("Response failed: " + responseObject.Message);
                             fileFound = false;
                         }
 
@@ -95,7 +115,7 @@ namespace Ethereal_Cloud.Pages
         }
 
 
-        public async Task OnPostUploadAsync(IFormFile uploadedFile)
+        public async Task<IActionResult> OnPostUploadAsync(IFormFile uploadedFile)
         {
             if (uploadedFile != null && uploadedFile.Length > 0)
             {
@@ -106,7 +126,7 @@ namespace Ethereal_Cloud.Pages
                     {
                         Filename = uploadedFile.FileName,
                         Filetype = Path.GetExtension(uploadedFile.FileName),
-                        Content = Convert.ToBase64String(stream.ToArray())
+                        Content = Encoding.ASCII.GetString(stream.ToArray())
                     };
 
                     string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/file";
@@ -119,7 +139,7 @@ namespace Ethereal_Cloud.Pages
                         if (response.IsSuccessStatusCode)
                         {
                             string stringResponse = await response.Content.ReadAsStringAsync();
-                            //the api returns response: success ,message        message: message, fileid
+                            //response: success ,message        message: message, fileid
 
                             Response<object> responseObject = await Response<object>.DeserializeJSON(stringResponse);
 
@@ -127,6 +147,9 @@ namespace Ethereal_Cloud.Pages
                             {
                                 Response<FileModel> file = await Response<FileModel>.DeserializeJSON(stringResponse);
                                 ShowPopup(file.Message.Content);
+                                var files = Files;
+                                files.Add(file.Message);
+                                Files = files;
                             }
                             else
                             {
@@ -147,6 +170,7 @@ namespace Ethereal_Cloud.Pages
                 ShowPopup("Invalid file upload");
             }
 
+            return null;
         }
 
     }

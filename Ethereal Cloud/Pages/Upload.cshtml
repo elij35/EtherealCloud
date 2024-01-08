@@ -11,12 +11,18 @@
     <div class="text-box">
         <div>
             <form method="post" asp-page-handler="File">
+
                 <button type="submit">File</button>
             </form>
 
+            <p id="test-out"></p>
+
             <script>
                 var popupStatus = '@ViewData["PopupStatus"]';
-                alert(popupStatus);
+
+                let out = document.getElementById("test-out");
+                out.innerText = popupStatus;
+
             </script>
         </div>
 
