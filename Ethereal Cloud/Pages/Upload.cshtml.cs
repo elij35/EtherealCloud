@@ -15,10 +15,9 @@ namespace Ethereal_Cloud.Pages
         [BindProperty]
         public string Username { get; set; }
 
-        public List<FileModel> Files { get; set; } = new List<FileModel>();
+        public List<FileModel> Files = new List<FileModel>();
 
-        //get file
-        public async Task OnGetAsync()
+        public async Task OnPostFileAsync()
         {
             bool fileFound = true;
             int counter = 1;
@@ -39,9 +38,10 @@ namespace Ethereal_Cloud.Pages
                         if (responseObject.Success)
                         {
                             Response<FileModel> file = await Response<FileModel>.DeserializeJSON(stringResponse);
-
-                            //here i want to add the download to the page
-                            Files.Add(file.Message);
+                            ShowPopup(file.Message.Content);
+                            var files = Files;
+                            files.Add(file.Message);
+                            Files = files;
                         }
                         else
                         {
