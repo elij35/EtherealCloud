@@ -4,18 +4,20 @@ using System.Text;
 
 namespace Ethereal_Cloud.Pages
 {
-    public class LoginModel : PageModel
+    public class LoginSignupModel : PageModel
     {
-
         [BindProperty]
         public string Email { get; set; }
 
         [BindProperty]
         public string Password { get; set; }
 
+        [BindProperty]
+        public string Username { get; set; }
+
         public async Task OnPostLoginAsync()
         {
-            string apiUrl = "http://82.47.161.57:8090/user/login";
+            string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/user/login";
 
             using (HttpClient client = new HttpClient())
             {
@@ -33,13 +35,12 @@ namespace Ethereal_Cloud.Pages
                     {
                         //Valid login goto the next page
                         ShowPopup(login.Message);
-
-                        //Add redirect here!
                     }
                     else
                     {
                         ShowPopup("Invalid: " + login.Message);
                     }
+
                 }
                 else
                 {
@@ -48,27 +49,9 @@ namespace Ethereal_Cloud.Pages
             }
         }
 
-        private void ShowPopup(string status)
-        {
-            ViewData["PopupStatus"] = status;
-        }
-    }
-
-    public class SignupModel : PageModel
-    {
-        [BindProperty]
-        public string Username { get; set; }
-
-        [BindProperty]
-        public string Email { get; set; }
-
-        [BindProperty]
-        public string Password { get; set; }
-
         public async Task OnPostSignupAsync()
         {
-            // Replace "your-api-endpoint" with the actual API endpoint
-            string apiUrl = "http://82.47.161.57:8090/user/signup";
+            string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/user/signup";
 
             using (HttpClient client = new HttpClient())
             {
@@ -85,9 +68,6 @@ namespace Ethereal_Cloud.Pages
                     {
                         //Valid Signup goto the next page
                         ShowPopup(signup.Message);
-
-                        //Add redirect link here!
-
                     }
                     else
                     {

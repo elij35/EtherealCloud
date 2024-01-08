@@ -1,9 +1,40 @@
 ﻿@page
-@model Ethereal_Cloud.Pages.IndexModel
+@model Ethereal_Cloud.Pages.LoginSignupModel
 @{
     <meta charset="utf-8">
     Layout = "IndexLayout";
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/css/Site.css" asp-append-version="true">
     <link rel="stylesheet" href="/css/Index.css" asp-append-version="true">
+
+
+    <div>
+        <form method="post" asp-page-handler="Login">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required />
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required />
+
+            <button type="submit">Login</button>
+        </form>
+
+        <form method="post" asp-page-handler="Signup">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required />
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required />
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required />
+
+            <button type="submit">Signup</button>
+        </form>
+
+        <script>
+            var popupStatus = '@ViewData["PopupStatus"]';
+            alert(popupStatus);
+        </script>
+    </div>
 }
