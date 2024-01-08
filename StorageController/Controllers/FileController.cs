@@ -29,20 +29,21 @@ namespace StorageController.Controllers
         public struct FileRequest
         {
             public string AuthToken { get; set; }
-            public string FileID { get; set; }
+
         }
 
-        [HttpGet]
+        [HttpPost]
         [Consumes("application/json")]
         [Produces("application/json")]
-        public async Task<string> GetFile([FromBody] FileRequest fileRequest)
+        [Route("/file/{id}")]
+        public async Task<string> GetFile([FromBody] FileRequest fileRequest, [FromRoute] int id)
         {
 
             string sql_Get_File = "SELECT FileID, FileName, FileType FROM ethereal.Files WHERE FileID = @FileID;";
 
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@FileID", fileRequest.FileID)
+                new SqlParameter("@FileID", id)
             };
 
             DataHandler db = DataHandler.instance;
