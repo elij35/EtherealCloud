@@ -67,6 +67,12 @@ namespace StorageController.Controllers
             return await new Response<FileData>(true, fileData).Serialize();
         }
 
+        public struct FileSaveInfo
+        {
+            public string Message { get; set; }
+            public int FileID { get; set; }
+        }
+
         [HttpPost]
         [Route("/file")]
         [Consumes("application/json")]
@@ -85,8 +91,9 @@ namespace StorageController.Controllers
             DataHandler db = DataHandler.instance;
             DataTable rows = await db.StaticQuery("SELECT FileName FROM ethereal.Files");
 
-            Response<string> savedFile = (await BucketAPIHandler.SendFileContent(rows.Rows.Count + 1, fileData.Content));
-            
+            int nextID = rows.Rows.Count + 1;
+            Response<string> savedFile = (await BucketAPIHandler.SendFileContent(nextID, fileData.Content));
+
             int success = 0;
             if (savedFile.Success)
                 success = await db.ParametizedNonQuery(sql_Save_File, parameters);
@@ -94,7 +101,12 @@ namespace StorageController.Controllers
             if (success < 1)
                 return await new Response<string>(false, "Could not save file.").Serialize();
 
-            return await new Response<string>(true, "File saved.").Serialize();
+            FileSaveInfo fileSaveInfo = new FileSaveInfo()
+            {
+                Message = "File Saved.",
+                FileID = nextID
+            };
+            return await new Response<FileSaveInfo>(true, fileSaveInfo).Serialize();
         }
     }
 }
