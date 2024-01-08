@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text;
 
 namespace Ethereal_Cloud.Pages
@@ -14,6 +14,9 @@ namespace Ethereal_Cloud.Pages
 
         [BindProperty]
         public string Username { get; set; }
+
+        [BindProperty]
+        public string Passwordconf { get; set; }
 
         public async Task OnPostLoginAsync()
         {
@@ -35,17 +38,12 @@ namespace Ethereal_Cloud.Pages
                     {
                         //Valid login goto the next page
                         ShowPopup(login.Message);
-                        Redirect("/upload");
+                        Response.Redirect("/Upload");
                     }
                     else
                     {
                         ShowPopup("Invalid: " + login.Message);
                     }
-
-                }
-                else
-                {
-                    ShowPopup("Failure");
                 }
             }
         }
@@ -56,29 +54,31 @@ namespace Ethereal_Cloud.Pages
 
             using (HttpClient client = new HttpClient())
             {
-                var content = new StringContent($"{{\"username\":\"{Username}\",\"email\":\"{Email}\",\"password\":\"{Password}\"}}", Encoding.UTF8, "application/json");
+                var content = new StringContent($"{{\"username\":\"{Username}\",\"email\":\"{Email}\",\"password\":\"{Password}\",\"confpassword\":\"{Passwordconf}\"}}", Encoding.UTF8, "application/json");
                 var response = await client.PostAsync(apiUrl, content);
 
-                if (response.IsSuccessStatusCode)
+                if (Passwordconf == Password)
                 {
-                    string stringResponse = await response.Content.ReadAsStringAsync();
-
-                    Response<string> signup = await Response<string>.DeserializeJSON(stringResponse);
-
-                    if (signup.Success == true)
+                    if (response.IsSuccessStatusCode)
                     {
-                        //Valid Signup goto the next page
-                        ShowPopup(signup.Message);
-                        Redirect("/upload");
-                    }
-                    else
-                    {
-                        ShowPopup("Invalid: " + signup.Message);
+                        string stringResponse = await response.Content.ReadAsStringAsync();
+
+                        Response<string> signup = await Response<string>.DeserializeJSON(stringResponse);
+
+                        if (signup.Success == true)
+                        {
+                            //Valid Signup goto the next page
+                            Response.Redirect("/Upload");
+                        }
+                        else
+                        {
+                            ShowPopup("Invalid: " + signup.Message);
+                        }
                     }
                 }
                 else
                 {
-                    ShowPopup("Failure");
+                    ShowPopup("Invalid: passwords must match!");
                 }
             }
         }
