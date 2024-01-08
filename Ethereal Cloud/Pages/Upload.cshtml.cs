@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Ethereal_Cloud.Pages
 {
-    public class IndexModel : PageModel
+    public class UploadModel : PageModel
     {
         [BindProperty]
         public string Username { get; set; }
@@ -14,8 +14,7 @@ namespace Ethereal_Cloud.Pages
 
         public async Task OnGetFileAsync(int Id)
         {
-            string apiUrl = "http://82.47.161.57:8090/file";
-
+            string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/file";
             using (HttpClient client = new HttpClient())
             {
                 var response = await client.GetAsync(apiUrl);
@@ -45,9 +44,7 @@ namespace Ethereal_Cloud.Pages
         public IActionResult OnGetDownload(string filename)
         {
             var files = Files;
-
             var file = files?.FirstOrDefault(f => f.Filename == filename);
-
 
             if (file == null)
             {
@@ -65,6 +62,7 @@ namespace Ethereal_Cloud.Pages
             return File(fileContents, contentType, file.Filename);
         }
 
+        //Uploading files to host
         public async Task<IActionResult> OnPostUploadAsync(IFormFile uploadedFile)
         {
             if (uploadedFile != null && uploadedFile.Length > 0)
@@ -80,8 +78,7 @@ namespace Ethereal_Cloud.Pages
                         Content = Convert.ToBase64String(stream.ToArray())
                     };
 
-                    string apiUrl = "http://82.47.161.57:8090/file";
-
+                    string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/file";
                     using (HttpClient client = new HttpClient())
                     {
                         var content = new StringContent($"{{\"authtoken\":\"{newFile.AuthToken}\",\"filename\":\"{newFile.Filename}\",\"filetype\":\"{newFile.Filetype}\",\"content\":\"{newFile.Content}\"}}", Encoding.UTF8, "application/json");
