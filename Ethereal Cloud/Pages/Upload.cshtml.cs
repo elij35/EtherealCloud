@@ -1,7 +1,10 @@
+using Ethereal_Cloud.Pages;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.StaticFiles;
 using System.Text;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Text.Json;
+using System.Web;
+using System.Net.Http.Headers;
 
 namespace Ethereal_Cloud.Pages
 {
@@ -10,21 +13,45 @@ namespace Ethereal_Cloud.Pages
         [BindProperty]
         public string Username { get; set; }
 
-        public List<FileModel> Files { get; set; }
+        // Helper method to get or initialize the Files list from session
+        public List<FileModel> Files
+        {
+            get
+            {
+                if (HttpContext.Session.TryGetValue("Files", out byte[] data) && data != null)
+                {
+                    string json = Encoding.UTF8.GetString(data);
+                    return Newtonsoft.Json.JsonConvert.DeserializeObject<List<FileModel>>(json);
+                }
+                else
+                {
+                    return new List<FileModel>();
+                }
+            }
+            set
+            {
+                string json = Newtonsoft.Json.JsonConvert.SerializeObject(value);
+                HttpContext.Session.Set("Files", Encoding.UTF8.GetBytes(json));
+            }
+        }
 
-        public async Task OnGetFileAsync(int Id)
+        public async Task OnPostFileAsync()
         {
             string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/file";
+
             using (HttpClient client = new HttpClient())
             {
-                var response = await client.GetAsync(apiUrl);
+                var content = new StringContent($"{{\"username\":\"{Username}\"}}", Encoding.UTF8, "application/json");
+                var response = await client.PostAsync(apiUrl, content);
+
+                string stringResponse = await response.Content.ReadAsStringAsync();
+
+                Response<FileModel> file = await Response<FileModel>.DeserializeJSON(stringResponse);
+
 
                 if (response.IsSuccessStatusCode)
                 {
-                    string stringResponse = await response.Content.ReadAsStringAsync();
-
-                    Response<FileModel> file = await Response<FileModel>.DeserializeJSON(stringResponse);
-
+                    ShowPopup(file.Message.Content);
                     var files = Files;
                     files.Add(file.Message);
                     Files = files;
@@ -33,6 +60,7 @@ namespace Ethereal_Cloud.Pages
                 {
                     ShowPopup("Failure");
                 }
+
             }
         }
 
@@ -41,28 +69,26 @@ namespace Ethereal_Cloud.Pages
             ViewData["PopupStatus"] = status;
         }
 
+
+
         public IActionResult OnGetDownload(string filename)
         {
             var files = Files;
+
             var file = files?.FirstOrDefault(f => f.Filename == filename);
+
 
             if (file == null)
             {
                 return NotFound();
             }
 
-            byte[] fileContents = Convert.FromBase64String(file.Content);
+            byte[] fileContents = Encoding.UTF8.GetBytes(file.Content);
 
-            // Determine content type based on file extension
-            var contentTypeProvider = new FileExtensionContentTypeProvider();
-            if (!contentTypeProvider.TryGetContentType(file.Filename, out var contentType))
-            {
-                contentType = "application/octet-stream";
-            }
-            return File(fileContents, contentType, file.Filename);
+            return File(fileContents, "text/plain", file.Filename + "." + file.Filetype);
         }
 
-        //Uploading files to host
+
         public async Task<IActionResult> OnPostUploadAsync(IFormFile uploadedFile)
         {
             if (uploadedFile != null && uploadedFile.Length > 0)
@@ -79,6 +105,7 @@ namespace Ethereal_Cloud.Pages
                     };
 
                     string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/file";
+
                     using (HttpClient client = new HttpClient())
                     {
                         var content = new StringContent($"{{\"authtoken\":\"{newFile.AuthToken}\",\"filename\":\"{newFile.Filename}\",\"filetype\":\"{newFile.Filetype}\",\"content\":\"{newFile.Content}\"}}", Encoding.UTF8, "application/json");
@@ -90,11 +117,16 @@ namespace Ethereal_Cloud.Pages
 
                             Response<FileModel> file = await Response<FileModel>.DeserializeJSON(stringResponse);
                             ShowPopup(file.Success + " : " + file.Message);
+
+                            var files = Files;
+                            files.Add(newFile);
+                            Files = files;
                         }
                         else
                         {
                             ShowPopup("Failure");
                         }
+
                     }
                 }
             }
@@ -102,7 +134,10 @@ namespace Ethereal_Cloud.Pages
             {
                 ShowPopup("Invalid file upload");
             }
-            return RedirectToPage("Index");
+
+            return null;
         }
+
     }
+
 }
