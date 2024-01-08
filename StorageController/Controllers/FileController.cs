@@ -33,7 +33,6 @@ namespace StorageController.Controllers
         }
 
         [HttpGet]
-        [Route("/file")]
         [Consumes("application/json")]
         [Produces("application/json")]
         public async Task<string> GetFile([FromBody] FileRequest fileRequest)
@@ -75,7 +74,6 @@ namespace StorageController.Controllers
         }
 
         [HttpPost]
-        [Route("/file")]
         [Consumes("application/json")]
         [Produces("application/json")]
         public async Task<string> SaveFile([FromBody] FileDataSave fileData)
