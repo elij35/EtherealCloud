@@ -10,37 +10,22 @@
     <!-- Box at top of screen -->
     <div class="text-box">
         <div>
-            <form method="post" asp-page-handler="File">
-
-                <button type="submit">File</button>
-            </form>
-
-            <p id="test-out"></p>
-
+            
             <script>
                 var popupStatus = '@ViewData["PopupStatus"]';
-
-                let out = document.getElementById("test-out");
-                out.innerText = popupStatus;
-
+                alert(popupStatus);
             </script>
         </div>
 
         <h2>Files</h2>
 
-        @if (Model.Files != null)
+        <h2>Files</h2>
+        @foreach (var file in Model.Files)
         {
-            @foreach (var file in Model.Files)
-            {
-                <div>
-                    <span>@file.Filename</span>
-                    <a asp-page-handler="Download" asp-route-filename="@file.Filename">Download</a>
-                </div>
-            }
-        }
-        else
-        {
-            <p>No files available.</p>
+            <div>
+                <span>@file.Filename</span>
+                <a asp-page-handler="Download" asp-route-filename="@file.Filename">Download</a>
+            </div>
         }
 
     </div>
