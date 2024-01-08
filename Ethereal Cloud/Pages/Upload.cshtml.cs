@@ -39,6 +39,9 @@ namespace Ethereal_Cloud.Pages
 
         public async Task OnPostFileAsync()
         {
+
+            Files = new List<FileModel>();
+
             bool fileFound = true;
             int counter = 1;
             while (fileFound)
@@ -65,7 +68,6 @@ namespace Ethereal_Cloud.Pages
                         }
                         else
                         {
-                            ShowPopup("Response failed: " + responseObject.Message);
                             fileFound = false;
                         }
 
@@ -126,7 +128,7 @@ namespace Ethereal_Cloud.Pages
                     {
                         Filename = uploadedFile.FileName,
                         Filetype = Path.GetExtension(uploadedFile.FileName),
-                        Content = Encoding.ASCII.GetString(stream.ToArray())
+                        Content = Convert.ToBase64String(stream.ToArray())
                     };
 
                     string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/file";
@@ -143,15 +145,7 @@ namespace Ethereal_Cloud.Pages
 
                             Response<object> responseObject = await Response<object>.DeserializeJSON(stringResponse);
 
-                            if (responseObject.Success)
-                            {
-                                Response<FileModel> file = await Response<FileModel>.DeserializeJSON(stringResponse);
-                                ShowPopup(file.Message.Content);
-                                var files = Files;
-                                files.Add(file.Message);
-                                Files = files;
-                            }
-                            else
+                            if (!responseObject.Success)
                             {
                                 ShowPopup("Response failed:" + responseObject.Message);
                             }
