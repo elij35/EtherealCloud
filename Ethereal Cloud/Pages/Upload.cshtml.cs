@@ -104,10 +104,6 @@ namespace Ethereal_Cloud.Pages
                         Content = Convert.ToBase64String(stream.ToArray())
                     };
 
-                    var files = Files;
-                    files.Add(newFile);
-                    Files = files;
-
                     string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/file";
 
                     using (HttpClient client = new HttpClient())
@@ -121,6 +117,10 @@ namespace Ethereal_Cloud.Pages
 
                             Response<FileModel> file = await Response<FileModel>.DeserializeJSON(stringResponse);
                             ShowPopup(file.Success + " : " + file.Message);
+
+                            var files = Files;
+                            files.Add(newFile);
+                            Files = files;
                         }
                         else
                         {
@@ -135,7 +135,7 @@ namespace Ethereal_Cloud.Pages
                 ShowPopup("Invalid file upload");
             }
 
-            return RedirectToPage("Index");
+            return null;
         }
 
     }
