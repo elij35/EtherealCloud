@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
 using System.Web;
 using System.Net.Http.Headers;
+using System.Diagnostics.Metrics;
 
 namespace Ethereal_Cloud.Pages
 {
@@ -37,31 +38,48 @@ namespace Ethereal_Cloud.Pages
 
         public async Task OnPostFileAsync()
         {
-            string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/file";
-
-            using (HttpClient client = new HttpClient())
+            bool fileFound = true;
+            int counter = 1;
+            while (fileFound = true)
             {
-                var content = new StringContent($"{{\"username\":\"{Username}\"}}", Encoding.UTF8, "application/json");
-                var response = await client.PostAsync(apiUrl, content);
+                string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/file/" + counter;
 
-                string stringResponse = await response.Content.ReadAsStringAsync();
-
-                Response<FileModel> file = await Response<FileModel>.DeserializeJSON(stringResponse);
-
-
-                if (response.IsSuccessStatusCode)
+                using (HttpClient client = new HttpClient())
                 {
-                    ShowPopup(file.Message.Content);
-                    var files = Files;
-                    files.Add(file.Message);
-                    Files = files;
-                }
-                else
-                {
-                    ShowPopup("Failure");
+                    var content = new StringContent($"{{\"authtoken\":\"Temp\"}}", Encoding.UTF8, "application/json");
+                    var response = await client.PostAsync(apiUrl, content);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string stringResponse = await response.Content.ReadAsStringAsync();
+                        Response<object> responseObject = await Response<object>.DeserializeJSON(stringResponse);
+
+                        if (responseObject.Success)
+                        {
+                            Response<FileModel> file = await Response<FileModel>.DeserializeJSON(stringResponse);
+                            ShowPopup(file.Message.Content);
+                            var files = Files;
+                            files.Add(file.Message);
+                            Files = files;
+                        }
+                        else
+                        {
+                            ShowPopup("HI:" + responseObject.Message);
+                            fileFound = false;
+                        }
+
+                    }
+                    else
+                    {
+                        ShowPopup("Failure");
+                    }
+
                 }
 
+
+                counter++;
             }
+
         }
 
         private void ShowPopup(string status)
@@ -85,7 +103,7 @@ namespace Ethereal_Cloud.Pages
 
             byte[] fileContents = Encoding.UTF8.GetBytes(file.Content);
 
-            return File(fileContents, "text/plain", file.Filename + "." + file.Filetype);
+            return File(fileContents, "text/plain", file.Filename);
         }
 
 
@@ -98,25 +116,25 @@ namespace Ethereal_Cloud.Pages
                     await uploadedFile.CopyToAsync(stream);
                     var newFile = new FileModel
                     {
-                        AuthToken = "TempToken",
                         Filename = uploadedFile.FileName,
                         Filetype = Path.GetExtension(uploadedFile.FileName),
-                        Content = Convert.ToBase64String(stream.ToArray())
+                        Content = Encoding.ASCII.GetString(stream.ToArray())
                     };
 
                     string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/file";
 
                     using (HttpClient client = new HttpClient())
                     {
-                        var content = new StringContent($"{{\"authtoken\":\"{newFile.AuthToken}\",\"filename\":\"{newFile.Filename}\",\"filetype\":\"{newFile.Filetype}\",\"content\":\"{newFile.Content}\"}}", Encoding.UTF8, "application/json");
-                        var response = await client.PostAsync(apiUrl, content);
+                        var content = new StringContent($"{{\"authtoken\":\"Test\",\"filename\":\"{newFile.Filename}\",\"filetype\":\"{newFile.Filetype}\",\"content\":\"{newFile.Content}\"}}", Encoding.UTF8, "application/json");
+                        var response = await client.PostAsync(apiUrl,content);
 
                         if (response.IsSuccessStatusCode)
                         {
                             string stringResponse = await response.Content.ReadAsStringAsync();
+                            //response: success ,message        message: message, fileid
 
-                            Response<FileModel> file = await Response<FileModel>.DeserializeJSON(stringResponse);
-                            ShowPopup(file.Success + " : " + file.Message);
+                            //Response<FileModel> file = await Response<FileModel>.DeserializeJSON(stringResponse);
+                            //ShowPopup(file.Success + " : " + file.Message);
 
                             var files = Files;
                             files.Add(newFile);
