@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using StorageController.Data;
 using System.Data;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace StorageController.Controllers
 {
@@ -10,24 +12,17 @@ namespace StorageController.Controllers
     public class LoginController : Controller
     {
 
-        string[] expected_parameters =
+        public struct LoginParams
         {
-            "username",
-            "password"
-        };
+            public string Username { get; set; }
+            public string Password { get; set; }
+        }
 
         [HttpPost]
-        public async Task<bool> Index()
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        public async Task<string> Index([FromBody] LoginParams loginParams)
         {
-
-            Stream body_stream = Request.Body;
-
-            // Converting the request body to a dictionary of parameters
-            Dictionary<string, string> body_parameters = HTTPUtils.ConvertParamsToDictionary(body_stream, (int)Request.ContentLength);
-
-            // Ensuring all the required parameters are present
-            if (!HTTPUtils.CheckRequestParameters(body_parameters, expected_parameters, Response))
-                return false;
 
             // SQL for selecting the user's data
             string sql_checkUser = "SELECT * FROM ethereal.Users WHERE Username = @Username OR Email = @Email";
@@ -35,8 +30,8 @@ namespace StorageController.Controllers
             // SQL parameters
             SqlParameter[] sqlParameters =
             {
-                new SqlParameter("@Username", body_parameters["username"]),
-                new SqlParameter("@Email", body_parameters["username"])
+                new SqlParameter("@Username", loginParams.Username),
+                new SqlParameter("@Email", loginParams.Username)
             };
 
             // Getting the data handler and sending the SQL 
@@ -47,13 +42,15 @@ namespace StorageController.Controllers
             Dictionary<string, string[]>? entries = await dataHandler.DataTableToDictionary(table);
 
             // Ensuring there is a user and the passwords match
-            if (entries == null || entries["Password"][0] != body_parameters["password"])
+            if (entries == null || entries["Password"][0] != loginParams.Password)
             {
-                return false;
+                return await new Response<string>(false, "Incorrect credentials.").Serialize();
             }
 
+            string token = await AuthManager.AuthorizeUser(int.Parse(entries["UserID"][0]));
+
             // If it reached here, all checks passed and the user exists and the password matched
-            return true;
+            return await new Response<string>(true, token).Serialize();
         }
     }
 }

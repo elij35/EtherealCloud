@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using StorageController.Data;
 
 namespace StorageController.Controllers
 {
@@ -9,32 +10,27 @@ namespace StorageController.Controllers
     public class SignupController : Controller
     {
 
-        string[] expected_parameters =
+        public struct SignupParams
         {
-            "username",
-            "email",
-            "password"
-        };
+            public string UserName { get; set; }
+            public string Email { get; set; }
+            public string Password { get; set; }
+        }
 
         [HttpPost]
-        public async void Index()
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        public async Task<string> Index([FromBody] SignupParams signupParams)
         {
-
-            Stream body_stream =  Request.Body;
-
-            Dictionary<string, string> body_parameters = HTTPUtils.ConvertParamsToDictionary(body_stream, (int)Request.ContentLength);
-
-            if (!HTTPUtils.CheckRequestParameters(body_parameters, expected_parameters, Response))
-                return;
 
             string sql_addUser = "INSERT INTO ethereal.Users (Username, Email, Password, Administrator)" +
                 "VALUES (@Username, @Email, @Password, 0)";
 
             SqlParameter[] sqlParameters = 
             {
-                new SqlParameter("@Username", body_parameters["username"]),
-                new SqlParameter("@Email", body_parameters["email"]),
-                new SqlParameter("@Password", body_parameters["password"])
+                new SqlParameter("@Username", signupParams.UserName),
+                new SqlParameter("@Email", signupParams.Email),
+                new SqlParameter("@Password", signupParams.Password)
             };
 
             DataHandler dataHandler = DataHandler.instance;
@@ -43,10 +39,11 @@ namespace StorageController.Controllers
             if (rows_affected < 1)
             {
                 Response.StatusCode = 500;
-                return;
+                return await new Response<string>(false, "An unexpected error occured.").Serialize();
             }
 
             Response.StatusCode = 200;
+            return await new Response<string>(true, "User successfully created.").Serialize();
         }
     }
 }
