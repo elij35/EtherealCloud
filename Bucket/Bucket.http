@@ -1,0 +1,6 @@
+@Bucket_HostAddress = http://localhost:5139
+
+GET {{Bucket_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
