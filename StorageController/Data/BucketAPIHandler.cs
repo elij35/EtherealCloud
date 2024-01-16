@@ -1,8 +1,7 @@
-﻿using StorageController.Data;
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using System.Text.Json;
 
-namespace StorageController
+namespace StorageController.Data
 {
     public class BucketAPIHandler
     {
@@ -11,7 +10,7 @@ namespace StorageController
         {
 
             Response<string> responseObj;
-            using(HttpClient client = new HttpClient())
+            using (HttpClient client = new HttpClient())
             {
 
                 HttpResponseMessage response = await client.GetAsync($"http://{Environment.GetEnvironmentVariable("BUCK_IP")}:8070/file/{fileID}");
