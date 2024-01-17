@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using static StorageController.Controllers.FileController;
 
 namespace StorageController.Data
 {
@@ -15,7 +16,7 @@ namespace StorageController.Data
             SymmetricSecurityKey securityKey = new(Encoding.UTF8.GetBytes(Program.SECURITY_KEY));
             SigningCredentials signingCredential = new(securityKey, SecurityAlgorithms.HmacSha256);
 
-            Claim[] tokenClaims = new[]
+            Claim[] tokenClaims = 
             {
                 new Claim("userID", userID.ToString())
             };
@@ -28,6 +29,41 @@ namespace StorageController.Data
                 signingCredentials: signingCredential);
 
             return new JwtSecurityTokenHandler().WriteToken(authToken);
+
+        }
+
+        public static async Task<JwtSecurityToken?> ValidateToken(string token)
+        {
+
+            JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+            JwtSecurityToken? tokenJWT;
+
+            try
+            {
+                handler.ValidateToken(token, Program.Validation_Parameters, out SecurityToken tokenValidated);
+                tokenJWT = tokenValidated as JwtSecurityToken;
+            }
+            catch
+            {
+                return null;
+            }
+
+            return tokenJWT;
+
+        }
+
+        public static async Task<int?> GetUserIDFromToken(JwtSecurityToken token)
+        {
+
+            int? userID = null;
+
+            try
+            {
+                userID = int.Parse(token.Claims.FirstOrDefault(claim => claim.Type == "userID").Value);
+            }
+            catch { }
+
+            return userID;
 
         }
 
