@@ -1,7 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using Microsoft.IdentityModel.Tokens;
 using StorageController.Data;
+using StorageController.Data.Models;
+using System.Buffers.Text;
 using System.Data;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
+using static StorageController.Controllers.FileController;
 
 namespace StorageController.Controllers
 {
@@ -11,7 +19,7 @@ namespace StorageController.Controllers
     public class FileController : Controller
     {
 
-        public struct FileData
+        public struct FileDataReturn
         {
             public string Filename { get; set; }
             public string Filetype { get; set; }
@@ -24,6 +32,7 @@ namespace StorageController.Controllers
             public string Filename { get; set; }
             public string Filetype { get; set; }
             public string Content { get; set; }
+            public bool Folder { get; set; }
         }
 
         public struct FileRequest
@@ -39,33 +48,50 @@ namespace StorageController.Controllers
         public async Task<string> GetFile([FromBody] FileRequest fileRequest, [FromRoute] int id)
         {
 
-            string sql_Get_File = "SELECT FileID, FileName, FileType FROM ethereal.Files WHERE FileID = @FileID;";
+            JwtSecurityToken? token = await AuthManager.ValidateToken(fileRequest.AuthToken);
 
-            SqlParameter[] parameters = new SqlParameter[]
+            if (token == null)
             {
-                new SqlParameter("@FileID", id)
-            };
+                return await new Response<string>(false, "Invalid auth token.").Serialize();
+            }
 
-            DataHandler db = DataHandler.instance;
-            DataTable dataTable = await db.ParametizedQuery(sql_Get_File, parameters);
-            Dictionary<string, string[]>? entries = await db.DataTableToDictionary(dataTable);
+            int? userID = await AuthManager.GetUserIDFromToken(token);
 
-            if (entries == null)
-                return await new Response<string>(false, "Invalid file").Serialize();
+            if (userID == null)
+            {
+                return await new Response<string>(false, "Invalid auth token.").Serialize();
+            }
 
-            Response<string> fileContent = await BucketAPIHandler.GetFileContent(int.Parse(entries["FileID"][0]));
+            DataHandler db = new();
+
+            FileData? file = db.Files.FirstOrDefault(file => file.FileID == id);
+
+            if (file == null)
+            {
+                return await new Response<string>(false, "Invalid file.").Serialize();
+            }
+
+            UserFile? userFile = db.UserFiles.FirstOrDefault(userFile => userFile.FileID == id && userFile.UserID == userID);
+
+            if (userFile == null) 
+            {
+                return await new Response<string>(false, "You don't have access to this file").Serialize();
+            }
+
+            Response<string> fileContent = await BucketAPIHandler.GetFileContent(id);
 
             if (!fileContent.Success)
                 return await new Response<string>(false, "Cannot find file contents").Serialize();
 
-            FileData fileData = new FileData
+            FileDataReturn fileData = new FileDataReturn
             {
-                Filename = entries["FileName"][0],
-                Filetype = entries["FileType"][0],
+                Filename = file.FileName,
+                Filetype = file.FileType,
                 Content = fileContent.Message
             };
 
-            return await new Response<FileData>(true, fileData).Serialize();
+            return await new Response<FileDataReturn>(true, fileData).Serialize();
+
         }
 
         public struct FileSaveInfo
@@ -80,23 +106,52 @@ namespace StorageController.Controllers
         public async Task<string> SaveFile([FromBody] FileDataSave fileData)
         {
 
-            string sql_Save_File = "INSERT INTO ethereal.Files (FileName, FileType, Folder) VALUES (@FileName, @FileType, 0)";
+            JwtSecurityToken? token = await AuthManager.ValidateToken(fileData.AuthToken);
 
-            SqlParameter[] parameters =
+            if (token == null)
             {
-                new SqlParameter("@FileName", fileData.Filename),
-                new SqlParameter("@FileType", fileData.Filetype)
-            };
+                return await new Response<string>(false, "Invalid auth token.").Serialize();
+            }
 
-            DataHandler db = DataHandler.instance;
-            DataTable rows = await db.StaticQuery("SELECT FileName FROM ethereal.Files");
+            int? userID = await AuthManager.GetUserIDFromToken(token);
 
-            int nextID = rows.Rows.Count + 1;
+            if (userID == null)
+            {
+                return await new Response<string>(false, "Invalid auth token.").Serialize();
+            }
+
+            DataHandler db = new DataHandler();
+            int nextID = db.Files.Count() + 1;
+
+            User? userData = db.Users.FirstOrDefault(user => user.UserID == userID);
+            if (userData == null)
+            {
+                return await new Response<string>(false, "Invalid user.").Serialize();
+            }
+
+            FileData fileSave = new();
+            fileSave.FileName = fileData.Filename;
+            fileSave.FileType = fileData.Filetype;
+            fileSave.BucketLocation = db.Buckets.First();
+
+            UserFile userFileSave = new();
+            userFileSave.Privilege = "Owner";
+            userFileSave.UserData = userData;
+               
+
             Response<string> savedFile = (await BucketAPIHandler.SendFileContent(nextID, fileData.Content));
 
             int success = 0;
             if (savedFile.Success)
-                success = await db.ParametizedNonQuery(sql_Save_File, parameters);
+            {
+                await db.Files.AddAsync(fileSave);
+                await db.SaveChangesAsync();
+
+                userFileSave.File = fileSave;
+                await db.UserFiles.AddAsync(userFileSave);
+                success = await db.SaveChangesAsync();
+
+            }
 
             if (success < 1)
                 return await new Response<string>(false, "Could not save file.").Serialize();
@@ -106,6 +161,7 @@ namespace StorageController.Controllers
                 Message = "File Saved.",
                 FileID = nextID
             };
+
             return await new Response<FileSaveInfo>(true, fileSaveInfo).Serialize();
         }
     }
