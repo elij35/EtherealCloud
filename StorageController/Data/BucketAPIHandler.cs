@@ -9,11 +9,14 @@ namespace StorageController.Data
         public static async Task<Response<string>> GetFileContent(int fileID)
         {
 
+            string BUCK_IP = Environment.GetEnvironmentVariable("BUCK_IP");
+            string BUCK_PORT = Environment.GetEnvironmentVariable("BUCK_PORT");
+
             Response<string> responseObj;
             using (HttpClient client = new HttpClient())
             {
 
-                HttpResponseMessage response = await client.GetAsync($"http://{Environment.GetEnvironmentVariable("BUCK_IP")}:8070/file/{fileID}");
+                HttpResponseMessage response = await client.GetAsync($"http://{BUCK_IP}:{BUCK_PORT}/file/{fileID}");
                 string responseText = await response.Content.ReadAsStringAsync();
 
                 responseObj = await Response<string>.DeserializeJSON(responseText);
