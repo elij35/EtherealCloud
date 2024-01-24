@@ -1,4 +1,3 @@
-using Ethereal_Cloud.Pages;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -7,6 +6,7 @@ using System.Web;
 using System.Net.Http.Headers;
 using System.Diagnostics.Metrics;
 using Microsoft.AspNetCore.StaticFiles;
+using Ethereal_Cloud.Models;
 
 namespace Ethereal_Cloud.Pages
 {
