@@ -1,8 +1,8 @@
 ﻿@page
-@model Ethereal_Cloud.Pages.BinModel
+@model Ethereal_Cloud.Pages.SettingsModel
 @{
-   <meta charset="utf-8">
-    <title>Bin</title>
+    <meta charset="utf-8">
+    <title>Settings</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     Layout = null;
     <link rel="stylesheet" href="/css/Site.css" asp-append-version="true">
@@ -20,7 +20,7 @@
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link @(Request.Path == "/Upload" || Request.Path == "/" ? "active" : "")" class="icon" asp-area="" asp-page="/Upload">My Files</a>
-                    </li>                    
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link @(Request.Path == "/Bin" || Request.Path == "/" ? "active" : "")" class="icon" asp-area="" asp-page="/Bin">Bin</a>
                     </li>
@@ -37,7 +37,7 @@
     </nav>
 
     <div class="container mt-3">
-        <h3 style="text-align:center;"><b>Bin</b></h3>
-        <p style ="text-align:center;">Here the user will be able to restore or permanently delete files</p>
+        <h3 style="text-align:center;"><b>Settings</b></h3>
+        <p style="text-align:center;">Here the user will be able to change any settings e.g. contrast</p>
     </div>
 }
