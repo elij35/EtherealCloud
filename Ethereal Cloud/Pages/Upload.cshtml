@@ -47,13 +47,13 @@
         </div>
 
         <!-- Appears when the load files button is clicked -->
-        <div class="row">
-            <div class="col-sm" id="uploaded-files">
+        <div class="upload-row">
+            <div class="col-sm">
                 @if (Model.Files != null)
                 {
                     @foreach (var file in Model.Files)
                     {
-                        <div>
+                        <div id="uploaded-files">
                             <span>@file.Filename</span>
                             <a asp-page-handler="Download" asp-route-filename="@file.Filename">Download</a>
                         </div>
