@@ -6,13 +6,13 @@
 
 .upload-box {
     text-align: center;
-    padding: 15px;
+    padding: 5px;
     border: dashed;
     height: fit-content;
     background-color: #dee4ec;
 }
 
-.uploaded-files {
+#uploaded-files {
     background-color: lightcyan;
 }
 
