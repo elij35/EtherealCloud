@@ -12,12 +12,6 @@ body {
     font-family: 'Open Sans', sans-serif;
 }
 
-/*Header & Footer*/
-header, footer {
-    background: #ffffff;
-    padding: 3rem;
-}
-
 .logo {
     width: auto;
     height: 5rem;
@@ -33,42 +27,4 @@ a {
     flex-direction: column;
     justify-content: center;
     text-align: center;
-}
-
-.temp-link {
-    color: #ffffff;
-}
-
-.form input[type="file"] {
-    z-index: 999;
-    line-height: 0;
-    font-size: 50px;
-    position: absolute;
-    opacity: 0;
-    filter: alpha(opacity = 0);
-    -ms-filter: "alpha(opacity=0)";
-    cursor: pointer;
-    _cursor: hand;
-    margin: 0;
-    padding: 0;
-    left: 0;
-}
-
-.add-photo-btn {
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-    text-align: center;
-    background-color: #83b81a;
-    color: #fff;
-    display: block;
-    width: 197px;
-    height: 31px;
-    font-size: 18px;
-    line-height: 30px;
-    float: left;
-}
-
-input[type="text"] {
-    float: left;
 }

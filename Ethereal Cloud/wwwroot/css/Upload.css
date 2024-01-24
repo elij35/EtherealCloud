@@ -1,34 +1,17 @@
-﻿.text-box {
+﻿.temp-refresh-btn {
     text-align: center;
-    padding: 25px;
-    margin-top: 15px;
-    border-radius: 25px;
+    padding: 5px;
     height: fit-content;
-    background-color: #dee4ec;
 }
 
 .upload-box {
     text-align: center;
-    margin-top: 5px;
-    border-radius: 25px;
+    padding: 5px;
     border: dashed;
     height: fit-content;
     background-color: #dee4ec;
-    align-content: center;
 }
 
-.upload-btn-wrapper {
-    position: relative;
-    overflow: hidden;
-    display: inline-block;
-    margin-top: 5px;
-    padding: 5px;
-}
-
-.upload-btn-wrapper input[type=file] {
-    font-size: 100px;
-    position: absolute;
-    left: 0;
-    top: 0;
-    opacity: 0;
+.uploaded-files {
+    background-color: red;
 }

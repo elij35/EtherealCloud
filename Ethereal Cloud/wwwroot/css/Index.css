@@ -111,3 +111,7 @@ button {
 #chk:checked ~ .signup label {
     transform: scale(.6);
 }
+
+.temp-link {
+    color: #ffffff;
+}
