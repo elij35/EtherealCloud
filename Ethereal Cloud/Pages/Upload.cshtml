@@ -24,6 +24,9 @@
                     <li class="nav-item">
                         <a class="nav-link @(Request.Path == "/Bin" || Request.Path == "/" ? "active" : "")" class="icon" asp-area="" asp-page="/Bin">Bin</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(Request.Path == "/Settings" || Request.Path == "/" ? "active" : "")" class="icon" asp-area="" asp-page="/Settings">Settings</a>
+                    </li>
                 </ul>
                 <form class="d-flex">
                     <input class="form-control me-2" type="text" placeholder="Search">
@@ -45,7 +48,7 @@
 
         <!-- Appears when the load files button is clicked -->
         <div class="row">
-            <div class="col-sm">
+            <div class="col-sm" id="uploaded-files">
                 @if (Model.Files != null)
                 {
                     @foreach (var file in Model.Files)
@@ -61,13 +64,13 @@
     </div>
 
     <!-- Upload box fixed to bottom of screen -->
-    <nav class="container mt-3 fixed-bottom" style="margin-bottom: 8px;">
+    <nav class="container mt-3 fixed-bottom" style="margin-bottom: 5px;">
         <div class="upload-box">
             <h3>Upload your files</h3>
             <form method="post" enctype="multipart/form-data" asp-page-handler="Upload">
                 
                 <div class="mb-3" id="file-input-box">
-                    <input class="form-control" type="file" id="formFileMultiple" multiple>
+                    <input class="form-control" type="file" name="uploadedFile" id="fileInput" multiple>
                 </div>
                 
                 <div class="mb-3">
