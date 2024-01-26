@@ -90,6 +90,99 @@ namespace StorageController.Controllers
 
         }
 
+        public struct FolderContentReturn
+        {
+            public FolderDataReturn[] Folders { get; set; }
+            public FileMetaReturn[] Files { get; set; }
+        }
+
+        [HttpPost]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        [Route("/folder/files/{id?}")]
+        public async Task<string> GetFolderContent([FromBody] FileRequest fileRequest, [FromRoute] int? id = null)
+        {
+
+            JwtSecurityToken? token = await AuthManager.ValidateToken(fileRequest.AuthToken);
+
+            if (token == null)
+            {
+                return await new Response<string>(false, "Invalid auth token.").Serialize();
+            }
+
+            int? userID = await AuthManager.GetUserIDFromToken(token);
+
+            if (userID == null)
+            {
+                return await new Response<string>(false, "Invalid auth token.").Serialize();
+            }
+
+            DataHandler db = new();
+            User? user = db.Users.FirstOrDefault(user => user.UserID == userID);
+
+            if (user == null)
+            {
+                return await new Response<string>(false, "Invalid user.").Serialize();
+            }
+
+            Folder? folder = null;
+
+            if (id != null)
+            {
+
+                folder = db.Folders.FirstOrDefault(folder => folder.FolderID == id);
+
+                if (folder == null)
+                    return await new Response<string>(false, "Invalid folder.").Serialize();
+
+                UserFolder? userFolder = db.UserFolders.FirstOrDefault(userFolder => userFolder.UserID == userID && userFolder.FolderID == folder.FolderID);
+
+                if (userFolder == null)
+                {
+                    return await new Response<string>(false, "You do not have access to this folder.").Serialize();
+                }
+
+            }
+
+            IQueryable<UserFile> userFiles = db.UserFiles.Where(userFile => userFile.UserID == userID);
+            IQueryable<UserFolder> userFolders = db.UserFolders.Where(userFolder => userFolder.UserID == userID);
+
+            FileData[] files = db.Files.Where(file => file.FolderData.FolderID == ((folder == null) ? null : folder.FolderID) 
+                                                    && (userFiles.FirstOrDefault(link => link.UserID == userID) != null)).ToArray();
+
+            Folder[] folders = db.Folders.Where(folder => folder.ParentID == id
+                                                        && (userFolders.FirstOrDefault(link => link.UserID == userID) != null)).ToArray();
+
+            FileMetaReturn[] fileData = new FileMetaReturn[files.Length];
+            for (int i = 0; i < files.Length; i++)
+            {
+                fileData[i] = new FileMetaReturn()
+                {
+                    FileID = files[i].FileID,
+                    Filename = files[i].FileName,
+                    Filetype = files[i].FileType
+                };
+            }
+
+            FolderDataReturn[] folderData = new FolderDataReturn[folders.Length];
+            for (int i = 0; i < folderData.Length; i++)
+            {
+                folderData[i] = new()
+                {
+                    FolderID = folders[i].FolderID,
+                    Foldername = folders[i].FolderName
+                };
+            }
+
+            FolderContentReturn folderContentReturn = new()
+            {
+                Files = fileData,
+                Folders = folderData
+            };
+
+            return await new Response<FolderContentReturn>(true, folderContentReturn).Serialize();
+
+        }
 
     }
 }
