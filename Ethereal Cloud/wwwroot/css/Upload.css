@@ -1,38 +1,13 @@
-﻿.temp-refresh-btn {
+﻿/* Button at top of page which will go soon */
+.temp-refresh-btn {
     text-align: center;
     padding: 5px;
     height: fit-content;
 }
 
-.upload-box {
-    text-align: center;
-    padding: 5px;
-    border: dashed;
-    height: 18vh;
-    background-color: #dee4ec;
-}
-
-#uploaded-files {
-    background-color: lightblue;
-    border: solid;
-    border-width: 2px;
-    width: min-content;
-    margin: 10px;
-}
-
-#uploaded-files a p {
-    text-align: center;
-    text-decoration: none;
-    color: black;    
-}
-
-#file-input-box input {
-    width: fit-content;
-    display: inline-block;
-}
-
+/* This is where all the uploaded files are contained */
 #scrollbox {
-    height: 55vh;
+    height: 48vh;
     max-height: inherit;
     border: solid;
     border-width: 2px;
@@ -40,8 +15,38 @@
     overflow-y: scroll;
 }
 
-.upload-img {
-    width: 150px;
-    height: auto;
+/* Everything inside the containers for the files (img and file name) */
+.uploaded-files {
+    background-color: lightblue;
+    border: solid;
+    width: min-content;
+    margin: 5px;
+}
+
+    .uploaded-files img {
+        width: 150px;
+        height: auto;
+        padding-top: 5px;
+    }
+
+    .uploaded-files a p {
+        text-align: center;
+        text-decoration: none;
+        color: black;    
+    }
+
+/* Upload box (at bottom of page) */
+.upload-box {
+    text-align: center;
     padding: 5px;
+    justify-content: center;
+    border: dashed;
+    height: min-content;
+    background-color: #dee4ec;
+}
+
+/* Input box for choosing a file */
+#file-input-box input {
+    width: fit-content;
+    display: inline-block;
 }
