@@ -40,8 +40,9 @@ namespace StorageController.Data
                 await Buckets.AddAsync(bucket);
                 await SaveChangesAsync();
             }
-            catch 
+            catch (Exception e)
             {
+                Console.WriteLine($"{e}");
                 return;
             }
 
@@ -61,5 +62,7 @@ namespace StorageController.Data
         public DbSet<FileData> Files { get; set; }
         public DbSet<UserFile> UserFiles { get; set; }
         public DbSet<Bucket> Buckets { get; set; }
+        public DbSet<Folder> Folders { get; set; }
+        public DbSet<UserFolder> UserFolders { get; set; }
     }
 }
