@@ -40,7 +40,7 @@ namespace StorageController.Controllers
         [HttpPost]
         [Consumes("application/json")]
         [Produces("application/json")]
-        [Route("/file/{id}")]
+        [Route("/v1/file/{id}")]
         public async Task<string> GetFile([FromBody] FileRequest fileRequest, [FromRoute] int id)
         {
 
@@ -99,7 +99,7 @@ namespace StorageController.Controllers
         [HttpPost]
         [Produces("application/json")]
         [Consumes("application/json")]
-        [Route("/folder/files/{id?}")]
+        [Route("/v1/folder/files/{id?}")]
         public async Task<string> GetFolderContent([FromBody] FileRequest fileRequest, [FromRoute] int? id = null)
         {
 

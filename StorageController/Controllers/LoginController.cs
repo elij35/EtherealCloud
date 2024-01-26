@@ -9,7 +9,7 @@ namespace StorageController.Controllers
 {
 
     [ApiController]
-    [Route("/user/login")]
+    [Route("/v1/user/login")]
     public class LoginController : Controller
     {
 

@@ -25,7 +25,7 @@ namespace StorageController.Controllers
             public int? FolderID { get; set; }
         }
 
-        [Route("/file")]
+        [Route("/v1/file")]
         [HttpPost]
         [Consumes("application/json")]
         [Produces("application/json")]
@@ -132,7 +132,7 @@ namespace StorageController.Controllers
             public string FolderName { get; set; }
         }
 
-        [Route("/folder")]
+        [Route("/v1/folder")]
         [HttpPost]
         [Consumes("application/json")]
         [Produces("application/json")]
