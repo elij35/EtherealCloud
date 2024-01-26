@@ -55,7 +55,7 @@
                 {
                     @foreach (var file in Model.Files)
                     {
-                        <div class="uploaded-files">
+                        <div id="uploaded-files">
                             <a asp-page-handler="Download" asp-route-filename="@file.Filename">
                                 <img src="~/Logo.png" alt="logo">
                                 <p>@file.Filename</p>
