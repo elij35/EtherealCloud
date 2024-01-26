@@ -8,17 +8,40 @@
     text-align: center;
     padding: 5px;
     border: dashed;
-    height: fit-content;
+    height: 18vh;
     background-color: #dee4ec;
 }
 
 #uploaded-files {
-    background-color: lightcyan;
+    background-color: lightblue;
     border: solid;
-    border-width: 5px;
+    border-width: 2px;
+    width: min-content;
+    margin: 10px;
+}
+
+#uploaded-files a p {
+    text-align: center;
+    text-decoration: none;
+    color: black;    
 }
 
 #file-input-box input {
     width: fit-content;
     display: inline-block;
+}
+
+#scrollbox {
+    height: 55vh;
+    max-height: inherit;
+    border: solid;
+    border-width: 2px;
+    justify-content: center;
+    overflow-y: scroll;
+}
+
+.upload-img {
+    width: 150px;
+    height: auto;
+    padding: 5px;
 }
