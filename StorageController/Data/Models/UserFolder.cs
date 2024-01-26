@@ -4,26 +4,26 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StorageController.Data.Models
 {
-    [Table("UserFiles", Schema = "ethereal")]
-    [PrimaryKey("FileID", "UserID")]
-    public class UserFile
+    [Table("UserFolders", Schema = "ethereal")]
+    [PrimaryKey("FolderID", "UserID")]
+    public class UserFolder
     {
 
         [Required]
-        public int FileID { get; set; }
+        public int FolderID { get; set; }
 
         [Required]
         public int UserID { get; set; }
 
         [Required]
-        [StringLength(10)]
         public string Privilege { get; set; }
 
         /// <summary>
         /// Foreign key section
         /// </summary>
+        public Folder FolderData { get; set; }
+
         public User UserData { get; set; }
-        public FileData File { get; set; }
 
     }
 }

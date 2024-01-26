@@ -30,6 +30,9 @@ namespace StorageController.Data.Models
         [Required]
         public bool Administrator { get; set; }
 
+        /// <summary>
+        /// Foreign key section
+        /// </summary>
         public ICollection<UserFile> UserFiles { get; set; }
 
     }

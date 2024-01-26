@@ -10,10 +10,7 @@ namespace StorageController.Data.Models
         [Key]
         public int FileID { get; set; }
 
-        [Required]
-        public bool Folder { get; set; }
-
-        [StringLength(20)]
+        [StringLength(64)]
         public string FileType { get; set; }
 
         [Required]
@@ -23,17 +20,20 @@ namespace StorageController.Data.Models
         [StringLength(64)]
         public string? FilePassword { get; set; }
 
-        public int? FileRoute { get; set; }
-
-        [Required]
-        public int BucketID { get; set; }
-
         public DateTime? CreationDate { get; set; }
 
         public int? RedundantID { get; set; }
 
-        public ICollection<UserFile> UserFiles { get; set; }
+        [Required]
+        public int BucketID { get; set; }
 
+        public int? FolderID { get; set; }
+
+        /// <summary>
+        /// Foreign key section
+        /// </summary>
+        public ICollection<UserFile> UserFiles { get; set; }
+        public Folder? FolderData { get; set; }
         public Bucket BucketLocation { get; set; }
 
     }

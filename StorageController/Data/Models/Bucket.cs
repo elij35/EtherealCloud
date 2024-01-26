@@ -17,6 +17,9 @@ namespace StorageController.Data.Models
         [Required]
         public string BucketPort { get; set; }
 
+        /// <summary>
+        /// Foreign key section
+        /// </summary>
         public ICollection<FileData> Files { get; set; }
 
     }
