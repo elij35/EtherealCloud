@@ -55,7 +55,7 @@ namespace StorageController.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(ConnectionString);
+            optionsBuilder.UseSqlServer(ConnectionString, sqlOptions => sqlOptions.EnableRetryOnFailure(10));
         }
 
         public DbSet<User> Users { get; set; }
