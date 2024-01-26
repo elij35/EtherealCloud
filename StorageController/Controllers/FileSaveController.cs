@@ -125,5 +125,78 @@ namespace StorageController.Controllers
             public int? ParentFolder {  get; set; }
 
         }
+
+        public struct FolderReturnData
+        {
+            public int FolderID { get; set; }
+            public string FolderName { get; set; }
+        }
+
+        [Route("/folder")]
+        [HttpPost]
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        public async Task<string> CreateFolder([FromBody] FolderSaveData folderSaveData)
+        {
+
+            JwtSecurityToken? token = await AuthManager.ValidateToken(folderSaveData.AuthToken);
+
+            if (token == null)
+            {
+                return await new Response<string>(false, "Invalid auth token.").Serialize();
+            }
+
+            int? userID = await AuthManager.GetUserIDFromToken(token);
+
+            if (userID == null)
+            {
+                return await new Response<string>(false, "Invalid auth token.").Serialize();
+            }
+
+            DataHandler db = new();
+
+            Folder? parentFolder = null;
+            if (folderSaveData.ParentFolder != null)
+            {
+                parentFolder = db.Folders.FirstOrDefault(folder => folder.FolderID == folderSaveData.ParentFolder);
+
+                if (parentFolder == null)
+                {
+                    return await new Response<string>(false, "Invalid folder.").Serialize();
+                }
+
+                UserFolder? userFolder = db.UserFolders.FirstOrDefault(userFolder => userFolder.UserID == userID && userFolder.FolderID == folderSaveData.ParentFolder);
+
+                if (userFolder == null)
+                {
+                    return await new Response<string>(false, "Can't access this folder").Serialize();
+                }
+            }
+
+            Folder folder = new();
+            folder.ParentID = (parentFolder == null) ? null : parentFolder.FolderID;
+            folder.FolderName = folderSaveData.FolderName;
+
+            await db.Folders.AddAsync(folder);
+            await db.SaveChangesAsync();
+
+            UserFolder folderLink = new();
+            folderLink.UserID = userID.Value;
+            folderLink.FolderID = folder.FolderID;
+            folderLink.Privilege = "Owner";
+
+            await db.UserFolders.AddAsync(folderLink);
+            await db.SaveChangesAsync();
+
+            FolderReturnData folderReturnData = new FolderReturnData()
+            {
+                FolderID = folder.FolderID,
+                FolderName = folder.FolderName
+            };
+
+            return await new Response<FolderReturnData>(true, folderReturnData).Serialize();
+
+        }
+
     }
 }
