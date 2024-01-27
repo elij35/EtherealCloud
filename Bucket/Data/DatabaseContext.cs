@@ -33,7 +33,7 @@ namespace Bucket.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(CONNECTION_STRING);
+            optionsBuilder.UseSqlServer(CONNECTION_STRING, sqlOptions => sqlOptions.EnableRetryOnFailure(10));
         }
 
         public DbSet<FileData> FileData { get; set; }
