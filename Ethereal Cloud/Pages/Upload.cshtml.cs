@@ -1,12 +1,8 @@
-using Ethereal_Cloud.Pages;
+using Ethereal_Cloud.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Text;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Text.Json;
-using System.Web;
-using System.Net.Http.Headers;
-using System.Diagnostics.Metrics;
 using Microsoft.AspNetCore.StaticFiles;
+using System.Text;
 
 namespace Ethereal_Cloud.Pages
 {
@@ -78,8 +74,6 @@ namespace Ethereal_Cloud.Pages
                     }
 
                 }
-
-
                 counter++;
             }
 
@@ -136,7 +130,7 @@ namespace Ethereal_Cloud.Pages
                     using (HttpClient client = new HttpClient())
                     {
                         var content = new StringContent($"{{\"authtoken\":\"Test\",\"filename\":\"{newFile.Filename}\",\"filetype\":\"{newFile.Filetype}\",\"content\":\"{newFile.Content}\"}}", Encoding.UTF8, "application/json");
-                        var response = await client.PostAsync(apiUrl,content);
+                        var response = await client.PostAsync(apiUrl, content);
 
                         if (response.IsSuccessStatusCode)
                         {

@@ -1,48 +1,52 @@
-﻿.text-box {
+﻿/* Button at top of page which will go soon */
+.temp-refresh-btn {
     text-align: center;
-    padding: 25px;
-    margin-top: 15px;
-    margin-left: 310px;
-    margin-right: 15px;
-    border-radius: 25px;
-    height: 600px;
-    background-color: #dee4ec;
+    padding: 5px;
+    height: fit-content;
 }
 
-/* Upload box */
+/* This is where all the uploaded files are contained */
+#scrollbox {
+    height: 48vh;
+    max-height: inherit;
+    border: solid;
+    border-width: 2px;
+    justify-content: center;
+    overflow-y: scroll;
+}
+
+/* Everything inside the containers for the files (img and file name) */
+#uploaded-files {
+    background-color: lightblue;
+    border: solid;
+    width: min-content;
+    margin: 5px;
+}
+
+    #uploaded-files img {
+        width: 150px;
+        height: auto;
+        padding-top: 5px;
+    }
+
+    #uploaded-files a p {
+        text-align: center;
+        text-decoration: none;
+        color: black;    
+    }
+
+/* Upload box (at bottom of page) */
 .upload-box {
     text-align: center;
-    margin-top: 5px;
-    margin-left: 310px;
-    margin-right: 15px;
-    border-radius: 25px;
-    border: dashed;
-    height: fit-content;
-    background-color: #dee4ec;
-    align-content: center;
-}
-
-.upload-btn-wrapper {
-    position: relative;
-    overflow: hidden;
-    display: inline-block;
-    margin-top: 5px;
     padding: 5px;
+    justify-content: center;
+    border: dashed;
+    height: min-content;
+    background-color: #dee4ec;
 }
 
-.btn {
-    background-color: mediumpurple;
-    padding: 8px 20px;
-    border-radius: 8px;
-    font-size: 20px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.upload-btn-wrapper input[type=file] {
-    font-size: 100px;
-    position: absolute;
-    left: 0;
-    top: 0;
-    opacity: 0;
+/* Input box for choosing a file */
+#file-input-box input {
+    width: fit-content;
+    display: inline-block;
 }
