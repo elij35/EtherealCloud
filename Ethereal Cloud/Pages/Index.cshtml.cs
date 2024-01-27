@@ -20,7 +20,7 @@ namespace Ethereal_Cloud.Pages
 
         public async Task OnPostLoginAsync()
         {
-            string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/user/login";
+            string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/v1/user/login";
 
             using (HttpClient client = new HttpClient())
             {
@@ -50,7 +50,7 @@ namespace Ethereal_Cloud.Pages
 
         public async Task OnPostSignupAsync()
         {
-            string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/user/signup";
+            string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/v1/user/signup";
 
             using (HttpClient client = new HttpClient())
             {

@@ -2,51 +2,39 @@ using Ethereal_Cloud.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.StaticFiles;
+using Newtonsoft.Json;
 using System.Text;
 
 namespace Ethereal_Cloud.Pages
 {
+    [DisableRequestSizeLimit] //Disables the file upload limit
     public class UploadModel : PageModel
     {
         [BindProperty]
         public string Username { get; set; }
 
-        // Helper method to get or initialize the Files list from session
-        public List<FileModel> Files
+        //list of files to be shown to user
+        public List<FileInfo> Files;
+
+        public async Task<IActionResult> OnGet()
         {
-            get
-            {
-                if (HttpContext.Session.TryGetValue("Files", out byte[] data) && data != null)
-                {
-                    string json = Encoding.UTF8.GetString(data);
-                    return Newtonsoft.Json.JsonConvert.DeserializeObject<List<FileModel>>(json);
-                }
-                else
-                {
-                    return new List<FileModel>();
-                }
-            }
-            set
-            {
-                string json = Newtonsoft.Json.JsonConvert.SerializeObject(value);
-                HttpContext.Session.Set("Files", Encoding.UTF8.GetBytes(json));
-            }
-        }
-
-        public async Task OnPostFileAsync()
-        {
-
-            Files = new List<FileModel>();
-
             bool fileFound = true;
             int counter = 1;
-            while (fileFound)
+            while (fileFound) //TODO: THE LOOP WONT BE NEEDED AS A LIST SHOULD BE RETURNED
             {
-                string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/file/" + counter;
+                string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/v1/file/" + counter;
+
+                string authToken = Helpers.AuthTokenManagement.GetToken(HttpContext);
 
                 using (HttpClient client = new HttpClient())
                 {
-                    var content = new StringContent($"{{\"authtoken\":\"Temp\"}}", Encoding.UTF8, "application/json");
+                    //create json object
+                    var dataObject = new
+                    {
+                        authtoken = authToken
+                    };
+                    var content = new StringContent(JsonConvert.SerializeObject(dataObject), Encoding.UTF8, "application/json");
+
                     var response = await client.PostAsync(apiUrl, content);
 
                     if (response.IsSuccessStatusCode)
@@ -56,27 +44,30 @@ namespace Ethereal_Cloud.Pages
 
                         if (responseObject.Success)
                         {
-                            Response<FileModel> file = await Response<FileModel>.DeserializeJSON(stringResponse);
-                            ShowPopup(file.Message.Content);
+                            Response<FileInfo> file = await Response<FileInfo>.DeserializeJSON(stringResponse); //THE MESSAGE SHOULD ONLY RETURN FILEINFO (FILENAME, FILETYPE) THE DATA IS GOTTEN ON DOWNLOAD
                             var files = Files;
                             files.Add(file.Message);
                             Files = files;
                         }
                         else
                         {
+                            ShowPopup("Failure: " + responseObject.Message);
                             fileFound = false;
                         }
 
                     }
                     else
                     {
-                        ShowPopup("Failure");
+                        ShowPopup("Failure: " + response.Content);
                     }
 
                 }
+
+
                 counter++;
             }
 
+            return Page();
         }
 
         private void ShowPopup(string status)
@@ -86,28 +77,72 @@ namespace Ethereal_Cloud.Pages
 
 
 
-        public IActionResult OnGetDownload(string filename)
+        public async Task<IActionResult> OnGetDownload(string filename)
         {
             var files = Files;
 
             var file = files?.FirstOrDefault(f => f.Filename == filename);
-
 
             if (file == null)
             {
                 return NotFound();
             }
 
-            byte[] fileContents = Convert.FromBase64String(file.Content);
+            string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/v1/file/" + "1";//counter
 
-            // Determine content type based on file extension
-            var contentTypeProvider = new FileExtensionContentTypeProvider();
-            if (!contentTypeProvider.TryGetContentType(file.Filename, out var contentType))
+            string authToken = Helpers.AuthTokenManagement.GetToken(HttpContext);
+
+            using (HttpClient client = new HttpClient())
             {
-                contentType = "application/octet-stream";
+                //create json object
+                var dataObject = new
+                {
+                    authtoken = authToken,
+                    filename = file.Filename
+                };
+                var content = new StringContent(JsonConvert.SerializeObject(dataObject), Encoding.UTF8, "application/json");
+
+                var response = await client.PostAsync(apiUrl, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string stringResponse = await response.Content.ReadAsStringAsync();
+                    Response<object> responseObject = await Response<object>.DeserializeJSON(stringResponse);
+
+                    if (responseObject.Success)
+                    {
+                        Response<string> fileContent = await Response<string>.DeserializeJSON(stringResponse); //message should only contain filecontent
+
+                        byte[] fileContents = Convert.FromBase64String(fileContent.Message);
+
+                        // Determine content type based on file extension
+                        var contentTypeProvider = new FileExtensionContentTypeProvider();
+                        if (!contentTypeProvider.TryGetContentType(file.Filename, out var contentType))
+                        {
+                            contentType = "application/octet-stream";
+                        }
+
+                        return File(fileContents, contentType, file.Filename);
+
+
+
+
+
+                    }
+                    else
+                    {
+                        ShowPopup("Failure: " + responseObject.Message);
+                    }
+
+                }
+                else
+                {
+                    ShowPopup("Failure: " + response.Content);
+                }
+
             }
 
-            return File(fileContents, contentType, file.Filename);
+            return null;
         }
 
 
@@ -127,9 +162,21 @@ namespace Ethereal_Cloud.Pages
 
                     string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/file";
 
+                    string authToken = Helpers.AuthTokenManagement.GetToken(HttpContext);
+
                     using (HttpClient client = new HttpClient())
                     {
-                        var content = new StringContent($"{{\"authtoken\":\"Test\",\"filename\":\"{newFile.Filename}\",\"filetype\":\"{newFile.Filetype}\",\"content\":\"{newFile.Content}\"}}", Encoding.UTF8, "application/json");
+                        //create json object
+                        var dataObject = new
+                        {
+                            authtoken = authToken,
+                            filename = newFile.Filename,
+                            filetype = newFile.Filetype,
+                            content = newFile.Content,
+                            folder = ""
+                        };
+                        var content = new StringContent(JsonConvert.SerializeObject(dataObject), Encoding.UTF8, "application/json");
+
                         var response = await client.PostAsync(apiUrl, content);
 
                         if (response.IsSuccessStatusCode)
