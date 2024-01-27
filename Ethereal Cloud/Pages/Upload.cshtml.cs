@@ -18,7 +18,6 @@ namespace Ethereal_Cloud.Pages
 
         public async Task<IActionResult> OnGet()
         {
-            
             bool fileFound = true;
             int counter = 1;
             while (fileFound) //TODO: THE LOOP WONT BE NEEDED AS A LIST SHOULD BE RETURNED
@@ -68,7 +67,7 @@ namespace Ethereal_Cloud.Pages
 
                 counter++;
             }
-            
+
             return Page();
         }
 
@@ -163,12 +162,15 @@ namespace Ethereal_Cloud.Pages
                         Content = Convert.ToBase64String(stream.ToArray())
                     };
 
-                    string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/file";
+                    string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/v1/file";
 
                     string authToken = Helpers.AuthTokenManagement.GetToken(HttpContext);
 
                     using (HttpClient client = new HttpClient())
                     {
+                        //Where folder the user is in
+                        int? currentFolder = null;
+
                         //create json object
                         var dataObject = new
                         {
@@ -176,7 +178,7 @@ namespace Ethereal_Cloud.Pages
                             filename = newFile.Filename,
                             filetype = newFile.Filetype,
                             content = newFile.Content,
-                            folder = ""
+                            folder = currentFolder
                         };
                         var content = new StringContent(JsonConvert.SerializeObject(dataObject), Encoding.UTF8, "application/json");
 

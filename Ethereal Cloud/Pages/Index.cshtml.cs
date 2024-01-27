@@ -36,8 +36,21 @@ namespace Ethereal_Cloud.Pages
 
                     if (login.Success == true)
                     {
-                        //Valid login goto the next page
-                        ShowPopup(login.Message);
+                        //Valid login
+
+                        //save the auth token as a cookie
+                        //AuthTokenManagement.SetToken(HttpContext, login.Message);
+
+                        var options = new CookieOptions
+                        {
+                            HttpOnly = true,
+                            Secure = true, //for HTTPS
+                        };
+
+                        Response.Cookies.Append("AuthToken", login.Message, options);
+
+                        //goto the next page
+                        //ShowPopup(login.Message);
                         Response.Redirect("/Upload");
                     }
                     else
@@ -68,7 +81,7 @@ namespace Ethereal_Cloud.Pages
                         if (signup.Success == true)
                         {
                             //Valid Signup goto the next page
-                            Response.Redirect("/Upload");
+                            //Response.Redirect("/Upload");
                         }
                         else
                         {
