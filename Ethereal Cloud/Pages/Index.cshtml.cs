@@ -1,5 +1,7 @@
+using Ethereal_Cloud.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.IO;
 using System.Text;
 
 namespace Ethereal_Cloud.Pages
@@ -20,85 +22,71 @@ namespace Ethereal_Cloud.Pages
 
         public async Task OnPostLoginAsync()
         {
-            string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/v1/user/login";
-
-            using (HttpClient client = new HttpClient())
-            {
-                var content = new StringContent($"{{\"username\":\"{Email}\",\"password\":\"{Password}\"}}", Encoding.UTF8, "application/json");
-                var response = await client.PostAsync(apiUrl, content);
-
-
-                if (response.IsSuccessStatusCode)
+            //create body object
+            var dataObject = new Dictionary<string, object?>
                 {
-                    string stringResponse = await response.Content.ReadAsStringAsync();
+                    { "Username", Username },
+                    { "Email", Email },
+                    { "Password", Password }
+                };
 
-                    Response<string> login = await Response<string>.DeserializeJSON(stringResponse);
+            //Make request
+            Message response = (Message)await ApiRequest.Files(ViewData, HttpContext, "v1/user/login", dataObject);
 
-                    if (login.Success == true)
-                    {
-                        //Valid login
+            if (response != null)
+            {
+                //Valid login
+                Logger.LogToConsole(ViewData, "Successful: " + response.message);
 
-                        //save the auth token as a cookie
-                        //AuthTokenManagement.SetToken(HttpContext, login.Message);
+                //save the auth token in a cookie
+                var options = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true, //for HTTPS
+                };
+                Response.Cookies.Append("AuthToken", response.message, options);
 
-                        var options = new CookieOptions
-                        {
-                            HttpOnly = true,
-                            Secure = true, //for HTTPS
-                        };
-
-                        Response.Cookies.Append("AuthToken", login.Message, options);
-
-                        //goto the next page
-                        //ShowPopup(login.Message);
-                        Response.Redirect("/Upload");
-                    }
-                    else
-                    {
-                        ShowPopup("Invalid: " + login.Message);
-                    }
-                }
+                //goto the my files page
+                Response.Redirect("/Upload");
             }
+            else
+            {
+                Logger.LogToConsole(ViewData, "Invalid: Couldn't signup");
+            }
+ 
         }
 
         public async Task OnPostSignupAsync()
         {
-            string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/v1/user/signup";
-
-            using (HttpClient client = new HttpClient())
+            ViewData["logger"] = "Successful: test yay!";
+            if (Passwordconf == Password)
             {
-                var content = new StringContent($"{{\"username\":\"{Username}\",\"email\":\"{Email}\",\"password\":\"{Password}\",\"confpassword\":\"{Passwordconf}\"}}", Encoding.UTF8, "application/json");
-                var response = await client.PostAsync(apiUrl, content);
-
-                if (Passwordconf == Password)
-                {
-                    if (response.IsSuccessStatusCode)
+                //create body object
+                var dataObject = new Dictionary<string, object?>
                     {
-                        string stringResponse = await response.Content.ReadAsStringAsync();
+                        { "Username", Username },
+                        { "Email", Email },
+                        { "Password", Password }
+                    };
 
-                        Response<string> signup = await Response<string>.DeserializeJSON(stringResponse);
+                //Make request
+                Message response = (Message)await ApiRequest.Files(ViewData, HttpContext, "v1/user/signup", dataObject);
 
-                        if (signup.Success == true)
-                        {
-                            //Valid Signup goto the next page
-                            //Response.Redirect("/Upload");
-                        }
-                        else
-                        {
-                            ShowPopup("Invalid: " + signup.Message);
-                        }
-                    }
+                if(response != null)
+                {
+                    //Valid Signup
+                    Logger.LogToConsole(ViewData, "Successful: " + response.message);
                 }
                 else
                 {
-                    ShowPopup("Invalid: passwords must match!");
+                    Logger.LogToConsole(ViewData, "Invalid: Couldn't signup");
                 }
             }
-        }
-
-        private void ShowPopup(string status)
-        {
-            ViewData["PopupStatus"] = status;
+            else
+            {
+                Logger.LogToConsole(ViewData, "Invalid: passwords must match!");
+            }
+            
         }
     }
 }

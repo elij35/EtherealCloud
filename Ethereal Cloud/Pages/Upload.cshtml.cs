@@ -1,3 +1,4 @@
+using Ethereal_Cloud.Helpers;
 using Ethereal_Cloud.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -16,13 +17,17 @@ namespace Ethereal_Cloud.Pages
         //list of files to be shown to user
         public List<FileInfo> Files;
 
-        public async Task<IActionResult> OnGet()
+        public async Task<IActionResult> OnGet(int? folderId)
         {
+            /*
+            //users current folder location
+            folderId = null;
+
             bool fileFound = true;
             int counter = 1;
             while (fileFound) //TODO: THE LOOP WONT BE NEEDED AS A LIST SHOULD BE RETURNED
             {
-                string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/v1/file/" + counter;
+                string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/v1/folder/files/" + folderId;
 
                 string authToken = Helpers.AuthTokenManagement.GetToken(HttpContext);
 
@@ -51,14 +56,14 @@ namespace Ethereal_Cloud.Pages
                         }
                         else
                         {
-                            ShowPopup("Failure: " + responseObject.Message);
+                            Logger.LogToConsole(ViewData, "Failure: " + responseObject.Message);
                             fileFound = false;
                         }
 
                     }
                     else
                     {
-                        ShowPopup("Failure: " + response.Content);
+                        Logger.LogToConsole(ViewData, "Failure: " + response.Content);
                         fileFound = false;
                     }
 
@@ -69,14 +74,9 @@ namespace Ethereal_Cloud.Pages
             }
 
             return Page();
+            */
+            return null;
         }
-
-        private void ShowPopup(string status)
-        {
-            ViewData["PopupStatus"] = status;
-        }
-
-
 
         public async Task<IActionResult> OnGetDownload(string filename)
         {
@@ -132,13 +132,13 @@ namespace Ethereal_Cloud.Pages
                     }
                     else
                     {
-                        ShowPopup("Failure: " + responseObject.Message);
+                        Logger.LogToConsole(ViewData, "Failure: " + responseObject.Message);
                     }
 
                 }
                 else
                 {
-                    ShowPopup("Failure: " + response.Content);
+                    Logger.LogToConsole(ViewData, "Failure: " + response.Content);
                 }
 
             }
@@ -154,63 +154,38 @@ namespace Ethereal_Cloud.Pages
             {
                 using (var stream = new MemoryStream())
                 {
-                    await uploadedFile.CopyToAsync(stream);
-                    var newFile = new FileModel
+                    //Where folder the user is in
+                    int? currentFolder = null;
+
+                    //create file object
+                    var dataObject = new Dictionary<string, object?>
                     {
-                        Filename = uploadedFile.FileName,
-                        Filetype = Path.GetExtension(uploadedFile.FileName),
-                        Content = Convert.ToBase64String(stream.ToArray())
+                        { "filename", uploadedFile.FileName },
+                        { "filetype", Path.GetExtension(uploadedFile.FileName) },
+                        { "content", Convert.ToBase64String(stream.ToArray()) },
+                        { "folder", currentFolder }
                     };
 
-                    string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/v1/file";
+                    //Make request
+                    var response = await ApiRequest.Files(ViewData, HttpContext, "v1/file",  dataObject);
 
-                    string authToken = Helpers.AuthTokenManagement.GetToken(HttpContext);
-
-                    using (HttpClient client = new HttpClient())
+                    if (response != null)
                     {
-                        //Where folder the user is in
-                        int? currentFolder = null;
-
-                        //create json object
-                        var dataObject = new
-                        {
-                            authtoken = authToken,
-                            filename = newFile.Filename,
-                            filetype = newFile.Filetype,
-                            content = newFile.Content,
-                            folder = currentFolder
-                        };
-                        var content = new StringContent(JsonConvert.SerializeObject(dataObject), Encoding.UTF8, "application/json");
-
-                        var response = await client.PostAsync(apiUrl, content);
-
-                        if (response.IsSuccessStatusCode)
-                        {
-                            string stringResponse = await response.Content.ReadAsStringAsync();
-                            //response: success ,message        message: message, fileid
-
-                            Response<object> responseObject = await Response<object>.DeserializeJSON(stringResponse);
-
-                            if (!responseObject.Success)
-                            {
-                                ShowPopup("Response failed:" + responseObject.Message);
-                            }
-
-                        }
-                        else
-                        {
-                            ShowPopup("Failure");
-                        }
-
+                        //Reload the page to refresh files get
+                        return Page();
+                    }
+                    else
+                    {
+                        return null;
                     }
                 }
             }
             else
             {
-                ShowPopup("Invalid file upload");
+                Logger.LogToConsole(ViewData, "Invalid file upload");
             }
             
-            return Page();
+            return null;
         }
 
     }

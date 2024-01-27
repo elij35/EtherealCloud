@@ -11,12 +11,13 @@ namespace Ethereal_Cloud.Helpers
             {
                 HttpOnly = true,
                 Secure = true, //for HTTPS
+                //Expires = DateTimeOffset.UtcNow.AddMinutes(30) //expires in 30 mins
             };
            
             context.Response.Cookies.Append("AuthToken", token, options);
         }
 
-        public static string GetToken(HttpContext context)
+        public static string? GetToken(HttpContext context)
         {
             return context.Request.Cookies["AuthToken"];
         }

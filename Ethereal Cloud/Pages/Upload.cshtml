@@ -79,4 +79,12 @@
             </form>
         </div>
     </nav>
+
+    <!-- Console logger -->
+    <script>
+        var logger = '@ViewData["logger"]';
+        if (logger !== null) {
+            console.log(logger);
+        }
+    </script>
 }
