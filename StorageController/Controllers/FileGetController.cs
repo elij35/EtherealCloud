@@ -12,7 +12,6 @@ namespace StorageController.Controllers
 
         public struct FileDataReturn
         {
-            public int FileID { get; set; }
             public string Filename { get; set; }
             public string Filetype { get; set; }
             public string Content { get; set; }
@@ -74,7 +73,14 @@ namespace StorageController.Controllers
                 return await new Response<string>(false, "You don't have access to this file").Serialize();
             }
 
-            Response<string> fileContent = await BucketAPIHandler.GetFileContent(id, file.BucketLocation);
+            Bucket? bucket = db.Buckets.FirstOrDefault(bucket => bucket.BucketID == file.BucketID);
+
+            if (bucket == null)
+            {
+                return await new Response<string>(false, "Invalid bucket.").Serialize();
+            }
+
+            Response<string> fileContent = await BucketAPIHandler.GetFileContent(id, bucket);
 
             if (!fileContent.Success)
                 return await new Response<string>(false, "Cannot find file contents").Serialize();
