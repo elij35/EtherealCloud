@@ -18,6 +18,7 @@ namespace Ethereal_Cloud.Pages
 
         public async Task<IActionResult> OnGet()
         {
+            
             bool fileFound = true;
             int counter = 1;
             while (fileFound) //TODO: THE LOOP WONT BE NEEDED AS A LIST SHOULD BE RETURNED
@@ -59,6 +60,7 @@ namespace Ethereal_Cloud.Pages
                     else
                     {
                         ShowPopup("Failure: " + response.Content);
+                        fileFound = false;
                     }
 
                 }
@@ -66,7 +68,7 @@ namespace Ethereal_Cloud.Pages
 
                 counter++;
             }
-
+            
             return Page();
         }
 
@@ -148,6 +150,7 @@ namespace Ethereal_Cloud.Pages
 
         public async Task<IActionResult> OnPostUploadAsync(IFormFile uploadedFile)
         {
+            
             if (uploadedFile != null && uploadedFile.Length > 0)
             {
                 using (var stream = new MemoryStream())
@@ -204,8 +207,8 @@ namespace Ethereal_Cloud.Pages
             {
                 ShowPopup("Invalid file upload");
             }
-
-            return null;
+            
+            return Page();
         }
 
     }
