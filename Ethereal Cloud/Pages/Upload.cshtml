@@ -5,71 +5,134 @@
     <title>My Files</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     Layout = null;
-    <link rel="stylesheet" href="/css/Site.css" asp-append-version="true">
-    <link rel="stylesheet" href="/css/Upload.css" asp-append-version="true">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="/css/Site.css" asp-append-version="true">
+    <link rel="stylesheet" href="/css/Upload.css" asp-append-version="true">
+
 
     <!-- Top Navigation bar -->
-    <div class="upload-page">
-        <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-            <div class="container">
-                <img src="~/Logo.png" alt="logo" class="logo">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="mynavbar">
-                    <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a class="nav-link @(Request.Path == "/Upload" || Request.Path == "/" ? "active" : "")" class="icon" asp-area="" asp-page="/Upload">My Files</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(Request.Path == "/Bin" || Request.Path == "/" ? "active" : "")" class="icon" asp-area="" asp-page="/Bin">Bin</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(Request.Path == "/Settings" || Request.Path == "/" ? "active" : "")" class="icon" asp-area="" asp-page="/Settings">Settings</a>
-                        </li>
-                    </ul>
-                    <form class="d-flex">
-                        <input class="form-control me-2" type="text" placeholder="Search">
-                        <button class="btn btn-primary" type="button">Search</button>
-                    </form>
-                </div>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <div class="container">
+            <div class="navbar-brand">
+                <img src="~/LogoVector.svg" alt="logo" class="logo">
             </div>
-        </nav>
 
-        <!-- Page title -->
-        <div class="container mt-3">
-            <h3 style="text-align:center;"><b>My Files</b></h3>
-
-            <!-- Box at top of screen -->
-            <div class="temp-refresh-btn">
-                <form method="post" asp-page-handler="File">
-                    <button type="submit">Click to load files</button>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mynavbar">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link @(Request.Path == "/Upload" || Request.Path == "/" ? "active" : "")" class="icon" asp-area="" asp-page="/Upload">My Files</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(Request.Path == "/Bin" || Request.Path == "/" ? "active" : "")" class="icon" asp-area="" asp-page="/Bin">Bin</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(Request.Path == "/Settings" || Request.Path == "/" ? "active" : "")" class="icon" asp-area="" asp-page="/Settings">Settings</a>
+                    </li>
+                </ul>
+                <form class="d-flex">
+                    <input class="form-control me-2" type="text" placeholder="Search">
+                    <button class="btn btn-primary" type="button">Search</button>
                 </form>
             </div>
-
-            <!-- Appears when the load files button is clicked -->
-            <div id="scrollbox" class="row">               
-                @if (Model.Files != null)
-                {
-                    @foreach (var file in Model.Files)
-                    {
-                        <div id="uploaded-files">
-                            <a asp-page-handler="Download" asp-route-filename="@file.Filename">
-                                <img src="~/Logo.png" alt="logo">
-                                <p>@file.Filename</p>
-                            </a>
-                        </div>
-                    }
-                }
-            </div>
         </div>
-    </div>
+    </nav>
 
-    <!-- Bottom upload dotted box -->
-    <nav style="padding: 0px;" class="container mt-3">
-        <div class="upload-box">
+
+    <div class="upload-page container mx-auto">
+    
+        <!-- File explorer -->
+        <div id="file-explorer" class="row mt-3">
+
+            <!-- Files Toolbox -->
+            <div id="toolbox" class="col-md-1">
+                <div id="tools">
+                    <!-- Sort button -->
+                    <form id="tool-row" class="row" method="post">
+
+                    </form>
+                    <div id="tool-row" class="row" onclick="toggleImage()">
+                        <img id="toggleImage" class="col" src="~/sort-alpha-down.svg" alt="Image 1">
+                        <p class="col">Sort</p>
+
+                        <script>
+                            // On click swap image
+                            function toggleImage() {
+                                var imageElement = document.getElementById('toggleImage');
+                                if (imageElement.src.endsWith('sort-alpha-down.svg')) {
+                                    imageElement.src = 'sort-alpha-up.svg';
+                                } else {
+                                    imageElement.src = 'sort-alpha-down.svg';
+                                }
+                            }
+                        </script>
+
+                    </div>
+
+
+
+
+                    <!-- New folder button -->
+                    <div id="tool-row" class="row" onclick="">
+                        <img class="col" src="~/folder-plus.svg" alt="new-folder">
+                        <p class="col">New</p>
+                    </div>
+
+                    <!-- Share button -->
+                    <div id="tool-row" class="row" onclick="">
+                        <img class="col" src="~/share.svg" alt="share">
+                        <p class="col">Share</p>
+                    </div>
+
+                    <!-- Delete button -->
+                    <div id="tool-row" class="row" onclick="">
+                        <img class="col" src="~/trash.svg" alt="trash">
+                        <p class="col">Delete</p>
+                    </div>
+
+                </div>
+            </div>
+            
+
+            <!-- Files Box -->
+            <div id="filebox" class="col-md-11">
+
+                <!-- Appears when the files are loaded -->
+                <div id="scrollbox">               
+                    @if (Model.Files != null)
+                    {
+                        @foreach (var file in Model.Files)
+                        {
+                            <div id="uploaded-files">
+                                <a asp-page-handler="Download" asp-route-filename="@file.Filename">
+                                    <img src="~/Logo.png" alt="logo">
+                                    <p>@file.Filename</p>
+                                </a>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="no-files">
+                            <div>
+                                <img class="row" src="~/search.svg" alt="search" style="width: -webkit-fill-available; opacity: 50%;">
+                                <h3 class="row">No files here</h3>
+                            </div>
+                        </div>
+                        
+                    }
+                </div>
+            </div>
+            
+        </div>
+            
+
+        <!-- Bottom upload dotted box -->
+        <div id="upload-box" class="row mt-3">
             <h3>Upload your files</h3>
             <form method="post" enctype="multipart/form-data" asp-page-handler="Upload">
                 <div class="mb-3" id="file-input-box">
@@ -78,7 +141,9 @@
                 </div>
             </form>
         </div>
-    </nav>
+
+
+    </div>
 
     <!-- Console logger -->
     <script>

@@ -58,7 +58,6 @@ namespace Ethereal_Cloud.Pages
 
         public async Task OnPostSignupAsync()
         {
-            ViewData["logger"] = "Successful: test yay!";
             if (Passwordconf == Password)
             {
                 //create body object

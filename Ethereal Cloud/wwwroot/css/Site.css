@@ -1,6 +1,7 @@
 body {
     font-family: 'Jost', sans-serif;
     background: #f5f6fa;
+    overflow: auto;
 }
 
 * {
