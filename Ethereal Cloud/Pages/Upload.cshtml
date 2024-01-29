@@ -102,15 +102,15 @@
             <div id="filebox" class="col-md-11">
 
                 <!-- Appears when the files are loaded -->
-                <div id="scrollbox">               
-                    @if (Model.Files != null)
+                <div id="scrollbox">
+                    @if (Model.DisplayList != null)
                     {
-                        @foreach (var file in Model.Files)
+                        @foreach (var displayList in Model.DisplayList)
                         {
                             <div id="uploaded-files">
-                                <a asp-page-handler="Download" asp-route-filename="@file.Filename">
+                                <a asp-page-handler="Download" asp-route-filename="@displayList.Name">
                                     <img src="~/Logo.png" alt="logo">
-                                    <p>@file.Filename</p>
+                                    <p>@displayList.Name</p>
                                 </a>
                             </div>
                         }

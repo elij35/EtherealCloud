@@ -18,25 +18,26 @@ namespace Ethereal_Cloud.Pages
         public string Username { get; set; }
 
         [BindProperty]
-        public string Passwordconf { get; set; }
+        public string PasswordConf { get; set; }
 
         public async Task OnPostLoginAsync()
         {
             //create body object
             var dataObject = new Dictionary<string, object?>
                 {
-                    { "Username", Username },
-                    { "Email", Email },
+                    { "Username", Username }, //This is the username or email
                     { "Password", Password }
                 };
 
             //Make request
-            Message response = (Message)await ApiRequest.Files(ViewData, HttpContext, "v1/user/login", dataObject);
+            var response = await ApiRequest.Files(ViewData, HttpContext, "v1/user/login", dataObject);
 
+            Logger.LogToConsole(ViewData, "Checker: " + response);
+            
             if (response != null)
             {
                 //Valid login
-                Logger.LogToConsole(ViewData, "Successful: " + response.message);
+                Logger.LogToConsole(ViewData, "Successfull login of user " + Username);
 
                 //save the auth token in a cookie
                 var options = new CookieOptions
@@ -44,21 +45,21 @@ namespace Ethereal_Cloud.Pages
                     HttpOnly = true,
                     Secure = true, //for HTTPS
                 };
-                Response.Cookies.Append("AuthToken", response.message, options);
+                //response
+                Response.Cookies.Append("AuthToken", response.ToString(), options);
 
                 //goto the my files page
                 Response.Redirect("/Upload");
             }
             else
             {
-                Logger.LogToConsole(ViewData, "Invalid: Couldn't signup");
+                Logger.LogToConsole(ViewData, "Invalid: Invalid Login");
             }
- 
         }
 
         public async Task OnPostSignupAsync()
         {
-            if (Passwordconf == Password)
+            if (PasswordConf == Password)
             {
                 //create body object
                 var dataObject = new Dictionary<string, object?>
@@ -69,12 +70,12 @@ namespace Ethereal_Cloud.Pages
                     };
 
                 //Make request
-                Message response = (Message)await ApiRequest.Files(ViewData, HttpContext, "v1/user/signup", dataObject);
+                var response = await ApiRequest.Files(ViewData, HttpContext, "v1/user/signup", dataObject);
 
                 if(response != null)
                 {
                     //Valid Signup
-                    Logger.LogToConsole(ViewData, "Successful: " + response.message);
+                    Logger.LogToConsole(ViewData, "Successfull signup of user " + Username);
                 }
                 else
                 {

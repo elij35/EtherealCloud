@@ -11,12 +11,6 @@ namespace Ethereal_Cloud.Helpers
 {
     public class ApiRequest
     {
-        public static async Task Login()
-        {
-            //maybe change this to just one method. that checks if it needs the authtoken or not
-        }
-
-
         //Viewdata is only used for console logging
         public static async Task<object> Files(ViewDataDictionary viewData,HttpContext context, string endpoint, Dictionary<string, object?> bodyObject)
         {
@@ -24,14 +18,6 @@ namespace Ethereal_Cloud.Helpers
 
             using (HttpClient client = new HttpClient())
             {
-
-                //Try to get and add auth token to request body
-                string? authToken = AuthTokenManagement.GetToken(context);
-                if (authToken != null)
-                {
-                    bodyObject.Add("authtoken", authToken);
-                }
-
                 //Convert body object to a json string
                 var content = new StringContent(JsonConvert.SerializeObject(bodyObject), Encoding.UTF8, "application/json");
 
@@ -58,7 +44,7 @@ namespace Ethereal_Cloud.Helpers
                 else
                 {
                     //Couldn't connect to endpoint
-                    Logger.LogToConsole(viewData, "Invalid: " + responseEndpoint.RequestMessage);
+                    Logger.LogToConsole(viewData, "Invalid Connect: " + responseEndpoint.RequestMessage);
                     return null;
                 }
 

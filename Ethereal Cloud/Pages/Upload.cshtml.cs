@@ -1,10 +1,17 @@
 using Ethereal_Cloud.Helpers;
 using Ethereal_Cloud.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.StaticFiles;
 using Newtonsoft.Json;
+using NuGet.Protocol;
+using System.CodeDom;
+using System.IO;
 using System.Text;
+using System.Text.Json;
+using static NuGet.Packaging.PackagingConstants;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Ethereal_Cloud.Pages
 {
@@ -15,141 +22,114 @@ namespace Ethereal_Cloud.Pages
         public string Username { get; set; }
 
         //list of files to be shown to user
-        public List<FileInfo> Files;
+        public List<FolderContentDisplay> DisplayList;
 
         public async Task<IActionResult> OnGet(int? folderId)
         {
-            /*
             //users current folder location
             folderId = null;
 
-            bool fileFound = true;
-            int counter = 1;
-            while (fileFound) //TODO: THE LOOP WONT BE NEEDED AS A LIST SHOULD BE RETURNED
+            //create object
+            var dataObject = new Dictionary<string, object?>
             {
-                string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/v1/folder/files/" + folderId;
+                { "authtoken", AuthTokenManagement.GetToken(HttpContext)}
+            };
+            
+            //Make request
+            var response = await ApiRequest.Files(ViewData, HttpContext, "v1/folder/files/" + folderId, dataObject);
+            
+            if (response != null)
+            {
+                //Put response in form of FolderContentRecieve
+                string jsonString = response.ToString();
+                FolderContentRecieve folderContent = JsonSerializer.Deserialize<FolderContentRecieve>(jsonString);
 
-                string authToken = Helpers.AuthTokenManagement.GetToken(HttpContext);
-
-                using (HttpClient client = new HttpClient())
+                //Add folders to display list
+                foreach(FolderDataRecieve folder in folderContent.Folders)
                 {
-                    //create json object
-                    var dataObject = new
+                    FolderContentDisplay newFolder = new()
                     {
-                        authtoken = authToken
+                        Id = folder.FolderId,
+                        Name = folder.FolderName,
+                        Type = "Folder"
                     };
-                    var content = new StringContent(JsonConvert.SerializeObject(dataObject), Encoding.UTF8, "application/json");
 
-                    var response = await client.PostAsync(apiUrl, content);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        string stringResponse = await response.Content.ReadAsStringAsync();
-                        Response<object> responseObject = await Response<object>.DeserializeJSON(stringResponse);
-
-                        if (responseObject.Success)
-                        {
-                            Response<FileInfo> file = await Response<FileInfo>.DeserializeJSON(stringResponse); //THE MESSAGE SHOULD ONLY RETURN FILEINFO (FILENAME, FILETYPE) THE DATA IS GOTTEN ON DOWNLOAD
-                            var files = Files;
-                            files.Add(file.Message);
-                            Files = files;
-                        }
-                        else
-                        {
-                            Logger.LogToConsole(ViewData, "Failure: " + responseObject.Message);
-                            fileFound = false;
-                        }
-
-                    }
-                    else
-                    {
-                        Logger.LogToConsole(ViewData, "Failure: " + response.Content);
-                        fileFound = false;
-                    }
-
+                    DisplayList.Add(newFolder);
                 }
 
+                //Add files to display list
+                foreach (FileMetaRecieve file in folderContent.Files)
+                {
+                    FolderContentDisplay newFile = new()
+                    {
+                        Id = file.FileId,
+                        Name = file.Filename,
+                        Type = file.Filetype
+                    };
 
-                counter++;
+                    DisplayList.Add(newFile);
+                }
+
+                
+                Logger.LogToConsole(ViewData, "Successful get of files");
+                //Reload the page to refresh files get
+                return Page();
             }
-
-            return Page();
-            */
-            return null;
+            else
+            {
+                Logger.LogToConsole(ViewData, "Failed Get");
+                return null;
+            }
+            
         }
 
         public async Task<IActionResult> OnGetDownload(string filename)
         {
-            var files = Files;
-
-            var file = files?.FirstOrDefault(f => f.Filename == filename);
+            /*
+            var file = DisplayList?.FirstOrDefault(f => f.Filename == filename);
 
             if (file == null)
             {
+                Logger.LogToConsole(ViewData, "Cant find file to download");
                 return NotFound();
             }
 
-            string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/v1/file/" + "1";//counter
+            var fileId = 1;
 
-            string authToken = Helpers.AuthTokenManagement.GetToken(HttpContext);
-
-            using (HttpClient client = new HttpClient())
+            //create object
+            var dataObject = new Dictionary<string, object?>
             {
-                //create json object
-                var dataObject = new
+                { "authtoken", AuthTokenManagement.GetToken(HttpContext)}
+            };
+
+            //Make request
+            var response = await ApiRequest.Files(ViewData, HttpContext, "v1/file/" + fileId, dataObject);
+
+            if (response != null)
+            {
+                byte[] fileContents = Convert.FromBase64String((string)response);
+
+                // Determine content type based on file extension
+                var contentTypeProvider = new FileExtensionContentTypeProvider();
+                if (!contentTypeProvider.TryGetContentType(file.Filename, out var contentType))
                 {
-                    authtoken = authToken,
-                    filename = file.Filename
-                };
-                var content = new StringContent(JsonConvert.SerializeObject(dataObject), Encoding.UTF8, "application/json");
-
-                var response = await client.PostAsync(apiUrl, content);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    string stringResponse = await response.Content.ReadAsStringAsync();
-                    Response<object> responseObject = await Response<object>.DeserializeJSON(stringResponse);
-
-                    if (responseObject.Success)
-                    {
-                        Response<string> fileContent = await Response<string>.DeserializeJSON(stringResponse); //message should only contain filecontent
-
-                        byte[] fileContents = Convert.FromBase64String(fileContent.Message);
-
-                        // Determine content type based on file extension
-                        var contentTypeProvider = new FileExtensionContentTypeProvider();
-                        if (!contentTypeProvider.TryGetContentType(file.Filename, out var contentType))
-                        {
-                            contentType = "application/octet-stream";
-                        }
-
-                        return File(fileContents, contentType, file.Filename);
-
-
-
-
-
-                    }
-                    else
-                    {
-                        Logger.LogToConsole(ViewData, "Failure: " + responseObject.Message);
-                    }
-
-                }
-                else
-                {
-                    Logger.LogToConsole(ViewData, "Failure: " + response.Content);
+                    contentType = "application/octet-stream";
                 }
 
+                Logger.LogToConsole(ViewData, "Successfull download of " + file.Filename);
+                return File(fileContents, contentType, file.Filename);
             }
-
+            else
+            {
+                return null;
+            }
+            */
             return null;
         }
 
 
         public async Task<IActionResult> OnPostUploadAsync(IFormFile uploadedFile)
         {
-            
             if (uploadedFile != null && uploadedFile.Length > 0)
             {
                 using (var stream = new MemoryStream())
@@ -160,6 +140,7 @@ namespace Ethereal_Cloud.Pages
                     //create file object
                     var dataObject = new Dictionary<string, object?>
                     {
+                        { "authtoken", AuthTokenManagement.GetToken(HttpContext)},
                         { "filename", uploadedFile.FileName },
                         { "filetype", Path.GetExtension(uploadedFile.FileName) },
                         { "content", Convert.ToBase64String(stream.ToArray()) },
@@ -171,6 +152,7 @@ namespace Ethereal_Cloud.Pages
 
                     if (response != null)
                     {
+                        Logger.LogToConsole(ViewData, "Successfull file upload: " + response);
                         //Reload the page to refresh files get
                         return Page();
                     }
