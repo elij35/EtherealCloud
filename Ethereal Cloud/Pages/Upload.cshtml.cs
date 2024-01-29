@@ -22,9 +22,8 @@ namespace Ethereal_Cloud.Pages
         public string Username { get; set; }
 
         //list of files to be shown to user
-        public List<FolderContentDisplay> DisplayList;
+        public List<FolderContentDisplay> DisplayList = new List<FolderContentDisplay>();
 
-        
         public async Task OnGet(int? folderId)
         {
             //users current folder location
@@ -84,6 +83,7 @@ namespace Ethereal_Cloud.Pages
             
         }
         
+        
         /*
         public async Task<IActionResult> OnGetDownload(string filename)
         {
@@ -126,11 +126,10 @@ namespace Ethereal_Cloud.Pages
                 return null;
             }
             
-            return null;
         }
         */
 
-        public async Task<IActionResult> OnPostUploadAsync(IFormFile uploadedFile)
+        public async Task OnPostUploadAsync(IFormFile uploadedFile)
         {
             if (uploadedFile != null && uploadedFile.Length > 0)
             {
@@ -148,22 +147,26 @@ namespace Ethereal_Cloud.Pages
                         { "AuthToken", AuthTokenManagement.GetToken(HttpContext)},
                         { "Filename", uploadedFile.FileName },
                         { "Filetype", Path.GetExtension(uploadedFile.FileName) },
-                        { "Content", Convert.ToBase64String(stream.ToArray()) },
-                        { "FolderId", currentFolder }
+                        { "Content", Convert.ToBase64String(stream.ToArray()) }
                     };
+                    //If the user isnt in the root
+                    if (currentFolder != null)
+                    {
+                        dataObject.Add("FolderId", currentFolder);
+                    }
+
 
                     //Make request
                     var response = await ApiRequest.Files(ViewData, HttpContext, "v1/file", dataObject);
-
+                    
                     if (response != null)
                     {
                         Logger.LogToConsole(ViewData, "Successfull file upload: " + response);
-                        //Reload the page to refresh files get
-                        return Page();
+                        await OnGet(null);
                     }
                     else
                     {
-                        return null;
+                        Logger.LogToConsole(ViewData, "Bad upload response");
                     }
                 }
                 
@@ -173,21 +176,8 @@ namespace Ethereal_Cloud.Pages
                 Logger.LogToConsole(ViewData, "Invalid file upload");
             }
             
-            return null;
+            
         }
-
-
-
-
-
-        
-
-
-
-
-
-
-
 
 
     }

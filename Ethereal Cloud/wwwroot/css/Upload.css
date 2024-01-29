@@ -94,10 +94,9 @@
 
 /* Everything inside the containers for the files (img and file name) */
 #uploaded-files {
-    width: min-content;
+    width: 120px;
     padding:5px;
     margin: 5px;
-    height: fit-content;
 }
 
     #uploaded-files img {
