@@ -15,7 +15,7 @@
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
         <div class="container">
             <div class="navbar-brand">
-                <img src="~/LogoVector.svg" alt="logo" class="logo">
+                <img src="~/images/LogoVector.svg" alt="logo" class="logo">
             </div>
 
             
@@ -56,7 +56,7 @@
 
                     </form>
                     <div id="tool-row" class="row" onclick="toggleImage()">
-                        <img id="toggleImage" class="col" src="~/sort-alpha-down.svg" alt="Image 1">
+                        <img id="toggleImage" class="col" src="~/images/tools/sort-alpha-down.svg" alt="Image 1">
                         <p class="col">Sort</p>
 
                         <script>
@@ -64,9 +64,9 @@
                             function toggleImage() {
                                 var imageElement = document.getElementById('toggleImage');
                                 if (imageElement.src.endsWith('sort-alpha-down.svg')) {
-                                    imageElement.src = 'sort-alpha-up.svg';
+                                    imageElement.src = 'images/tools/sort-alpha-up.svg';
                                 } else {
-                                    imageElement.src = 'sort-alpha-down.svg';
+                                    imageElement.src = 'images/tools/sort-alpha-down.svg';
                                 }
                             }
                         </script>
@@ -78,19 +78,21 @@
 
                     <!-- New folder button -->
                     <div id="tool-row" class="row" onclick="">
-                        <img class="col" src="~/folder-plus.svg" alt="new-folder">
+                        <img class="col" src="~/images/tools/folder-plus.svg" alt="new-folder">
                         <p class="col">New</p>
                     </div>
 
                     <!-- Share button -->
                     <div id="tool-row" class="row" onclick="">
-                        <img class="col" src="~/share.svg" alt="share">
+                        <img class="col" src="~/images/tools/share.svg" alt="share">
                         <p class="col">Share</p>
                     </div>
 
                     <!-- Delete button -->
                     <div id="tool-row" class="row" onclick="">
-                        <img class="col" src="~/trash.svg" alt="trash">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#ABABAB" class="bi bi-emoji-heart-eyes" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" /><path d="M11.315 10.014a.5.5 0 0 1 .548.736A4.498 4.498 0 0 1 7.965 13a4.498 4.498 0 0 1-3.898-2.25.5.5 0 0 1 .548-.736h.005l.017.005.067.015.252.055c.215.046.515.108.857.169.693.124 1.522.242 2.152.242.63 0 1.46-.118 2.152-.242a26.58 26.58 0 0 0 1.109-.224l.067-.015.017-.004.005-.002zM4.756 4.566c.763-1.424 4.02-.12.952 3.434-4.496-1.596-2.35-4.298-.952-3.434zm6.488 0c1.398-.864 3.544 1.838-.952 3.434-3.067-3.554.19-4.858.952-3.434z" /></svg>
+                        
+                        <img class="col" src="~/images/tools/trash.svg" alt="trash">
                         <p class="col">Delete</p>
                     </div>
 
@@ -102,15 +104,15 @@
             <div id="filebox" class="col-md-11">
 
                 <!-- Appears when the files are loaded -->
-                <div id="scrollbox">
-                    @if (Model.DisplayList != null)
+                <div id="scrollbox" class="row">
+                    @if (Model.DisplayList.Count > 0)
                     {
-                        @foreach (var displayList in Model.DisplayList)
+                        @foreach (var display in Model.DisplayList)
                         {
                             <div id="uploaded-files">
-                                <a asp-page-handler="Download" asp-route-filename="@displayList.Name">
-                                    <img src="~/Logo.png" alt="logo">
-                                    <p>@displayList.Name</p>
+                                <a asp-page-handler="Download" asp-route-filename="@display.Name">
+                                    <img src="~/images/file-icons/@GetImageForFileType(@display.Type)" alt="logo" class="logo">
+                                    <p>@display.Name</p>
                                 </a>
                             </div>
                         }
@@ -152,4 +154,29 @@
             console.log(logger);
         }
     </script>
+
+
+    string GetImageForFileType(string fileType)
+    {
+        switch (fileType.ToLower())
+        {
+            case "folder":
+                return "folder.svg";
+            case ".png":
+            case ".jpg":
+                return "file-image.svg";
+            case ".mp3":
+                return "file-music.svg";
+            case ".mp4":
+                return "file-video.svg";
+            case ".pdf":
+                return "file-pdf.svg";
+            case ".doc":
+            case ".txt":
+                return "file-doc.svg";
+            default:
+                return "unknown.svg"; //Unknown type
+        }
+    }
+
 }

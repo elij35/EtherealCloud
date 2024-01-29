@@ -24,7 +24,8 @@ namespace Ethereal_Cloud.Pages
         //list of files to be shown to user
         public List<FolderContentDisplay> DisplayList;
 
-        public async Task<IActionResult> OnGet(int? folderId)
+        
+        public async Task OnGet(int? folderId)
         {
             //users current folder location
             folderId = null;
@@ -43,6 +44,8 @@ namespace Ethereal_Cloud.Pages
                 //Put response in form of FolderContentRecieve
                 string jsonString = response.ToString();
                 FolderContentRecieve folderContent = JsonSerializer.Deserialize<FolderContentRecieve>(jsonString);
+                
+                DisplayList = new List<FolderContentDisplay>();
 
                 //Add folders to display list
                 foreach(FolderDataRecieve folder in folderContent.Folders)
@@ -57,9 +60,11 @@ namespace Ethereal_Cloud.Pages
                     DisplayList.Add(newFolder);
                 }
 
+
                 //Add files to display list
                 foreach (FileMetaRecieve file in folderContent.Files)
                 {
+                    
                     FolderContentDisplay newFile = new()
                     {
                         Id = file.FileId,
@@ -70,22 +75,19 @@ namespace Ethereal_Cloud.Pages
                     DisplayList.Add(newFile);
                 }
 
-                
                 Logger.LogToConsole(ViewData, "Successful get of files");
-                //Reload the page to refresh files get
-                return Page();
             }
             else
             {
                 Logger.LogToConsole(ViewData, "Failed Get");
-                return null;
             }
             
         }
-
+        
+        /*
         public async Task<IActionResult> OnGetDownload(string filename)
         {
-            /*
+            
             var file = DisplayList?.FirstOrDefault(f => f.Filename == filename);
 
             if (file == null)
@@ -123,10 +125,10 @@ namespace Ethereal_Cloud.Pages
             {
                 return null;
             }
-            */
+            
             return null;
         }
-
+        */
 
         public async Task<IActionResult> OnPostUploadAsync(IFormFile uploadedFile)
         {
@@ -137,18 +139,21 @@ namespace Ethereal_Cloud.Pages
                     //Where folder the user is in
                     int? currentFolder = null;
 
+                    //Hold the file contents in the stream
+                    await uploadedFile.CopyToAsync(stream);
+
                     //create file object
                     var dataObject = new Dictionary<string, object?>
                     {
-                        { "authtoken", AuthTokenManagement.GetToken(HttpContext)},
-                        { "filename", uploadedFile.FileName },
-                        { "filetype", Path.GetExtension(uploadedFile.FileName) },
-                        { "content", Convert.ToBase64String(stream.ToArray()) },
-                        { "folder", currentFolder }
+                        { "AuthToken", AuthTokenManagement.GetToken(HttpContext)},
+                        { "Filename", uploadedFile.FileName },
+                        { "Filetype", Path.GetExtension(uploadedFile.FileName) },
+                        { "Content", Convert.ToBase64String(stream.ToArray()) },
+                        { "FolderId", currentFolder }
                     };
 
                     //Make request
-                    var response = await ApiRequest.Files(ViewData, HttpContext, "v1/file",  dataObject);
+                    var response = await ApiRequest.Files(ViewData, HttpContext, "v1/file", dataObject);
 
                     if (response != null)
                     {
@@ -161,6 +166,7 @@ namespace Ethereal_Cloud.Pages
                         return null;
                     }
                 }
+                
             }
             else
             {
@@ -169,6 +175,20 @@ namespace Ethereal_Cloud.Pages
             
             return null;
         }
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
 
     }
 

@@ -94,22 +94,23 @@
 
 /* Everything inside the containers for the files (img and file name) */
 #uploaded-files {
-    background-color: lightblue;
-    border: solid;
     width: min-content;
+    padding:5px;
     margin: 5px;
+    height: fit-content;
 }
 
     #uploaded-files img {
-        width: 150px;
+        width: 100%;
         height: auto;
-        padding-top: 5px;
+        margin-bottom: 5px;
     }
 
     #uploaded-files a p {
         text-align: center;
         text-decoration: none;
-        color: black;    
+        color: black;
+        margin:0px;
     }
 
 /* Upload box (at bottom of page) */
