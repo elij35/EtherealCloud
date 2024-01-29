@@ -149,28 +149,35 @@
     <script>
         var logger = '@ViewData["logger"]';
         if (logger !== null) {
-            console.log(logger);
+            console.log(decodeHtml(logger));
+        }
+
+        function decodeHtml(html) {
+            var txt = document.createElement("textarea");
+            txt.innerHTML = html;
+            return txt.value;
         }
     </script>
 
-
     string GetImageForFileType(string fileType)
     {
+        //looks at files Mime type and gets appropriate image
         switch (fileType.ToLower())
         {
             case "folder":
                 return "folder.svg";
-            case ".png":
-            case ".jpg":
+            case "image/png":
+            case "image/jpeg":
+            case "image/gif":
                 return "file-image.svg";
-            case ".mp3":
+            case "audio/mpeg":
                 return "file-music.svg";
-            case ".mp4":
+            case "video/mp4":
                 return "file-video.svg";
-            case ".pdf":
+            case "application/pdf":
                 return "file-pdf.svg";
-            case ".doc":
-            case ".txt":
+            case "application/msword":
+            case "text/plain":
                 return "file-doc.svg";
             default:
                 return "unknown.svg"; //Unknown type

@@ -8,7 +8,7 @@ namespace Ethereal_Cloud.Helpers
         //Viewdata is only used for console logging
         public static void LogToConsole(ViewDataDictionary viewData, string content)
         {
-            viewData["logger"] = content;
+            viewData["logger"] = DateTime.Now.ToString("hh:mm:ss") +" : " + content;
         }
 
     }

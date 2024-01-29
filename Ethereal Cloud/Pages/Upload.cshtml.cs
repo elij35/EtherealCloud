@@ -1,16 +1,9 @@
 using Ethereal_Cloud.Helpers;
 using Ethereal_Cloud.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.StaticFiles;
-using Newtonsoft.Json;
-using NuGet.Protocol;
-using System.CodeDom;
-using System.IO;
-using System.Text;
-using System.Text.Json;
-using static NuGet.Packaging.PackagingConstants;
+using Microsoft.CodeAnalysis;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Ethereal_Cloud.Pages
@@ -51,7 +44,7 @@ namespace Ethereal_Cloud.Pages
                 {
                     FolderContentDisplay newFolder = new()
                     {
-                        Id = folder.FolderId,
+                        Id = folder.FolderID,
                         Name = folder.FolderName,
                         Type = "Folder"
                     };
@@ -66,7 +59,7 @@ namespace Ethereal_Cloud.Pages
                     
                     FolderContentDisplay newFile = new()
                     {
-                        Id = file.FileId,
+                        Id = file.FileID,
                         Name = file.Filename,
                         Type = file.Filetype
                     };
@@ -74,7 +67,7 @@ namespace Ethereal_Cloud.Pages
                     DisplayList.Add(newFile);
                 }
 
-                Logger.LogToConsole(ViewData, "Successful get of files");
+                Logger.LogToConsole(ViewData, "Successful get of files: " + jsonString);
             }
             else
             {
@@ -82,22 +75,20 @@ namespace Ethereal_Cloud.Pages
             }
             
         }
-        
-        
-        /*
         public async Task<IActionResult> OnGetDownload(string filename)
         {
-            
-            var file = DisplayList?.FirstOrDefault(f => f.Filename == filename);
+            await OnGet(null);
 
-            if (file == null)
+            FolderContentDisplay? element = DisplayList.FirstOrDefault(item => item.Name == filename);
+
+            if (element == null)
             {
-                Logger.LogToConsole(ViewData, "Cant find file to download");
-                return NotFound();
+                Logger.LogToConsole(ViewData, "Cant find file to download: " + filename + " : " + element);
+                return null;
             }
 
-            var fileId = 1;
-
+            int fileId = element.Id;
+            
             //create object
             var dataObject = new Dictionary<string, object?>
             {
@@ -109,25 +100,21 @@ namespace Ethereal_Cloud.Pages
 
             if (response != null)
             {
-                byte[] fileContents = Convert.FromBase64String((string)response);
+                string jsonString = response.ToString();
+                FileModel file = JsonSerializer.Deserialize<FileModel>(jsonString);
 
-                // Determine content type based on file extension
-                var contentTypeProvider = new FileExtensionContentTypeProvider();
-                if (!contentTypeProvider.TryGetContentType(file.Filename, out var contentType))
-                {
-                    contentType = "application/octet-stream";
-                }
+                Logger.LogToConsole(ViewData, "Successfull download: " + file.Content + " " + file.Filetype + " " + file.Filename);
 
-                Logger.LogToConsole(ViewData, "Successfull download of " + file.Filename);
-                return File(fileContents, contentType, file.Filename);
+                return File(Convert.FromBase64String(file.Content), file.Filetype, file.Filename);
             }
             else
             {
+                Logger.LogToConsole(ViewData, "Fail: " + fileId);
                 return null;
             }
-            
+           
         }
-        */
+        
 
         public async Task OnPostUploadAsync(IFormFile uploadedFile)
         {
@@ -141,12 +128,14 @@ namespace Ethereal_Cloud.Pages
                     //Hold the file contents in the stream
                     await uploadedFile.CopyToAsync(stream);
 
+                    
+
                     //create file object
                     var dataObject = new Dictionary<string, object?>
                     {
-                        { "AuthToken", AuthTokenManagement.GetToken(HttpContext)},
+                        { "AuthToken", AuthTokenManagement.GetToken(HttpContext) },
                         { "Filename", uploadedFile.FileName },
-                        { "Filetype", Path.GetExtension(uploadedFile.FileName) },
+                        { "Filetype", MimeType.GetMimeType(uploadedFile.FileName) },
                         { "Content", Convert.ToBase64String(stream.ToArray()) }
                     };
                     //If the user isnt in the root

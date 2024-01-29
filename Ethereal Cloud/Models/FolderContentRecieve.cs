@@ -8,14 +8,14 @@
 
     public class FileMetaRecieve
     {
-        public int FileId { get; set; }
+        public int FileID { get; set; }
         public string Filename { get; set; }
         public string Filetype { get; set; }
     }
 
     public class FolderDataRecieve
     {
-        public int FolderId { get; set; }
+        public int FolderID { get; set; }
         public string FolderName { get; set; }
     }
 }
