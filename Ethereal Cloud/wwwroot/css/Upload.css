@@ -135,6 +135,21 @@
     display: inline-block;
 }
 
+/* Define the default style for the element */
+.file-hover {
+    transition: background-color 0.3s ease; /* Add a smooth transition effect */
+}
+
+    /* Define the style when the element is being hovered over */
+    .file-hover:hover {
+        background-color: #ede6f8;
+        border: 2px solid;
+        border-color: #cbbbe2;
+        border-radius: 5px;
+    }
+
+
+
 /* Upload button */
 .btn {
     background: #9877c5;

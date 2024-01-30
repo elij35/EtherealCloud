@@ -155,7 +155,7 @@ namespace Ethereal_Cloud.Pages
                     }
                     else
                     {
-                        Logger.LogToConsole(ViewData, "Bad upload response");
+                        //Logger.LogToConsole(ViewData, "Bad upload response");
                     }
                 }
                 

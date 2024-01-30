@@ -37,7 +37,7 @@ namespace Ethereal_Cloud.Helpers
                     else
                     {
                         //Invalid request
-                        //Logger.LogToConsole(viewData, "Invalid: " + responseData.Message);
+                        Logger.LogToConsole(viewData, "Invalid: " + responseData.Message);
                         return null;
                     }
                 }
