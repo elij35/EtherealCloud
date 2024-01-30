@@ -49,10 +49,10 @@
         <div id="file-explorer" class="row mt-3">
 
             <!-- Files Toolbox -->
-            <div id="toolbox" class="col-md-1">
+            <div id="toolbox" class="col-md-1" class="row">
                 <div id="tools">
                     <!-- Sort button -->
-                    <div id="tool-row" class="row" onclick="toggleImage()">
+                    <div id="tool-row" onclick="toggleImage()">
                         <img id="toggleImage" class="col" src="~/images/tools/sort-alpha-down.svg" alt="Image 1">
                         <p class="col">Sort</p>
 
@@ -74,19 +74,21 @@
 
 
                     <!-- New folder button -->
-                    <a method="post" asp-page-handler="CreateFolder" asp-route-foldername="temp" id="tool-row" class="row">
-                        <img class="col" src="~/images/tools/folder-plus.svg" alt="new-folder">
-                        <p class="col">New</p>
-                    </a>
+                    <div id="tool-row" >
+                        <a asp-page-handler="Createfolder" asp-route-foldername="temp">
+                            <img class="col" src="~/images/tools/folder-plus.svg" alt="new-folder">
+                            <p class="col">New</p>
+                        </a>
+                    </div>
 
                     <!-- Share button -->
-                    <div id="tool-row" class="row" onclick="">
+                    <div id="tool-row">
                         <img class="col" src="~/images/tools/share.svg" alt="share">
                         <p class="col">Share</p>
                     </div>
 
                     <!-- Delete button -->
-                    <div id="tool-row" class="row" onclick="">
+                    <div id="tool-row">
                         <img class="col" src="~/images/tools/trash.svg" alt="trash">
                         <p class="col">Delete</p>
                     </div>

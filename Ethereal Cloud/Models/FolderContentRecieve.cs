@@ -16,6 +16,6 @@
     public class FolderDataRecieve
     {
         public int FolderID { get; set; }
-        public string FolderName { get; set; }
+        public string Foldername { get; set; }
     }
 }

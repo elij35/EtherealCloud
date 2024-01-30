@@ -39,19 +39,20 @@ namespace Ethereal_Cloud.Pages
                 
                 DisplayList = new List<FolderContentDisplay>();
 
+                Logger.LogToConsole(ViewData, "Success Folder: " + JsonSerializer.Serialize(folderContent));
+
                 //Add folders to display list
                 foreach(FolderDataRecieve folder in folderContent.Folders)
                 {
                     FolderContentDisplay newFolder = new()
                     {
                         Id = folder.FolderID,
-                        Name = folder.FolderName,
+                        Name = folder.Foldername,
                         Type = "Folder"
                     };
 
                     DisplayList.Add(newFolder);
                 }
-
 
                 //Add files to display list
                 foreach (FileMetaRecieve file in folderContent.Files)
@@ -67,7 +68,7 @@ namespace Ethereal_Cloud.Pages
                     DisplayList.Add(newFile);
                 }
 
-                //Logger.LogToConsole(ViewData, "Successful get of files: " + jsonString);
+                //Logger.LogToConsole(ViewData, "Successful get of files: " + JsonSerializer.Serialize(DisplayList));
             }
             else
             {
@@ -155,7 +156,7 @@ namespace Ethereal_Cloud.Pages
                     }
                     else
                     {
-                        //Logger.LogToConsole(ViewData, "Bad upload response");
+                        Logger.LogToConsole(ViewData, "Bad upload response");
                     }
                 }
                 
@@ -172,14 +173,8 @@ namespace Ethereal_Cloud.Pages
 
 
 
-        public async Task OnPostCreateFolderAsync(string foldername)
+        public async Task OnGetCreatefolderAsync(string foldername)
         {
-
-            Logger.LogToConsole(ViewData, "Folder Worked 1: " + foldername);
-            Logger.LogToConsole(ViewData, "Folder Worked 2: " + foldername);
-            Logger.LogToConsole(ViewData, "Folder Worked 3: " + foldername);
-
-            /*
             foldername = "TempName";
             
             //Where folder the user is in
@@ -205,7 +200,7 @@ namespace Ethereal_Cloud.Pages
             {
                 Logger.LogToConsole(ViewData, "Bad folder response");
             }
-            */
+            
         }
 
 
