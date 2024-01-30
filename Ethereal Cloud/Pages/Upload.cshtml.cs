@@ -67,7 +67,7 @@ namespace Ethereal_Cloud.Pages
                     DisplayList.Add(newFile);
                 }
 
-                Logger.LogToConsole(ViewData, "Successful get of files: " + jsonString);
+                //Logger.LogToConsole(ViewData, "Successful get of files: " + jsonString);
             }
             else
             {
@@ -167,6 +167,47 @@ namespace Ethereal_Cloud.Pages
             
             
         }
+
+
+
+
+
+        public async Task OnPostCreateFolderAsync(string foldername)
+        {
+
+            Logger.LogToConsole(ViewData, "Folder Worked 1: " + foldername);
+            Logger.LogToConsole(ViewData, "Folder Worked 2: " + foldername);
+            Logger.LogToConsole(ViewData, "Folder Worked 3: " + foldername);
+
+            /*
+            foldername = "TempName";
+            
+            //Where folder the user is in
+            int? currentFolder = null;
+
+            //create file object
+            var dataObject = new Dictionary<string, object?>
+            {
+                { "AuthToken", AuthTokenManagement.GetToken(HttpContext) }, 
+                { "FolderName", foldername },
+                { "ParentFolder", currentFolder }
+            };
+
+            //Make request
+            var response = await ApiRequest.Files(ViewData, HttpContext, "v1/folder", dataObject);
+
+            if (response != null)
+            {
+                Logger.LogToConsole(ViewData, "Successfull folder creation: " + response);
+                await OnGet(null);
+            }
+            else
+            {
+                Logger.LogToConsole(ViewData, "Bad folder response");
+            }
+            */
+        }
+
 
 
     }
