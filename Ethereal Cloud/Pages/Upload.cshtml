@@ -107,8 +107,8 @@
                     {
                         @foreach (var display in Model.DisplayList)
                         {
-                            <div id="uploaded-files">
-                                <a asp-page-handler="Download" asp-route-filename="@display.Name">
+                            <div id="uploaded-files" class="file-item">
+                                <a id="downloadLink" asp-page-handler="Download" asp-route-filename="@display.Name">
                                     <img src="~/images/file-icons/@GetImageForFileType(@display.Type)" alt="logo" class="logo">
                                     <p>@display.Name</p>
                                 </a>
@@ -158,6 +158,51 @@
             return txt.value;
         }
     </script>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var fileItems = document.querySelectorAll(".file-item");
+
+            document.addEventListener("click", function (event) {
+                // Check if the clicked element is a file item or a descendant of a file item
+                var isFileItem = event.target.closest('.file-item');
+
+                if (!isFileItem) {
+                    // Clicked outside a file item, remove highlighting from all items
+                    fileItems.forEach(function (fileItem) {
+                        fileItem.classList.remove("highlighted");
+                    });
+                }
+            });
+
+            fileItems.forEach(function (item) {
+                item.addEventListener("click", function (event) {
+                    // Remove highlighting from all items
+                    fileItems.forEach(function (fileItem) {
+                        fileItem.classList.remove("highlighted");
+                    });
+
+                    // Highlight the clicked item
+                    item.classList.add("highlighted");
+
+                    // Prevent the click event from propagating to the document
+                    event.stopPropagation();
+                });
+            });
+        });
+
+    </script>
+
+    <style>
+        .highlighted {
+            background-color: #cce8ff;
+        }
+    </style>
+
+
+
+
 
     string GetImageForFileType(string fileType)
     {

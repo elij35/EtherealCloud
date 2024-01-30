@@ -95,6 +95,7 @@
 /* Everything inside the containers for the files (img and file name) */
 #uploaded-files {
     width: 120px;
+    height: fit-content;
     padding:5px;
     margin: 5px;
 }
@@ -109,7 +110,10 @@
         text-align: center;
         text-decoration: none;
         color: black;
-        margin:0px;
+        margin: 0px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
 /* Upload box (at bottom of page) */
