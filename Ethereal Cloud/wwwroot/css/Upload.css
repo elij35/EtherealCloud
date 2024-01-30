@@ -1,48 +1,163 @@
-﻿.text-box {
-    text-align: center;
-    padding: 25px;
-    margin-top: 15px;
-    margin-left: 310px;
-    margin-right: 15px;
-    border-radius: 25px;
-    height: 600px;
-    background-color: #dee4ec;
+﻿.upload-page {
+    padding-bottom: 10px;
 }
 
-/* Upload box */
-.upload-box {
+.navbar-brand {
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    background-color: white;
+    display: flex;
+    align-items: center;
+}
+    .navbar-brand img {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        padding: 5px;
+    }
+
+
+.no-files{
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    margin-top: 5px;
-    margin-left: 310px;
-    margin-right: 15px;
-    border-radius: 25px;
-    border: dashed;
-    height: fit-content;
-    background-color: #dee4ec;
-    align-content: center;
+    margin:0px;
+    height:100%;
+    align-items: center;
 }
 
-.upload-btn-wrapper {
-    position: relative;
+#file-explorer{
+    padding: 0px;
+    justify-content:center;
+}
+
+#toolbox {
+    padding-left: 0px;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+}
+
+#tools {
+    justify-content:center;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
-    display: inline-block;
-    margin-top: 5px;
+    height: 100%;
+    text-align: center;
+    align-items: center;
+    background: #cbbbe2;
+    border: solid;
+    border-color: #7045BA;
+    border-radius: 20px;
     padding: 5px;
 }
+    #tool-row {
+        width: 100%;
+        display: contents;
+        cursor: pointer;
+    }
+    #tools img {
+        padding:0px;
+        max-width: 50px;
+    }
+    #tools p {
+        margin:0px;
+        padding:0px;
+        max-width: 50px;
+        overflow:hidden;
+        white-space:nowrap;
+    }
 
+
+
+/* This is where the scrollbox is contained */
+#filebox {
+    background: #f2f2f2;
+    border: solid;
+    border-color: #808080;
+    border-radius: 20px;
+    padding: 0px;
+    overflow: hidden;
+}
+
+/* This is where all the uploaded files are contained */
+#scrollbox {
+    width: 100%;
+    height: 48vh;
+    max-height: inherit;
+    justify-content: center;
+    overflow-y: scroll;
+}
+
+/* Everything inside the containers for the files (img and file name) */
+#uploaded-files {
+    width: 120px;
+    height: fit-content;
+    padding:5px;
+    margin: 5px;
+}
+
+    #uploaded-files img {
+        width: 100%;
+        height: auto;
+        margin-bottom: 5px;
+    }
+
+    #uploaded-files a p {
+        text-align: center;
+        text-decoration: none;
+        color: black;
+        margin: 0px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+/* Upload box (at bottom of page) */
+#upload-box {
+    text-align: center;
+    padding: 5px;
+    justify-content: center;
+    border: dashed;
+    border-color: #808080;
+    height: min-content;
+    background-color: #e6e6e6;
+    border-radius: 20px
+}
+
+/* Input box for choosing a file */
+#file-input-box input {
+    overflow:auto;
+    width: fit-content;
+    display: inline-block;
+}
+
+/* Define the default style for the element */
+.file-hover {
+    transition: background-color 0.3s ease; /* Add a smooth transition effect */
+}
+
+    /* Define the style when the element is being hovered over */
+    .file-hover:hover {
+        background-color: #ede6f8;
+        border: 2px solid;
+        border-color: #cbbbe2;
+        border-radius: 5px;
+    }
+
+
+
+/* Upload button */
 .btn {
-    background-color: mediumpurple;
-    padding: 8px 20px;
-    border-radius: 8px;
-    font-size: 20px;
-    cursor: pointer;
-    font-weight: bold;
+    background: #9877c5;
+    border-color: black;
 }
 
-.upload-btn-wrapper input[type=file] {
-    font-size: 100px;
-    position: absolute;
-    left: 0;
-    top: 0;
-    opacity: 0;
-}
+    .btn:hover {
+        background-color: #705892;
+        border-color: black;
+    }

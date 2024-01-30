@@ -2,50 +2,186 @@
 @model Ethereal_Cloud.Pages.UploadModel
 @{
     <meta charset="utf-8">
+    <title>My Files</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    Layout = "SidebarsLayout";
+    Layout = null;
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="/css/Site.css" asp-append-version="true">
     <link rel="stylesheet" href="/css/Upload.css" asp-append-version="true">
 
-    <!-- Box at top of screen -->
-    <div class="text-box">
-        <div>
-            <form method="post" asp-page-handler="File">
 
-                <button type="submit">File</button>
+    <!-- Top Navigation bar -->
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <div class="container">
+            <div class="navbar-brand">
+                <img src="~/images/LogoVector.svg" alt="logo" class="logo">
+            </div>
+
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mynavbar">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link @(Request.Path == "/Upload" || Request.Path == "/" ? "active" : "")" class="icon" asp-area="" asp-page="/Upload">My Files</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(Request.Path == "/Bin" || Request.Path == "/" ? "active" : "")" class="icon" asp-area="" asp-page="/Bin">Bin</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(Request.Path == "/Settings" || Request.Path == "/" ? "active" : "")" class="icon" asp-area="" asp-page="/Settings">Settings</a>
+                    </li>
+                </ul>
+                <form class="d-flex">
+                    <input class="form-control me-2" type="text" placeholder="Search">
+                    <button class="btn btn-primary" type="button">Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="upload-page container mx-auto">
+    
+        <!-- File explorer -->
+        <div id="file-explorer" class="row mt-3">
+
+            <!-- Files Toolbox -->
+            <div id="toolbox" class="col-md-1" class="row">
+                <div id="tools">
+                    <!-- Sort button -->
+                    <div id="tool-row" onclick="toggleImage()">
+                        <img id="toggleImage" class="col" src="~/images/tools/sort-alpha-down.svg" alt="Image 1">
+                        <p class="col">Sort</p>
+
+                        <script>
+                            // On click swap image
+                            function toggleImage() {
+                                var imageElement = document.getElementById('toggleImage');
+                                if (imageElement.src.endsWith('sort-alpha-down.svg')) {
+                                    imageElement.src = 'images/tools/sort-alpha-up.svg';
+                                } else {
+                                    imageElement.src = 'images/tools/sort-alpha-down.svg';
+                                }
+                            }
+                        </script>
+
+                    </div>
+
+
+
+
+                    <!-- New folder button -->
+                    <div id="tool-row" >
+                        <a asp-page-handler="Createfolder" asp-route-foldername="temp">
+                            <img class="col" src="~/images/tools/folder-plus.svg" alt="new-folder">
+                            <p class="col">New</p>
+                        </a>
+                    </div>
+
+                    <!-- Share button -->
+                    <div id="tool-row">
+                        <img class="col" src="~/images/tools/share.svg" alt="share">
+                        <p class="col">Share</p>
+                    </div>
+
+                    <!-- Delete button -->
+                    <div id="tool-row">
+                        <img class="col" src="~/images/tools/trash.svg" alt="trash">
+                        <p class="col">Delete</p>
+                    </div>
+
+                </div>
+            </div>
+            
+
+            <!-- Files Box -->
+            <div id="filebox" class="col-md-11">
+
+                <!-- Appears when the files are loaded -->
+                <div id="scrollbox" class="row">
+                    @if (Model.DisplayList.Count > 0)
+                    {
+                        @foreach (var display in Model.DisplayList)
+                        {
+                            <div id="uploaded-files" class="file-hover">
+                                <a asp-page-handler="Download" asp-route-filename="@display.Name">
+                                    <img src="~/images/file-icons/@GetImageForFileType(@display.Type)" alt="logo" class="logo">
+                                    <p>@display.Name</p>
+                                </a>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="no-files">
+                            <div>
+                                <img class="row" src="~/images/tools/search.svg" alt="search" style="width: -webkit-fill-available; opacity: 50%;">
+                                <h3 class="row">No files here</h3>
+                            </div>
+                        </div>
+                        
+                    }
+                </div>
+            </div>
+            
+        </div>
+            
+
+        <!-- Bottom upload dotted box -->
+        <div id="upload-box" class="row mt-3">
+            <h3>Upload your files</h3>
+            <form method="post" enctype="multipart/form-data" asp-page-handler="Upload">
+                <div class="mb-3" id="file-input-box">
+                    <input class="form-control" type="file" name="uploadedFile" id="fileInput" multiple>
+                    <input type="submit" class="btn btn-success" value="Upload" />
+                </div>
             </form>
         </div>
 
-        <h2>Files</h2>
-
-        @if (Model.Files != null)
-        {
-            @foreach (var file in Model.Files)
-            {
-                <div>
-                    <span>@file.Filename</span>
-                    <a asp-page-handler="Download" asp-route-filename="@file.Filename">Download</a>
-                </div>
-            }
-        }
-        else
-        {
-            <p>No files available.</p>
-        }
 
     </div>
 
-    <!-- Box at bottom of screen -->
-    <div class="upload-box">
-        <h1>Upload</h1>
-        <form method="post" enctype="multipart/form-data" asp-page-handler="Upload">
-            <div>
-                <label for="fileInput">Choose a file:</label>
-                <input type="file" id="fileInput" name="uploadedFile" />
-            </div>
-            <div>
-                <input type="submit" value="Upload" />
-            </div>
-        </form>
-    </div>
+    <!-- Console logger -->
+    <script>
+        var logger = '@ViewData["logger"]';
+        if (logger !== null) {
+            console.log(decodeHtml(logger));
+        }
+
+        function decodeHtml(html) {
+            var txt = document.createElement("textarea");
+            txt.innerHTML = html;
+            return txt.value;
+        }
+    </script>
+
+
+    string GetImageForFileType(string fileType)
+    {
+        //looks at files Mime type and gets appropriate image
+        switch (fileType.ToLower())
+        {
+            case "folder":
+                return "folder.svg";
+            case "image/png":
+            case "image/jpeg":
+            case "image/gif":
+                return "file-image.svg";
+            case "audio/mpeg":
+                return "file-music.svg";
+            case "video/mp4":
+                return "file-video.svg";
+            case "application/pdf":
+                return "file-pdf.svg";
+            case "application/msword":
+            case "text/plain":
+                return "file-doc.svg";
+            default:
+                return "unknown.svg"; //Unknown type
+        }
+    }
+
 }
