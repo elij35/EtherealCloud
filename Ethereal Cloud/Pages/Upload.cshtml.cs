@@ -39,8 +39,6 @@ namespace Ethereal_Cloud.Pages
                 
                 DisplayList = new List<FolderContentDisplay>();
 
-                Logger.LogToConsole(ViewData, "Success Folder: " + JsonSerializer.Serialize(folderContent));
-
                 //Add folders to display list
                 foreach(FolderDataRecieve folder in folderContent.Folders)
                 {

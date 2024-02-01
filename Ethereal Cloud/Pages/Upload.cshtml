@@ -49,56 +49,59 @@
         <div id="file-explorer" class="row mt-3">
 
             <!-- Files Toolbox -->
-            <div id="toolbox" class="col-md-1" class="row">
-                <div id="tools">
+            <div id="toolbox" class="col-lg-1 col-md-2 col-sm-2">
+                <div id="tools" class="row">
+
                     <!-- Sort button -->
                     <div id="tool-row" onclick="toggleImage()">
-                        <img id="toggleImage" class="col" src="~/images/tools/sort-alpha-down.svg" alt="Image 1">
-                        <p class="col">Sort</p>
-
-                        <script>
-                            // On click swap image
-                            function toggleImage() {
-                                var imageElement = document.getElementById('toggleImage');
-                                if (imageElement.src.endsWith('sort-alpha-down.svg')) {
-                                    imageElement.src = 'images/tools/sort-alpha-up.svg';
-                                } else {
-                                    imageElement.src = 'images/tools/sort-alpha-down.svg';
-                                }
-                            }
-                        </script>
-
+                        <a id="tool-label">
+                            <img id="toggleImage" class="row" src="~/images/tools/sort-alpha-down.svg" alt="Image 1">
+                        </a>
+                        <p class="row">Sort</p>
                     </div>
 
-
-
-
                     <!-- New folder button -->
-                    <div id="tool-row" >
-                        <a asp-page-handler="Createfolder" asp-route-foldername="temp">
-                            <img class="col" src="~/images/tools/folder-plus.svg" alt="new-folder">
-                            <p class="col">New</p>
+                    <div id="tool-row">
+                        <a id="tool-label" asp-page-handler="Createfolder" asp-route-foldername="temp">
+                            <img class="row" src="~/images/tools/folder-plus.svg" alt="new-folder">
                         </a>
+                        <p class="row">New</p>
                     </div>
 
                     <!-- Share button -->
                     <div id="tool-row">
-                        <img class="col" src="~/images/tools/share.svg" alt="share">
-                        <p class="col">Share</p>
+                        <a id="tool-label">
+                            <img class="row" src="~/images/tools/share.svg" alt="share">
+                        </a>
+                        <p class="row">Share</p>
                     </div>
 
                     <!-- Delete button -->
                     <div id="tool-row">
-                        <img class="col" src="~/images/tools/trash.svg" alt="trash">
-                        <p class="col">Delete</p>
+                        <a id="tool-label">
+                            <img class="row" src="~/images/tools/trash.svg" alt="trash">
+                        </a>
+                        <p class="row">Delete</p>
                     </div>
 
                 </div>
             </div>
-            
+
+            <script>
+                // On click swap image
+                function toggleImage() {
+                    var imageElement = document.getElementById('toggleImage');
+                    if (imageElement.src.endsWith('sort-alpha-down.svg')) {
+                        imageElement.src = 'images/tools/sort-alpha-up.svg';
+                    } else {
+                        imageElement.src = 'images/tools/sort-alpha-down.svg';
+                    }
+                }
+            </script>
+
 
             <!-- Files Box -->
-            <div id="filebox" class="col-md-11">
+            <div id="filebox" class="col-lg-11 col-md-10 col-sm-10">
 
                 <!-- Appears when the files are loaded -->
                 <div id="scrollbox" class="row">
@@ -109,8 +112,8 @@
                             <div id="uploaded-files" class="file-hover">
                                 <a asp-page-handler="Download" asp-route-filename="@display.Name">
                                     <img src="~/images/file-icons/@GetImageForFileType(@display.Type)" alt="logo" class="logo">
-                                    <p>@display.Name</p>
                                 </a>
+                                <p>@display.Name</p>
                             </div>
                         }
                     }

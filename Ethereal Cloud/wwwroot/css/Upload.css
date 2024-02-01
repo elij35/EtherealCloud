@@ -35,18 +35,15 @@
 }
 
 #toolbox {
-    padding-left: 0px;
-    padding-top: 10px;
-    padding-right: 10px;
-    padding-bottom: 10px;
+    padding: 10px;
 }
 
 #tools {
     justify-content:center;
     display: flex;
-    flex-direction: column;
     overflow: hidden;
     height: 100%;
+    width: 100%;
     text-align: center;
     align-items: center;
     background: #cbbbe2;
@@ -54,28 +51,37 @@
     border-color: #7045BA;
     border-radius: 20px;
     padding: 5px;
+    margin: 0px;
 }
     #tool-row {
-        width: 100%;
-        display: contents;
+        text-align: -webkit-center;
+        display: flow;
+        width: fit-content;
         cursor: pointer;
+        align-self:center
+    }
+    #tool-label {
+        display: flow;
+        width: fit-content;
+        cursor: pointer;
+        align-self: center
     }
     #tools img {
-        padding:0px;
-        max-width: 50px;
+        padding: 0px;
+        width: 40px;
+        height: auto;
     }
     #tools p {
+        justify-content: center;
         margin:0px;
         padding:0px;
-        max-width: 50px;
-        overflow:hidden;
-        white-space:nowrap;
     }
 
 
 
 /* This is where the scrollbox is contained */
 #filebox {
+    height: fit-content;
     background: #f2f2f2;
     border: solid;
     border-color: #808080;
@@ -107,7 +113,7 @@
         margin-bottom: 5px;
     }
 
-    #uploaded-files a p {
+    #uploaded-files p {
         text-align: center;
         text-decoration: none;
         color: black;
@@ -115,6 +121,7 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        text-decoration: none;
     }
 
 /* Upload box (at bottom of page) */
