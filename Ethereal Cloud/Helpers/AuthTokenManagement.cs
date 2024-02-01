@@ -11,7 +11,8 @@ namespace Ethereal_Cloud.Helpers
             {
                 HttpOnly = true,
                 Secure = true, //for HTTPS
-                //Expires = DateTimeOffset.UtcNow.AddMinutes(30) //expires in 30 mins
+                SameSite = SameSiteMode.Lax, //cant be send with 3rd party websites
+                Expires = DateTimeOffset.UtcNow.AddMinutes(30) //expires in 30 mins
             };
            
             context.Response.Cookies.Append("AuthToken", token, options);
