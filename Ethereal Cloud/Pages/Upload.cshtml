@@ -102,6 +102,27 @@
 
             <!-- Files Box -->
             <div id="filebox" class="col-lg-11 col-md-10 col-sm-10">
+                <!-- FilePath -->
+                <div id="filepath" class="row">
+                    <div class="col-11">
+                        <!-- Root Image -->
+                        <div class="col" id="path-root">
+                            <img src="~/images/file-path/path-root.svg" alt="path">
+                        </div>
+                        <!-- Current Filepath-->
+                        <div id="path-divider" class="col">\</div>
+                        <p id="path-folder" class="col">test</p>
+                        <div id="path-divider" class="col">\</div>
+                        <p id="path-folder" class="col">testing</p>
+                    </div>
+
+                    <!-- Path Back button-->
+                    <div id="filepath-button" class="col-1">
+                        <button>Back</button>
+                    </div>
+
+                </div>
+
 
                 <!-- Appears when the files are loaded -->
                 <div id="scrollbox" class="row">
@@ -110,7 +131,7 @@
                         @foreach (var display in Model.DisplayList)
                         {
                             <div id="uploaded-files" class="file-hover">
-                                <a asp-page-handler="Download" asp-route-filename="@display.Name">
+                                <a asp-page-handler="@GetFileItemHandler(display.Type)" asp-route-itemname="@display.Name">
                                     <img src="~/images/file-icons/@GetImageForFileType(@display.Type)" alt="logo" class="logo">
                                 </a>
                                 <p>@display.Name</p>
@@ -160,6 +181,19 @@
             return txt.value;
         }
     </script>
+
+
+    string GetFileItemHandler(string fileHandler)
+    {
+        if (fileHandler == "Folder")
+        {
+            return "Navigate";
+        }
+        else
+        {
+            return "Download";
+        }
+    }
 
 
     string GetImageForFileType(string fileType)

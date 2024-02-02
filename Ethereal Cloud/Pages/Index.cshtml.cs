@@ -39,14 +39,8 @@ namespace Ethereal_Cloud.Pages
                 //Valid login
                 Logger.LogToConsole(ViewData, "Successfull login of user " + Username);
 
-                //save the auth token in a cookie
-                var options = new CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = true, //for HTTPS
-                };
-                //response
-                Response.Cookies.Append("AuthToken", response.ToString(), options);
+                //Save authtoken as a cookie
+                CookieManagement.Set(HttpContext, "AuthToken", response.ToString());
 
                 //goto the my files page
                 Response.Redirect("/Upload");

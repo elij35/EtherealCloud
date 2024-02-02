@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.CodeAnalysis;
+using NuGet.Packaging;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Ethereal_Cloud.Pages
@@ -25,7 +26,7 @@ namespace Ethereal_Cloud.Pages
             //create object
             var dataObject = new Dictionary<string, object?>
             {
-                { "authtoken", AuthTokenManagement.GetToken(HttpContext)}
+                { "authtoken", CookieManagement.Get(HttpContext, "AuthToken")}
             };
             
             //Make request
@@ -66,7 +67,7 @@ namespace Ethereal_Cloud.Pages
                     DisplayList.Add(newFile);
                 }
 
-                //Logger.LogToConsole(ViewData, "Successful get of files: " + JsonSerializer.Serialize(DisplayList));
+                Logger.LogToConsole(ViewData, "Successful get of files: " + JsonSerializer.Serialize(DisplayList));
             }
             else
             {
@@ -74,15 +75,15 @@ namespace Ethereal_Cloud.Pages
             }
             
         }
-        public async Task<IActionResult> OnGetDownload(string filename)
+        public async Task<IActionResult> OnGetDownload(string itemname)
         {
             await OnGet(null);
 
-            FolderContentDisplay? element = DisplayList.FirstOrDefault(item => item.Name == filename);
+            FolderContentDisplay? element = DisplayList.FirstOrDefault(item => item.Name == itemname);
 
             if (element == null)
             {
-                Logger.LogToConsole(ViewData, "Cant find file to download: " + filename + " : " + element);
+                Logger.LogToConsole(ViewData, "Cant find file to download: " + itemname + " : " + element);
                 return null;
             }
 
@@ -91,7 +92,7 @@ namespace Ethereal_Cloud.Pages
             //create object
             var dataObject = new Dictionary<string, object?>
             {
-                { "authtoken", AuthTokenManagement.GetToken(HttpContext)}
+                { "authtoken", CookieManagement.Get(HttpContext, "AuthToken")}
             };
 
             //Make request
@@ -113,7 +114,42 @@ namespace Ethereal_Cloud.Pages
             }
            
         }
-        
+
+        public async Task OnGetNavigate(string itemname)
+        {
+            //\
+            FolderContentDisplay? element = DisplayList.FirstOrDefault(item => item.Name == itemname);
+
+            if (element != null)
+            {
+                List<FolderDataRecieve>? folderPath = JsonSerializer.Deserialize<List<FolderDataRecieve>>(CookieManagement.Get(HttpContext, "FolderPath"));
+
+                FolderDataRecieve navigateTo = new()
+                {
+                    FolderID = element.Id,
+                    Foldername = itemname
+                };
+
+                folderPath.Add(navigateTo);
+
+                CookieManagement.Set(HttpContext, "FolderPath", JsonSerializer.Serialize(folderPath));
+
+                ///////////////////////Set the path div here!!!!!!!!!
+
+                //await OnGet(element.Id);
+
+                Logger.LogToConsole(ViewData, "Navigated to: " + itemname);
+            }
+            else
+            {
+                Logger.LogToConsole(ViewData, "Failed to find: " + itemname);
+            }
+
+           
+
+        }
+
+
 
         public async Task OnPostUploadAsync(IFormFile uploadedFile)
         {
@@ -132,7 +168,7 @@ namespace Ethereal_Cloud.Pages
                     //create file object
                     var dataObject = new Dictionary<string, object?>
                     {
-                        { "AuthToken", AuthTokenManagement.GetToken(HttpContext) },
+                        { "AuthToken", CookieManagement.Get(HttpContext, "AuthToken") },
                         { "Filename", uploadedFile.FileName },
                         { "Filetype", MimeType.GetMimeType(uploadedFile.FileName) },
                         { "Content", Convert.ToBase64String(stream.ToArray()) }
@@ -181,7 +217,7 @@ namespace Ethereal_Cloud.Pages
             //create file object
             var dataObject = new Dictionary<string, object?>
             {
-                { "AuthToken", AuthTokenManagement.GetToken(HttpContext) }, 
+                { "AuthToken", CookieManagement.Get(HttpContext, "AuthToken") }, 
                 { "FolderName", foldername },
                 { "ParentFolder", currentFolder }
             };
