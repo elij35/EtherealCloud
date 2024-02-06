@@ -4,10 +4,11 @@
     display: flex;
     justify-content: center;
     min-height: 100vh;
-    background: linear-gradient(to bottom, #0f0c29, #302b63);
+    background: linear-gradient(to bottom, #0f0c29, #64618a);
 }
 
 .main {
+    background: #573b8a;
     width: 320px;
     height: 410px;
     overflow: hidden;
@@ -42,6 +43,7 @@ h1 {
 }
 
 .labelbottom {
+    padding-top: 5px;
     color: #fff;
     font-size: 1.8em;
     justify-content: center;
@@ -72,7 +74,7 @@ button {
     justify-content: center;
     display: block;
     color: #fff;
-    background: #573b8a;
+    background: #9877c5;
     font-size: 15px;
     font-weight: bold;
     margin-top: 20px;
@@ -84,7 +86,7 @@ button {
 }
 
     button:hover {
-        background: #6d44b8;
+        background: #3f2b65;
     }
 
 .login {

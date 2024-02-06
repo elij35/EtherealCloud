@@ -1,52 +1,205 @@
-﻿/* Button at top of page which will go soon */
-.temp-refresh-btn {
-    text-align: center;
-    padding: 5px;
-    height: fit-content;
+﻿.upload-page {
+    padding-bottom: 10px;
 }
+
+.navbar-brand {
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    background-color: white;
+    display: flex;
+    align-items: center;
+}
+    .navbar-brand img {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        padding: 5px;
+    }
+
+.no-files{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin:0px;
+    height:100%;
+    align-items: center;
+}
+
+#file-explorer{
+    padding: 0px;
+    justify-content:center;
+}
+
+#toolbox {
+    padding: 10px;
+}
+
+#tools {
+    justify-content:center;
+    display: flex;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    align-items: center;
+    background: #cbbbe2;
+    border: solid;
+    border-color: #7045BA;
+    border-radius: 20px;
+    padding: 5px;
+    margin: 0px;
+}
+    #tool-row {
+        text-align: -webkit-center;
+        display: flow;
+        width: fit-content;
+        cursor: pointer;
+        align-self:center
+    }
+    #tool-label {
+        display: flow;
+        width: fit-content;
+        cursor: pointer;
+        align-self: center
+    }
+    #tools img {
+        padding: 0px;
+        width: 40px;
+        height: auto;
+    }
+    #tools p {
+        justify-content: center;
+        margin:0px;
+        padding:0px;
+    }
+
+
+
+/* This is where the scrollbox is contained */
+#filebox {
+    height: fit-content;
+    background: #f2f2f2;
+    border: solid;
+    border-color: #808080;
+    border-radius: 20px;
+    padding: 0px;
+    overflow: hidden;
+}
+
+#filepath {
+    box-sizing: border-box;
+    border-bottom: solid #808080;
+    padding: 5px;
+    padding-left: 10%;
+    padding-right: 10%;
+    background-color: #cbbbe2;
+    box-shadow: inset 0px 0px 20px 0px #80808066;
+}
+
+#path-root {
+    display: contents;
+}
+    #path-root img{
+        height:25px;
+        padding-right: 5px;
+    }
+
+#path-folder {
+    display: contents;
+}
+
+#path-divider {
+    display: contents;
+    font-weight: bold;
+}
+
+
+#filepath-button {
+    text-align: center;
+}
+
+
 
 /* This is where all the uploaded files are contained */
 #scrollbox {
+    margin: 0px;
+    width: 100%;
     height: 48vh;
     max-height: inherit;
-    border: solid;
-    border-width: 2px;
     justify-content: center;
     overflow-y: scroll;
 }
 
 /* Everything inside the containers for the files (img and file name) */
 #uploaded-files {
-    background-color: lightblue;
-    border: solid;
-    width: min-content;
+    width: 120px;
+    height: fit-content;
+    padding:5px;
     margin: 5px;
 }
 
     #uploaded-files img {
-        width: 150px;
+        width: 100%;
         height: auto;
-        padding-top: 5px;
+        margin-bottom: 5px;
     }
 
-    #uploaded-files a p {
+    #uploaded-files p {
         text-align: center;
         text-decoration: none;
-        color: black;    
+        color: black;
+        margin: 0px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-decoration: none;
     }
 
 /* Upload box (at bottom of page) */
-.upload-box {
+#upload-box {
     text-align: center;
     padding: 5px;
     justify-content: center;
     border: dashed;
+    border-color: #808080;
     height: min-content;
-    background-color: #dee4ec;
+    background-color: #e6e6e6;
+    border-radius: 20px
 }
 
 /* Input box for choosing a file */
 #file-input-box input {
+    overflow:auto;
     width: fit-content;
+    max-width:100%;
     display: inline-block;
 }
+
+/* Define the default style for the element */
+.file-hover {
+    transition: background-color 0.3s ease; /* Add a smooth transition effect */
+}
+
+    /* Define the style when the element is being hovered over */
+    .file-hover:hover {
+        background-color: #ede6f8;
+        border: 2px solid;
+        border-color: #cbbbe2;
+        border-radius: 5px;
+    }
+
+
+
+/* Upload button */
+.btn {
+    background: #9877c5;
+    border-color: black;
+}
+
+    .btn:hover {
+        background-color: #705892;
+        border-color: black;
+    }

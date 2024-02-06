@@ -1,165 +1,243 @@
+using Ethereal_Cloud.Helpers;
 using Ethereal_Cloud.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.StaticFiles;
-using System.Text;
+using Microsoft.CodeAnalysis;
+using NuGet.Packaging;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Ethereal_Cloud.Pages
 {
+    [DisableRequestSizeLimit] //Disables the file upload limit
     public class UploadModel : PageModel
     {
         [BindProperty]
         public string Username { get; set; }
 
-        // Helper method to get or initialize the Files list from session
-        public List<FileModel> Files
+        //list of files to be shown to user
+        public List<FolderContentDisplay> DisplayList = new List<FolderContentDisplay>();
+
+        public async Task OnGet(int? folderId)
         {
-            get
+            //users current folder location
+            folderId = null;
+
+            //create object
+            var dataObject = new Dictionary<string, object?>
             {
-                if (HttpContext.Session.TryGetValue("Files", out byte[] data) && data != null)
-                {
-                    string json = Encoding.UTF8.GetString(data);
-                    return Newtonsoft.Json.JsonConvert.DeserializeObject<List<FileModel>>(json);
-                }
-                else
-                {
-                    return new List<FileModel>();
-                }
-            }
-            set
+                { "authtoken", AuthTokenManagement.GetToken(HttpContext)}
+            };
+            
+            //Make request
+            var response = await ApiRequest.Files(ViewData, HttpContext, "v1/folder/files/" + folderId, dataObject);
+            
+            if (response != null)
             {
-                string json = Newtonsoft.Json.JsonConvert.SerializeObject(value);
-                HttpContext.Session.Set("Files", Encoding.UTF8.GetBytes(json));
-            }
-        }
+                //Put response in form of FolderContentRecieve
+                string jsonString = response.ToString();
+                FolderContentRecieve folderContent = JsonSerializer.Deserialize<FolderContentRecieve>(jsonString);
+                
+                DisplayList = new List<FolderContentDisplay>();
 
-        public async Task OnPostFileAsync()
-        {
-
-            Files = new List<FileModel>();
-
-            bool fileFound = true;
-            int counter = 1;
-            while (fileFound)
-            {
-                string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/file/" + counter;
-
-                using (HttpClient client = new HttpClient())
+                //Add folders to display list
+                foreach(FolderDataRecieve folder in folderContent.Folders)
                 {
-                    var content = new StringContent($"{{\"authtoken\":\"Temp\"}}", Encoding.UTF8, "application/json");
-                    var response = await client.PostAsync(apiUrl, content);
-
-                    if (response.IsSuccessStatusCode)
+                    FolderContentDisplay newFolder = new()
                     {
-                        string stringResponse = await response.Content.ReadAsStringAsync();
-                        Response<object> responseObject = await Response<object>.DeserializeJSON(stringResponse);
+                        Id = folder.FolderID,
+                        Name = folder.Foldername,
+                        Type = "Folder"
+                    };
 
-                        if (responseObject.Success)
-                        {
-                            Response<FileModel> file = await Response<FileModel>.DeserializeJSON(stringResponse);
-                            ShowPopup(file.Message.Content);
-                            var files = Files;
-                            files.Add(file.Message);
-                            Files = files;
-                        }
-                        else
-                        {
-                            fileFound = false;
-                        }
-
-                    }
-                    else
-                    {
-                        ShowPopup("Failure");
-                    }
-
+                    DisplayList.Add(newFolder);
                 }
-                counter++;
+
+                //Add files to display list
+                foreach (FileMetaRecieve file in folderContent.Files)
+                {
+                    
+                    FolderContentDisplay newFile = new()
+                    {
+                        Id = file.FileID,
+                        Name = file.Filename,
+                        Type = file.Filetype
+                    };
+
+                    DisplayList.Add(newFile);
+                }
+
+                Logger.LogToConsole(ViewData, "Successful get of files: " + JsonSerializer.Serialize(DisplayList));
             }
-
-        }
-
-        private void ShowPopup(string status)
-        {
-            ViewData["PopupStatus"] = status;
-        }
-
-
-
-        public IActionResult OnGetDownload(string filename)
-        {
-            var files = Files;
-
-            var file = files?.FirstOrDefault(f => f.Filename == filename);
-
-
-            if (file == null)
+            else
             {
-                return NotFound();
+                Logger.LogToConsole(ViewData, "Failed Get");
             }
+            
+        }
+        public async Task<IActionResult> OnGetDownload(string itemname)
+        {
+            await OnGet(null);
 
-            byte[] fileContents = Convert.FromBase64String(file.Content);
+            FolderContentDisplay? element = DisplayList.FirstOrDefault(item => item.Name == itemname);
 
-            // Determine content type based on file extension
-            var contentTypeProvider = new FileExtensionContentTypeProvider();
-            if (!contentTypeProvider.TryGetContentType(file.Filename, out var contentType))
+            if (element == null)
             {
-                contentType = "application/octet-stream";
+                Logger.LogToConsole(ViewData, "Cant find file to download: " + itemname + " : " + element);
+                return null;
             }
 
-            return File(fileContents, contentType, file.Filename);
+            int fileId = element.Id;
+            
+            //create object
+            var dataObject = new Dictionary<string, object?>
+            {
+                { "authtoken", AuthTokenManagement.GetToken(HttpContext)}
+            };
+
+            //Make request
+            var response = await ApiRequest.Files(ViewData, HttpContext, "v1/file/" + fileId, dataObject);
+
+            if (response != null)
+            {
+                string jsonString = response.ToString();
+                FileModel file = JsonSerializer.Deserialize<FileModel>(jsonString);
+
+                Logger.LogToConsole(ViewData, "Successfull download: " + file.Content + " " + file.Filetype + " " + file.Filename);
+
+                return File(Convert.FromBase64String(file.Content), file.Filetype, file.Filename);
+            }
+            else
+            {
+                Logger.LogToConsole(ViewData, "Fail: " + fileId);
+                return null;
+            }
+           
+        }
+
+        public async Task OnGetNavigate(string itemname)
+        {
+            //\
+            FolderContentDisplay? element = DisplayList.FirstOrDefault(item => item.Name == itemname);
+
+            if (element != null)
+            {
+                List<FolderDataRecieve>? folderPath = JsonSerializer.Deserialize<List<FolderDataRecieve>>(PathManagement.Get(HttpContext, "FolderPath"));
+
+                FolderDataRecieve navigateTo = new()
+                {
+                    FolderID = element.Id,
+                    Foldername = itemname
+                };
+
+                folderPath.Add(navigateTo);
+
+                PathManagement.Set(HttpContext, "FolderPath", JsonSerializer.Serialize(folderPath));
+
+                ///////////////////////Set the path div here!!!!!!!!!
+
+                //await OnGet(element.Id);
+
+                Logger.LogToConsole(ViewData, "Navigated to: " + itemname);
+            }
+            else
+            {
+                Logger.LogToConsole(ViewData, "Failed to find: " + itemname);
+            }
+
+           
+
         }
 
 
-        public async Task<IActionResult> OnPostUploadAsync(IFormFile uploadedFile)
+
+        public async Task OnPostUploadAsync(IFormFile uploadedFile)
         {
             if (uploadedFile != null && uploadedFile.Length > 0)
             {
                 using (var stream = new MemoryStream())
                 {
+                    //Where folder the user is in
+                    int? currentFolder = null;
+
+                    //Hold the file contents in the stream
                     await uploadedFile.CopyToAsync(stream);
-                    var newFile = new FileModel
+
+                    
+
+                    //create file object
+                    var dataObject = new Dictionary<string, object?>
                     {
-                        Filename = uploadedFile.FileName,
-                        Filetype = Path.GetExtension(uploadedFile.FileName),
-                        Content = Convert.ToBase64String(stream.ToArray())
+                        { "AuthToken", AuthTokenManagement.GetToken(HttpContext) },
+                        { "Filename", uploadedFile.FileName },
+                        { "Filetype", MimeType.GetMimeType(uploadedFile.FileName) },
+                        { "Content", Convert.ToBase64String(stream.ToArray()) }
                     };
-
-                    string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/file";
-
-                    using (HttpClient client = new HttpClient())
+                    //If the user isnt in the root
+                    if (currentFolder != null)
                     {
-                        var content = new StringContent($"{{\"authtoken\":\"Test\",\"filename\":\"{newFile.Filename}\",\"filetype\":\"{newFile.Filetype}\",\"content\":\"{newFile.Content}\"}}", Encoding.UTF8, "application/json");
-                        var response = await client.PostAsync(apiUrl, content);
+                        dataObject.Add("FolderId", currentFolder);
+                    }
 
-                        if (response.IsSuccessStatusCode)
-                        {
-                            string stringResponse = await response.Content.ReadAsStringAsync();
-                            //response: success ,message        message: message, fileid
 
-                            Response<object> responseObject = await Response<object>.DeserializeJSON(stringResponse);
-
-                            if (!responseObject.Success)
-                            {
-                                ShowPopup("Response failed:" + responseObject.Message);
-                            }
-
-                        }
-                        else
-                        {
-                            ShowPopup("Failure");
-                        }
-
+                    //Make request
+                    var response = await ApiRequest.Files(ViewData, HttpContext, "v1/file", dataObject);
+                    
+                    if (response != null)
+                    {
+                        Logger.LogToConsole(ViewData, "Successfull file upload: " + response);
+                        await OnGet(null);
+                    }
+                    else
+                    {
+                        Logger.LogToConsole(ViewData, "Bad upload response");
                     }
                 }
+                
             }
             else
             {
-                ShowPopup("Invalid file upload");
+                Logger.LogToConsole(ViewData, "Invalid file upload");
             }
-
-            return null;
+            
+            
         }
+
+
+
+
+
+        public async Task OnGetCreatefolderAsync(string foldername)
+        {
+            foldername = "TempName";
+            
+            //Where folder the user is in
+            int? currentFolder = null;
+
+            //create file object
+            var dataObject = new Dictionary<string, object?>
+            {
+                { "AuthToken", AuthTokenManagement.GetToken(HttpContext) }, 
+                { "FolderName", foldername },
+                { "ParentFolder", currentFolder }
+            };
+
+            //Make request
+            var response = await ApiRequest.Files(ViewData, HttpContext, "v1/folder", dataObject);
+
+            if (response != null)
+            {
+                Logger.LogToConsole(ViewData, "Successfull folder creation: " + response);
+                await OnGet(null);
+            }
+            else
+            {
+                Logger.LogToConsole(ViewData, "Bad folder response");
+            }
+            
+        }
+
+
 
     }
 
