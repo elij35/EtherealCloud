@@ -26,7 +26,7 @@ namespace Ethereal_Cloud.Pages
             //create object
             var dataObject = new Dictionary<string, object?>
             {
-                { "authtoken", CookieManagement.Get(HttpContext, "AuthToken")}
+                { "authtoken", AuthTokenManagement.GetToken(HttpContext)}
             };
             
             //Make request
@@ -92,7 +92,7 @@ namespace Ethereal_Cloud.Pages
             //create object
             var dataObject = new Dictionary<string, object?>
             {
-                { "authtoken", CookieManagement.Get(HttpContext, "AuthToken")}
+                { "authtoken", AuthTokenManagement.GetToken(HttpContext)}
             };
 
             //Make request
@@ -122,7 +122,7 @@ namespace Ethereal_Cloud.Pages
 
             if (element != null)
             {
-                List<FolderDataRecieve>? folderPath = JsonSerializer.Deserialize<List<FolderDataRecieve>>(CookieManagement.Get(HttpContext, "FolderPath"));
+                List<FolderDataRecieve>? folderPath = JsonSerializer.Deserialize<List<FolderDataRecieve>>(PathManagement.Get(HttpContext, "FolderPath"));
 
                 FolderDataRecieve navigateTo = new()
                 {
@@ -132,7 +132,7 @@ namespace Ethereal_Cloud.Pages
 
                 folderPath.Add(navigateTo);
 
-                CookieManagement.Set(HttpContext, "FolderPath", JsonSerializer.Serialize(folderPath));
+                PathManagement.Set(HttpContext, "FolderPath", JsonSerializer.Serialize(folderPath));
 
                 ///////////////////////Set the path div here!!!!!!!!!
 
@@ -168,7 +168,7 @@ namespace Ethereal_Cloud.Pages
                     //create file object
                     var dataObject = new Dictionary<string, object?>
                     {
-                        { "AuthToken", CookieManagement.Get(HttpContext, "AuthToken") },
+                        { "AuthToken", AuthTokenManagement.GetToken(HttpContext) },
                         { "Filename", uploadedFile.FileName },
                         { "Filetype", MimeType.GetMimeType(uploadedFile.FileName) },
                         { "Content", Convert.ToBase64String(stream.ToArray()) }
@@ -217,7 +217,7 @@ namespace Ethereal_Cloud.Pages
             //create file object
             var dataObject = new Dictionary<string, object?>
             {
-                { "AuthToken", CookieManagement.Get(HttpContext, "AuthToken") }, 
+                { "AuthToken", AuthTokenManagement.GetToken(HttpContext) }, 
                 { "FolderName", foldername },
                 { "ParentFolder", currentFolder }
             };

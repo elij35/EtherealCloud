@@ -40,7 +40,7 @@ namespace Ethereal_Cloud.Pages
                 Logger.LogToConsole(ViewData, "Successfull login of user " + Username);
 
                 //Save authtoken as a cookie
-                CookieManagement.Set(HttpContext, "AuthToken", response.ToString());
+                AuthTokenManagement.SetToken(HttpContext, response.ToString());
 
                 //goto the my files page
                 Response.Redirect("/Upload");

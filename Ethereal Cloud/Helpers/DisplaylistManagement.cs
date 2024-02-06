@@ -3,9 +3,9 @@ using NuGet.Protocol.Plugins;
 
 namespace Ethereal_Cloud.Helpers
 {
-    public class CookieManagement
+    public class DisplayListManagement
     {
-        public static void Set(HttpContext context, string key, string value)
+        public static void Set(HttpContext context, string key, string? value)
         {
             var options = new CookieOptions
             {
@@ -15,16 +15,22 @@ namespace Ethereal_Cloud.Helpers
                 IsEssential = true
             };
 
-            if (key == "AuthToken")
-            {
-                options.MaxAge = TimeSpan.FromMinutes(30);
-            }
-
             context.Response.Cookies.Append(key, value, options);
         }
 
         public static string? Get(HttpContext context, string key)
         {
+            var cookie = context.Request.Cookies[key];
+
+            if (cookie != null)
+            {
+                return cookie;
+            }
+            else
+            {
+                Set(context, key, null);
+            }
+
             return context.Request.Cookies[key];
         }
 
