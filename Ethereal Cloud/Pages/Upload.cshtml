@@ -10,18 +10,19 @@
     <link rel="stylesheet" href="/css/Site.css" asp-append-version="true">
     <link rel="stylesheet" href="/css/Upload.css" asp-append-version="true">
 
-
     <!-- Top Navigation bar -->
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
         <div class="container">
+
+            <!-- Our logo -->
             <div class="navbar-brand">
                 <img src="~/images/LogoVector.svg" alt="logo" class="logo">
             </div>
 
-            
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="mynavbar">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
@@ -34,6 +35,8 @@
                         <a class="nav-link @(Request.Path == "/Settings" || Request.Path == "/" ? "active" : "")" class="icon" asp-area="" asp-page="/Settings">Settings</a>
                     </li>
                 </ul>
+
+                <!-- Search Bar -->
                 <form class="d-flex">
                     <input class="form-control me-2" type="text" placeholder="Search">
                     <button class="btn btn-primary" type="button">Search</button>
@@ -42,7 +45,7 @@
         </div>
     </nav>
 
-
+    <!-- Upload page -->
     <div class="upload-page container mx-auto">
     
         <!-- File explorer -->
@@ -83,7 +86,6 @@
                         </a>
                         <p class="row">Delete</p>
                     </div>
-
                 </div>
             </div>
 
@@ -98,7 +100,6 @@
                     }
                 }
             </script>
-
 
             <!-- Files Box -->
             <div id="filebox" class="col-lg-11 col-md-10 col-sm-10">
@@ -120,9 +121,7 @@
                     <div id="filepath-button" class="col-1">
                         <button>Back</button>
                     </div>
-
                 </div>
-
 
                 <!-- Appears when the files are loaded -->
                 <div id="scrollbox" class="row">
@@ -145,14 +144,11 @@
                                 <img class="row" src="~/images/tools/search.svg" alt="search" style="width: -webkit-fill-available; opacity: 50%;">
                                 <h3 class="row">No files here</h3>
                             </div>
-                        </div>
-                        
+                        </div>                        
                     }
                 </div>
-            </div>
-            
-        </div>
-            
+            </div>            
+        </div>            
 
         <!-- Bottom upload dotted box -->
         <div id="upload-box" class="row mt-3">
@@ -164,8 +160,6 @@
                 </div>
             </form>
         </div>
-
-
     </div>
 
     <!-- Console logger -->
@@ -182,7 +176,6 @@
         }
     </script>
 
-
     string GetFileItemHandler(string fileHandler)
     {
         if (fileHandler == "Folder")
@@ -194,7 +187,6 @@
             return "Download";
         }
     }
-
 
     string GetImageForFileType(string fileType)
     {
@@ -220,5 +212,4 @@
                 return "unknown.svg"; //Unknown type
         }
     }
-
 }
