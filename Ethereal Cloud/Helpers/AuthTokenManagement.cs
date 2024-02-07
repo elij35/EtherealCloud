@@ -7,12 +7,11 @@
             var options = new CookieOptions
             {
                 HttpOnly = true,
-                Secure = true, //for HTTPS
+                Secure = context.Request.IsHttps, //for HTTPS
                 SameSite = SameSiteMode.Lax, //cant be send with 3rd party websites
                 MaxAge = TimeSpan.FromMinutes(30),
                 IsEssential = true
             };
-
             context.Response.Cookies.Append("AuthToken", token, options);
         }
 
@@ -25,11 +24,5 @@
         {
             context.Response.Cookies.Delete("AuthToken");
         }
-
-
-
-
     }
-
-
 }
