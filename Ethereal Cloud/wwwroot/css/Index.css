@@ -7,6 +7,8 @@
     background: linear-gradient(to bottom, #0f0c29, #64618a);
 }
 
+/* All below css is for the login and signup page */
+
 .main {
     background: #573b8a;
     width: 320px;
@@ -112,15 +114,4 @@ button {
 
 #chk:checked ~ .signup label {
     transform: scale(.6);
-}
-
-
-/* Remove the below once development has finished! */
-.temp-link {
-    color: lightcoral;
-}
-
-#remove-later-link {
-    margin-top: 20px;
-    font-size: 16px;
 }
