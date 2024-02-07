@@ -10,7 +10,7 @@ namespace Ethereal_Cloud.Helpers
             var options = new CookieOptions
             {
                 HttpOnly = true,
-                Secure = true,
+                Secure = context.Request.IsHttps, //for HTTPS
                 SameSite = SameSiteMode.Lax,
                 IsEssential = true
             };
