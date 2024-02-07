@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.CodeAnalysis;
+using NuGet.Packaging;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Ethereal_Cloud.Pages
@@ -39,8 +40,6 @@ namespace Ethereal_Cloud.Pages
                 
                 DisplayList = new List<FolderContentDisplay>();
 
-                Logger.LogToConsole(ViewData, "Success Folder: " + JsonSerializer.Serialize(folderContent));
-
                 //Add folders to display list
                 foreach(FolderDataRecieve folder in folderContent.Folders)
                 {
@@ -68,7 +67,7 @@ namespace Ethereal_Cloud.Pages
                     DisplayList.Add(newFile);
                 }
 
-                //Logger.LogToConsole(ViewData, "Successful get of files: " + JsonSerializer.Serialize(DisplayList));
+                Logger.LogToConsole(ViewData, "Successful get of files: " + JsonSerializer.Serialize(DisplayList));
             }
             else
             {
@@ -76,15 +75,15 @@ namespace Ethereal_Cloud.Pages
             }
             
         }
-        public async Task<IActionResult> OnGetDownload(string filename)
+        public async Task<IActionResult> OnGetDownload(string itemname)
         {
             await OnGet(null);
 
-            FolderContentDisplay? element = DisplayList.FirstOrDefault(item => item.Name == filename);
+            FolderContentDisplay? element = DisplayList.FirstOrDefault(item => item.Name == itemname);
 
             if (element == null)
             {
-                Logger.LogToConsole(ViewData, "Cant find file to download: " + filename + " : " + element);
+                Logger.LogToConsole(ViewData, "Cant find file to download: " + itemname + " : " + element);
                 return null;
             }
 
@@ -115,7 +114,42 @@ namespace Ethereal_Cloud.Pages
             }
            
         }
-        
+
+        public async Task OnGetNavigate(string itemname)
+        {
+            //\
+            FolderContentDisplay? element = DisplayList.FirstOrDefault(item => item.Name == itemname);
+
+            if (element != null)
+            {
+                List<FolderDataRecieve>? folderPath = JsonSerializer.Deserialize<List<FolderDataRecieve>>(PathManagement.Get(HttpContext, "FolderPath"));
+
+                FolderDataRecieve navigateTo = new()
+                {
+                    FolderID = element.Id,
+                    Foldername = itemname
+                };
+
+                folderPath.Add(navigateTo);
+
+                PathManagement.Set(HttpContext, "FolderPath", JsonSerializer.Serialize(folderPath));
+
+                ///////////////////////Set the path div here!!!!!!!!!
+
+                //await OnGet(element.Id);
+
+                Logger.LogToConsole(ViewData, "Navigated to: " + itemname);
+            }
+            else
+            {
+                Logger.LogToConsole(ViewData, "Failed to find: " + itemname);
+            }
+
+           
+
+        }
+
+
 
         public async Task OnPostUploadAsync(IFormFile uploadedFile)
         {

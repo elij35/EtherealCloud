@@ -1,7 +1,4 @@
-﻿using Ethereal_Cloud.Pages;
-using NuGet.Protocol.Plugins;
-
-namespace Ethereal_Cloud.Helpers
+﻿namespace Ethereal_Cloud.Helpers
 {
     public class AuthTokenManagement
     {
@@ -10,10 +7,11 @@ namespace Ethereal_Cloud.Helpers
             var options = new CookieOptions
             {
                 HttpOnly = true,
-                Secure = true, //for HTTPS
-                //Expires = DateTimeOffset.UtcNow.AddMinutes(30) //expires in 30 mins
+                Secure = context.Request.IsHttps, //for HTTPS
+                SameSite = SameSiteMode.Lax, //cant be send with 3rd party websites
+                MaxAge = TimeSpan.FromMinutes(30),
+                IsEssential = true
             };
-           
             context.Response.Cookies.Append("AuthToken", token, options);
         }
 
@@ -26,9 +24,5 @@ namespace Ethereal_Cloud.Helpers
         {
             context.Response.Cookies.Delete("AuthToken");
         }
-
-
-
-
     }
 }

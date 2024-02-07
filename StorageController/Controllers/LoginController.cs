@@ -35,7 +35,7 @@ namespace StorageController.Controllers
             }
 
             // Ensuring there is a user and the passwords match
-            if (loginParams.Password != user.Password)
+            if (!SecurityUtils.CheckPassword(loginParams.Password, user.PasswordSalt, user.Password))
             {
                 return await new Response<string>(false, "Incorrect credentials.").Serialize();
             }

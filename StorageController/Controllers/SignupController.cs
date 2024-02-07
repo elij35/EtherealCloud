@@ -33,11 +33,14 @@ namespace StorageController.Controllers
                 return await new Response<string>(false, "User already exists").Serialize();
             }
 
+            string salt = SecurityUtils.GenerateSalt();
+            string hash = SecurityUtils.HashPassword(signupParams.Password, salt);
+
             User userData = new User();
             userData.Username = signupParams.UserName;
             userData.Email = signupParams.Email;
-            userData.Password = signupParams.Password;
-            userData.PasswordSalt = "";
+            userData.Password = hash;
+            userData.PasswordSalt = salt;
             userData.Administrator = false;
 
             await dataHandler.Users.AddAsync(userData);
@@ -47,5 +50,6 @@ namespace StorageController.Controllers
             return await new Response<string>(true, "User successfully created.").Serialize();
 
         }
+
     }
 }
