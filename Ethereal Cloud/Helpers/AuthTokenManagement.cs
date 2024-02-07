@@ -1,7 +1,4 @@
-﻿using Ethereal_Cloud.Pages;
-using NuGet.Protocol.Plugins;
-
-namespace Ethereal_Cloud.Helpers
+﻿namespace Ethereal_Cloud.Helpers
 {
     public class AuthTokenManagement
     {
@@ -15,7 +12,6 @@ namespace Ethereal_Cloud.Helpers
                 MaxAge = TimeSpan.FromMinutes(30),
                 IsEssential = true
             };
-
             context.Response.Cookies.Append("AuthToken", token, options);
         }
 
@@ -28,11 +24,5 @@ namespace Ethereal_Cloud.Helpers
         {
             context.Response.Cookies.Delete("AuthToken");
         }
-
-
-
-
     }
-
-
 }

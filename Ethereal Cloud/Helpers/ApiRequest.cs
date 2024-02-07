@@ -1,10 +1,5 @@
-﻿using Ethereal_Cloud.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.ResponseCaching;
+﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Newtonsoft.Json;
-using NuGet.Protocol.Plugins;
 using System.Text;
 
 namespace Ethereal_Cloud.Helpers
@@ -12,7 +7,7 @@ namespace Ethereal_Cloud.Helpers
     public class ApiRequest
     {
         //Viewdata is only used for console logging
-        public static async Task<object> Files(ViewDataDictionary viewData,HttpContext context, string endpoint, Dictionary<string, object?> bodyObject)
+        public static async Task<object> Files(ViewDataDictionary viewData, HttpContext context, string endpoint, Dictionary<string, object?> bodyObject)
         {
             string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/" + endpoint;
 
