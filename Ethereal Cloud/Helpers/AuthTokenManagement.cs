@@ -1,7 +1,4 @@
-﻿using Ethereal_Cloud.Pages;
-using NuGet.Protocol.Plugins;
-
-namespace Ethereal_Cloud.Helpers
+﻿namespace Ethereal_Cloud.Helpers
 {
     public class AuthTokenManagement
     {

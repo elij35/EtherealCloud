@@ -76,8 +76,6 @@
         padding:0px;
     }
 
-
-
 /* This is where the scrollbox is contained */
 #filebox {
     height: fit-content;
@@ -116,12 +114,9 @@
     font-weight: bold;
 }
 
-
 #filepath-button {
     text-align: center;
 }
-
-
 
 /* This is where all the uploaded files are contained */
 #scrollbox {
@@ -190,8 +185,6 @@
         border-color: #cbbbe2;
         border-radius: 5px;
     }
-
-
 
 /* Upload button */
 .btn {
