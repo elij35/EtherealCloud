@@ -10,19 +10,18 @@
     <link rel="stylesheet" href="/css/Site.css" asp-append-version="true">
     <link rel="stylesheet" href="/css/Upload.css" asp-append-version="true">
 
+
     <!-- Top Navigation bar -->
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
         <div class="container">
-
-            <!-- Our logo -->
             <div class="navbar-brand">
                 <img src="~/images/LogoVector.svg" alt="logo" class="logo">
             </div>
 
+            
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
             <div class="collapse navbar-collapse" id="mynavbar">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
@@ -35,8 +34,6 @@
                         <a class="nav-link @(Request.Path == "/Settings" || Request.Path == "/" ? "active" : "")" class="icon" asp-area="" asp-page="/Settings">Settings</a>
                     </li>
                 </ul>
-
-                <!-- Search Bar -->
                 <form class="d-flex">
                     <input class="form-control me-2" type="text" placeholder="Search">
                     <button class="btn btn-primary" type="button">Search</button>
@@ -45,7 +42,7 @@
         </div>
     </nav>
 
-    <!-- Upload page -->
+
     <div class="upload-page container mx-auto">
     
         <!-- File explorer -->
@@ -86,6 +83,7 @@
                         </a>
                         <p class="row">Delete</p>
                     </div>
+
                 </div>
             </div>
 
@@ -101,6 +99,7 @@
                 }
             </script>
 
+
             <!-- Files Box -->
             <div id="filebox" class="col-lg-11 col-md-10 col-sm-10">
                 <!-- FilePath -->
@@ -108,20 +107,40 @@
                     <div class="col-11">
                         <!-- Root Image -->
                         <div class="col" id="path-root">
-                            <img src="~/images/file-path/path-root.svg" alt="path">
+                            <a asp-page-handler="GoToFolderInPath" asp-route-folderId="-2">
+                                <img src="~/images/file-path/path-root.svg" alt="path">
+                            </a>
                         </div>
+                        
                         <!-- Current Filepath-->
-                        <div id="path-divider" class="col">\</div>
-                        <p id="path-folder" class="col">test</p>
-                        <div id="path-divider" class="col">\</div>
-                        <p id="path-folder" class="col">testing</p>
+                        @if (Model.FolderPath.Count > 0)
+                        {
+                            @foreach (var display in Model.FolderPath)
+                            {
+                                <div id="path-divider" class="col">\</div>
+
+                                <div class="file-hover" class="col">
+                                    <a asp-page-handler="GoToFolderInPath" asp-route-folderId="@display.FolderID">
+                                        <p id="path-folder">@display.Foldername</p>
+                                    </a>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+
+                        }
                     </div>
 
                     <!-- Path Back button-->
                     <div id="filepath-button" class="col-1">
-                        <button>Back</button>
+                        <a asp-page-handler="GoToFolderInPath" asp-route-folderId="-1">
+                            <img src="~/images/file-path/path-back.svg" alt="path">
+                        </a>
                     </div>
+
                 </div>
+
 
                 <!-- Appears when the files are loaded -->
                 <div id="scrollbox" class="row">
@@ -130,7 +149,7 @@
                         @foreach (var display in Model.DisplayList)
                         {
                             <div id="uploaded-files" class="file-hover">
-                                <a asp-page-handler="@GetFileItemHandler(display.Type)" asp-route-itemname="@display.Name">
+                                <a asp-page-handler="@GetFileItemHandler(display.Type)" asp-route-itemname="@display.Id : @display.Name">
                                     <img src="~/images/file-icons/@GetImageForFileType(@display.Type)" alt="logo" class="logo">
                                 </a>
                                 <p>@display.Name</p>
@@ -144,11 +163,14 @@
                                 <img class="row" src="~/images/tools/search.svg" alt="search" style="width: -webkit-fill-available; opacity: 50%;">
                                 <h3 class="row">No files here</h3>
                             </div>
-                        </div>                        
+                        </div>
+
                     }
                 </div>
-            </div>            
-        </div>            
+            </div>
+            
+        </div>
+            
 
         <!-- Bottom upload dotted box -->
         <div id="upload-box" class="row mt-3">
@@ -160,6 +182,8 @@
                 </div>
             </form>
         </div>
+
+
     </div>
 
     <!-- Console logger -->
@@ -212,4 +236,5 @@
                 return "unknown.svg"; //Unknown type
         }
     }
+
 }
