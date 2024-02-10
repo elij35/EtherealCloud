@@ -153,11 +153,8 @@ namespace StorageController.Controllers
             IQueryable<UserFile> userFiles = db.UserFiles.Where(userFile => userFile.UserID == userID);
             IQueryable<UserFolder> userFolders = db.UserFolders.Where(userFolder => userFolder.UserID == userID);
 
-            FileData[] files = db.Files.Where(file => file.FolderData.FolderID == ((folder == null) ? null : folder.FolderID) 
-                                                    && (userFiles.FirstOrDefault(link => link.UserID == userID) != null)).ToArray();
-
-            Folder[] folders = db.Folders.Where(folder => folder.ParentID == id
-                                                        && (userFolders.FirstOrDefault(link => link.UserID == userID) != null)).ToArray();
+            FileData[] files = db.Files.Where(file => userFiles.FirstOrDefault(link => link.FileID == file.FileID) != null && file.FolderID == id).ToArray();
+            Folder[] folders = db.Folders.Where(folder => userFolders.FirstOrDefault(link => link.FolderID == folder.FolderID) != null && folder.ParentID == id).ToArray();
 
             FileMetaReturn[] fileData = new FileMetaReturn[files.Length];
             for (int i = 0; i < files.Length; i++)
