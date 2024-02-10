@@ -1,8 +1,6 @@
 using Ethereal_Cloud.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.IO;
-using System.Text;
 
 namespace Ethereal_Cloud.Pages
 {
@@ -33,7 +31,7 @@ namespace Ethereal_Cloud.Pages
             var response = await ApiRequest.Files(ViewData, HttpContext, "v1/user/login", dataObject);
 
             Logger.LogToConsole(ViewData, "Checker: " + response);
-            
+
             if (response != null)
             {
                 //Valid login
@@ -72,7 +70,7 @@ namespace Ethereal_Cloud.Pages
                 //Make request
                 var response = await ApiRequest.Files(ViewData, HttpContext, "v1/user/signup", dataObject);
 
-                if(response != null)
+                if (response != null)
                 {
                     //Valid Signup
                     Logger.LogToConsole(ViewData, "Successfull signup of user " + Username);
@@ -86,7 +84,7 @@ namespace Ethereal_Cloud.Pages
             {
                 Logger.LogToConsole(ViewData, "Invalid: passwords must match!");
             }
-            
+
         }
     }
 }

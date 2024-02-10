@@ -1,7 +1,5 @@
 ﻿using Ethereal_Cloud.Pages;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using NuGet.Protocol.Plugins;
 using System.Text.Json;
 
 namespace Ethereal_Cloud.Helpers
@@ -66,7 +64,7 @@ namespace Ethereal_Cloud.Helpers
             Logger.LogToConsole(viewData, "Made it this far");
 
 
-            
+
 
             //-2 means goto root
             if (folderId == -2)

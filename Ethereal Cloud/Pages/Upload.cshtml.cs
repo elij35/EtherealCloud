@@ -2,13 +2,6 @@ using Ethereal_Cloud.Helpers;
 using Ethereal_Cloud.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.Build.ObjectModelRemoting;
-using Microsoft.CodeAnalysis;
-using Microsoft.Extensions.Primitives;
-using NuGet.Packaging;
-using System.Net;
-using static NuGet.Packaging.PackagingConstants;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Ethereal_Cloud.Pages
@@ -43,13 +36,13 @@ namespace Ethereal_Cloud.Pages
             {
                 { "authtoken", AuthTokenManagement.GetToken(HttpContext)}
             };
-            
+
             //Make request
             var response = await ApiRequest.Files(ViewData, HttpContext, "v1/folder/files/" + folderId, dataObject);
-            
+
             if (response != null)
             {
-                
+
                 //Put response in form of FolderContentRecieve
                 string jsonString = response.ToString();
                 FolderContentRecieve folderContent = JsonSerializer.Deserialize<FolderContentRecieve>(jsonString);
@@ -72,7 +65,7 @@ namespace Ethereal_Cloud.Pages
                 //Add files to display list
                 foreach (FileMetaRecieve file in folderContent.Files)
                 {
-                    
+
                     FolderContentDisplay newFile = new()
                     {
                         Id = file.FileID,
@@ -89,7 +82,7 @@ namespace Ethereal_Cloud.Pages
             {
                 Logger.LogToConsole(ViewData, "Failed Get");
             }
-            
+
         }
 
 
@@ -97,14 +90,14 @@ namespace Ethereal_Cloud.Pages
         public async Task<IActionResult> OnGetDownload(string itemname)
         {
             Logger.LogToConsole(ViewData, "Hello");
-            
+
             string[] fileData = itemname.Split(':');
 
             int fileId = int.Parse(fileData[0]);
 
             Logger.LogToConsole(ViewData, "Fileid: " + fileData[0]);
-            
-            
+
+
             //create object
             var dataObject = new Dictionary<string, object?>
             {
@@ -131,8 +124,8 @@ namespace Ethereal_Cloud.Pages
 
                 return RedirectToPage("/Upload");
             }
-            
-           
+
+
         }
 
         public async Task OnGetNavigate(string itemname)
@@ -169,11 +162,11 @@ namespace Ethereal_Cloud.Pages
         public async Task OnGetGoToFolderInPathAsync(int folderId)
         {
             bool success = PathManagement.GoBackInFolderPath(HttpContext, folderId, ViewData);
-            
+
             if (success)
             {
                 Logger.LogToConsole(ViewData, "Navigated to folder with id: " + folderId);
-                
+
             }
             else
             {
@@ -182,7 +175,7 @@ namespace Ethereal_Cloud.Pages
             }
 
             Response.Redirect("/Upload");
-            
+
         }
 
 
@@ -199,7 +192,7 @@ namespace Ethereal_Cloud.Pages
                     //Hold the file contents in the stream
                     await uploadedFile.CopyToAsync(stream);
 
-                    
+
 
                     //create file object
                     var dataObject = new Dictionary<string, object?>
@@ -218,7 +211,7 @@ namespace Ethereal_Cloud.Pages
 
                     //Make request
                     var response = await ApiRequest.Files(ViewData, HttpContext, "v1/file", dataObject);
-                    
+
                     if (response != null)
                     {
                         Logger.LogToConsole(ViewData, "Successfull file upload: " + response);
@@ -229,13 +222,13 @@ namespace Ethereal_Cloud.Pages
                         Logger.LogToConsole(ViewData, "Bad upload response");
                     }
                 }
-                
+
             }
             else
             {
                 Logger.LogToConsole(ViewData, "Invalid file upload");
             }
-            
+
         }
 
 
@@ -244,7 +237,7 @@ namespace Ethereal_Cloud.Pages
             //create file object
             var dataObject = new Dictionary<string, object?>
             {
-                { "AuthToken", AuthTokenManagement.GetToken(HttpContext) }, 
+                { "AuthToken", AuthTokenManagement.GetToken(HttpContext) },
                 { "FolderName", foldername },
                 { "ParentFolder", PathManagement.GetCurrentFolderId(HttpContext) }
             };
@@ -261,7 +254,7 @@ namespace Ethereal_Cloud.Pages
             {
                 Logger.LogToConsole(ViewData, "Bad folder response");
             }
-            
+
         }
 
 
