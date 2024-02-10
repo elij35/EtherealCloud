@@ -42,6 +42,12 @@ namespace Ethereal_Cloud.Pages
                 //Save authtoken as a cookie
                 AuthTokenManagement.SetToken(HttpContext, response.ToString());
 
+
+
+                //reset the folderpath cookie
+                PathManagement.Remove(HttpContext);
+
+
                 //goto the my files page
                 Response.Redirect("/Upload");
             }

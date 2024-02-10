@@ -3,8 +3,12 @@ using Ethereal_Cloud.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Build.ObjectModelRemoting;
 using Microsoft.CodeAnalysis;
+using Microsoft.Extensions.Primitives;
 using NuGet.Packaging;
+using System.Net;
+using static NuGet.Packaging.PackagingConstants;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Ethereal_Cloud.Pages
@@ -18,10 +22,21 @@ namespace Ethereal_Cloud.Pages
         //list of files to be shown to user
         public List<FolderContentDisplay> DisplayList = new List<FolderContentDisplay>();
 
-        public async Task OnGet(int? folderId)
+        public List<FolderDataRecieve> FolderPath = new List<FolderDataRecieve>();
+
+        public void FolderPathForDisplay()
         {
-            //users current folder location
-            folderId = null;
+            //Sets the filepath list to be displayed on the interface
+            FolderPath = PathManagement.Get(HttpContext);
+        }
+
+        public async Task OnGet()
+        {
+            FolderPathForDisplay();
+
+            int? folderId = PathManagement.GetCurrentFolderId(HttpContext);
+
+            //Logger.LogToConsole(ViewData, "Current Folder: " + folderId);
 
             //create object
             var dataObject = new Dictionary<string, object?>
@@ -34,14 +49,15 @@ namespace Ethereal_Cloud.Pages
             
             if (response != null)
             {
+                
                 //Put response in form of FolderContentRecieve
                 string jsonString = response.ToString();
                 FolderContentRecieve folderContent = JsonSerializer.Deserialize<FolderContentRecieve>(jsonString);
-                
+
                 DisplayList = new List<FolderContentDisplay>();
 
                 //Add folders to display list
-                foreach(FolderDataRecieve folder in folderContent.Folders)
+                foreach (FolderDataRecieve folder in folderContent.Folders)
                 {
                     FolderContentDisplay newFolder = new()
                     {
@@ -67,7 +83,7 @@ namespace Ethereal_Cloud.Pages
                     DisplayList.Add(newFile);
                 }
 
-                Logger.LogToConsole(ViewData, "Successful get of files: " + JsonSerializer.Serialize(DisplayList));
+                //Logger.LogToConsole(ViewData, "Successful get of files: " + JsonSerializer.Serialize(DisplayList) + " FolderId: " + folderId);
             }
             else
             {
@@ -75,19 +91,19 @@ namespace Ethereal_Cloud.Pages
             }
             
         }
+
+
+
         public async Task<IActionResult> OnGetDownload(string itemname)
         {
-            await OnGet(null);
+            Logger.LogToConsole(ViewData, "Hello");
+            
+            string[] fileData = itemname.Split(':');
 
-            FolderContentDisplay? element = DisplayList.FirstOrDefault(item => item.Name == itemname);
+            int fileId = int.Parse(fileData[0]);
 
-            if (element == null)
-            {
-                Logger.LogToConsole(ViewData, "Cant find file to download: " + itemname + " : " + element);
-                return null;
-            }
-
-            int fileId = element.Id;
+            Logger.LogToConsole(ViewData, "Fileid: " + fileData[0]);
+            
             
             //create object
             var dataObject = new Dictionary<string, object?>
@@ -105,48 +121,68 @@ namespace Ethereal_Cloud.Pages
 
                 Logger.LogToConsole(ViewData, "Successfull download: " + file.Content + " " + file.Filetype + " " + file.Filename);
 
+                //Response.Redirect("/Upload");
+
                 return File(Convert.FromBase64String(file.Content), file.Filetype, file.Filename);
             }
             else
             {
                 Logger.LogToConsole(ViewData, "Fail: " + fileId);
-                return null;
+
+                return RedirectToPage("/Upload");
             }
+            
            
         }
 
         public async Task OnGetNavigate(string itemname)
         {
             //\
-            FolderContentDisplay? element = DisplayList.FirstOrDefault(item => item.Name == itemname);
+            string[] folderData = itemname.Split(':');
 
-            if (element != null)
+
+            var path = PathManagement.Get(HttpContext);
+
+            List<FolderDataRecieve> folderPath = new List<FolderDataRecieve>();
+
+            if (path != null)
             {
-                List<FolderDataRecieve>? folderPath = JsonSerializer.Deserialize<List<FolderDataRecieve>>(PathManagement.Get(HttpContext, "FolderPath"));
+                folderPath = path;
+            }
 
-                FolderDataRecieve navigateTo = new()
-                {
-                    FolderID = element.Id,
-                    Foldername = itemname
-                };
+            FolderDataRecieve navigateTo = new()
+            {
+                FolderID = int.Parse(folderData[0]),
+                Foldername = folderData[1]
+            };
 
-                folderPath.Add(navigateTo);
+            folderPath.Add(navigateTo);
 
-                PathManagement.Set(HttpContext, "FolderPath", JsonSerializer.Serialize(folderPath));
+            var serializedFolderPath = JsonSerializer.Serialize(folderPath);
 
-                ///////////////////////Set the path div here!!!!!!!!!
+            PathManagement.Set(HttpContext, serializedFolderPath);
 
-                //await OnGet(element.Id);
+            Response.Redirect("/Upload");
 
-                Logger.LogToConsole(ViewData, "Navigated to: " + itemname);
+        }
+
+        public async Task OnGetGoToFolderInPathAsync(int folderId)
+        {
+            bool success = PathManagement.GoBackInFolderPath(HttpContext, folderId, ViewData);
+            
+            if (success)
+            {
+                Logger.LogToConsole(ViewData, "Navigated to folder with id: " + folderId);
+                
             }
             else
             {
-                Logger.LogToConsole(ViewData, "Failed to find: " + itemname);
+                Logger.LogToConsole(ViewData, "Failed navigation to: " + folderId);
+
             }
 
-           
-
+            Response.Redirect("/Upload");
+            
         }
 
 
@@ -158,7 +194,7 @@ namespace Ethereal_Cloud.Pages
                 using (var stream = new MemoryStream())
                 {
                     //Where folder the user is in
-                    int? currentFolder = null;
+                    int? currentFolder = PathManagement.GetCurrentFolderId(HttpContext);
 
                     //Hold the file contents in the stream
                     await uploadedFile.CopyToAsync(stream);
@@ -186,7 +222,7 @@ namespace Ethereal_Cloud.Pages
                     if (response != null)
                     {
                         Logger.LogToConsole(ViewData, "Successfull file upload: " + response);
-                        await OnGet(null);
+                        Response.Redirect("/Upload");
                     }
                     else
                     {
@@ -200,26 +236,17 @@ namespace Ethereal_Cloud.Pages
                 Logger.LogToConsole(ViewData, "Invalid file upload");
             }
             
-            
         }
-
-
-
 
 
         public async Task OnGetCreatefolderAsync(string foldername)
         {
-            foldername = "TempName";
-            
-            //Where folder the user is in
-            int? currentFolder = null;
-
             //create file object
             var dataObject = new Dictionary<string, object?>
             {
                 { "AuthToken", AuthTokenManagement.GetToken(HttpContext) }, 
                 { "FolderName", foldername },
-                { "ParentFolder", currentFolder }
+                { "ParentFolder", PathManagement.GetCurrentFolderId(HttpContext) }
             };
 
             //Make request
@@ -228,7 +255,7 @@ namespace Ethereal_Cloud.Pages
             if (response != null)
             {
                 Logger.LogToConsole(ViewData, "Successfull folder creation: " + response);
-                await OnGet(null);
+                Response.Redirect("/Upload");
             }
             else
             {
