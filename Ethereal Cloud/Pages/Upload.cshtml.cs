@@ -2,6 +2,7 @@ using Ethereal_Cloud.Helpers;
 using Ethereal_Cloud.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Text;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Ethereal_Cloud.Pages
@@ -116,7 +117,9 @@ namespace Ethereal_Cloud.Pages
 
                 //Response.Redirect("/Upload");
 
-                return File(Convert.FromBase64String(file.Content), file.Filetype, file.Filename);
+                byte[] bytes = Convert.FromHexString(file.Content);
+
+                return File(bytes, file.Filetype, file.Filename);
             }
             else
             {
@@ -130,7 +133,6 @@ namespace Ethereal_Cloud.Pages
 
         public async Task OnGetNavigate(string itemname)
         {
-            //\
             string[] folderData = itemname.Split(':');
 
 
@@ -192,7 +194,8 @@ namespace Ethereal_Cloud.Pages
                     //Hold the file contents in the stream
                     await uploadedFile.CopyToAsync(stream);
 
-
+                    byte[] bytes = stream.ToArray();
+                    string hexBytes = BitConverter.ToString(bytes).Replace("-", "");
 
                     //create file object
                     var dataObject = new Dictionary<string, object?>
@@ -200,7 +203,7 @@ namespace Ethereal_Cloud.Pages
                         { "AuthToken", AuthTokenManagement.GetToken(HttpContext) },
                         { "Filename", uploadedFile.FileName },
                         { "Filetype", MimeType.GetMimeType(uploadedFile.FileName) },
-                        { "Content", Convert.ToBase64String(stream.ToArray()) }
+                        { "Content", hexBytes }
                     };
                     //If the user isnt in the root
                     if (currentFolder != null)
