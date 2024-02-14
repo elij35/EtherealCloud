@@ -18,6 +18,8 @@ namespace Ethereal_Cloud.Pages
         [BindProperty]
         public string PasswordConf { get; set; }
 
+        public int errornum = -1;
+
         public async Task OnPostLoginAsync()
         {
             //create body object
@@ -74,15 +76,19 @@ namespace Ethereal_Cloud.Pages
                 {
                     //Valid Signup
                     Logger.LogToConsole(ViewData, "Successfull signup of user " + Username);
+                    errornum = 0;
                 }
+
                 else
                 {
                     Logger.LogToConsole(ViewData, "Invalid: Couldn't signup");
+                    errornum = 1;
                 }
             }
             else
             {
                 Logger.LogToConsole(ViewData, "Invalid: passwords must match!");
+                errornum = 2;
             }
 
         }
