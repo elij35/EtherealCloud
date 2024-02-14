@@ -16,7 +16,7 @@ body {
 
 .logo {
     width: auto;
-    height: 5rem;
+    height: 3rem;
 }
 
 .navbar-brand {
@@ -48,7 +48,6 @@ a {
     text-align: center;
 }
 
-/* Upload button */
 .btn {
     background: #9877c5;
     border-color: black;
@@ -62,9 +61,39 @@ a {
 #footer {
     position: fixed;
     height: 50px;
-    background-color: red;
     bottom: 0px;
     left: 0px;
     right: 0px;
     margin-bottom: 0px;
+}
+
+
+/* Profile Picture */
+.profile-pic {
+    display: inline-block;
+    vertical-align: middle;
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+    .profile-pic img {
+        width: 100%;
+        height: auto;
+        object-fit: fill;
+    }
+
+.profile-menu .dropdown-menu {
+    right: 0;
+    left: unset;
+}
+
+.profile-menu .fa-fw {
+    margin-right: 10px;
+}
+
+.toggle-change::after {
+    border-top: 0;
+    border-bottom: 0.3em solid;
 }
