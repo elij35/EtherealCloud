@@ -49,25 +49,13 @@
         </div>
     </div>
 
-    <script>
-        // On click swap image
-        function toggleImage() {
-            var imageElement = document.getElementById('toggleImage');
-            if (imageElement.src.endsWith('sort-alpha-down.svg')) {
-                imageElement.src = 'images/tools/sort-alpha-up.svg';
-            } else {
-                imageElement.src = 'images/tools/sort-alpha-down.svg';
-            }
-        }
-    </script>
-
     <!-- Files Box -->
     <div id="filebox" class="col-lg-11 col-md-10 col-sm-10">
         <!-- FilePath -->
-        <div id="filepath" class="row">
+        <div id="file   path" class="row">
             <div class="col-11">
                 <!-- Root Image -->
-                <div class="col" id="path-root">
+                <div cl ass="col" id="path-root">
                     <a asp-page-handler="GoToFolderInPath" asp-route-folderId="-2">
                         <img src="~/images/file-path/path-root.svg" alt="path">
                     </a>
@@ -87,10 +75,6 @@
                         </div>
                     }
                 }
-                else
-                {
-
-                }
             </div>
 
             <!-- Path Back button-->
@@ -99,9 +83,7 @@
                     <img src="~/images/file-path/path-back.svg" alt="path">
                 </a>
             </div>
-
         </div>
-
 
         <!-- Appears when the files are loaded -->
         <div id="scrollbox" class="row">
@@ -125,13 +107,10 @@
                         <h3 class="row">No files here</h3>
                     </div>
                 </div>
-
             }
         </div>
     </div>
-
 </div>
-
 
 <!-- Bottom upload dotted box -->
 <div id="upload-box" class="row mt-3">
