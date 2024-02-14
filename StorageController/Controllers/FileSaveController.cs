@@ -2,6 +2,7 @@
 using StorageController.Data.Models;
 using StorageController.Data;
 using System.IdentityModel.Tokens.Jwt;
+using static StorageController.Controllers.FileGetController;
 
 namespace StorageController.Controllers
 {
@@ -27,25 +28,18 @@ namespace StorageController.Controllers
 
         [Route("/v1/file")]
         [HttpPost]
+        [DisableRequestSizeLimit]
         [Consumes("application/json")]
         [Produces("application/json")]
         public async Task<string> SaveFile([FromBody] FileDataSave fileData)
         {
 
-            // Checking the user's token
-            JwtSecurityToken? token = await AuthManager.ValidateToken(fileData.AuthToken);
+            Response<string> authResponse = await AuthManager.AuthorizeUser(fileData.AuthToken);
 
-            if (token == null)
-            {
-                return await new Response<string>(false, "Invalid auth token.").Serialize();
-            }
+            if (!authResponse.Success)
+                return await authResponse.Serialize();
 
-            int? userID = await AuthManager.GetUserIDFromToken(token);
-
-            if (userID == null)
-            {
-                return await new Response<string>(false, "Invalid auth token.").Serialize();
-            }
+            int userID = int.Parse(authResponse.Message);
 
             // Getting the database
             DataHandler db = new DataHandler();
@@ -130,19 +124,12 @@ namespace StorageController.Controllers
         public async Task<string> CreateFolder([FromBody] FolderSaveData folderSaveData)
         {
 
-            JwtSecurityToken? token = await AuthManager.ValidateToken(folderSaveData.AuthToken);
+            Response<string> authResponse = await AuthManager.AuthorizeUser(folderSaveData.AuthToken);
 
-            if (token == null)
-            {
-                return await new Response<string>(false, "Invalid auth token.").Serialize();
-            }
+            if (!authResponse.Success)
+                return await authResponse.Serialize();
 
-            int? userID = await AuthManager.GetUserIDFromToken(token);
-
-            if (userID == null)
-            {
-                return await new Response<string>(false, "Invalid auth token.").Serialize();
-            }
+            int userID = int.Parse(authResponse.Message);
 
             DataHandler db = new();
 
@@ -172,7 +159,7 @@ namespace StorageController.Controllers
             await db.SaveChangesAsync();
 
             UserFolder folderLink = new();
-            folderLink.UserID = userID.Value;
+            folderLink.UserID = userID;
             folderLink.FolderID = folder.FolderID;
             folderLink.Privilege = "Owner";
 
