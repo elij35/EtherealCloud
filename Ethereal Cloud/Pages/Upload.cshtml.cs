@@ -82,9 +82,7 @@ namespace Ethereal_Cloud.Pages
             {
                 Logger.LogToConsole(ViewData, "Failed Get");
             }
-
         }
-
 
 
         public async Task<IActionResult> OnGetDownload(string itemname)
