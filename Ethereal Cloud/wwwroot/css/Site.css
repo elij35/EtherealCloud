@@ -81,3 +81,9 @@ a {
 .profile-menu .fa-fw {
     margin-right: 8px;
 }
+
+.popup-message {
+    width: fit-content;
+    position: relative;
+    text-align: center;
+}

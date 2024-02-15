@@ -9,6 +9,22 @@
 <div class="main">
     <div class="login-container align-items-center">
         <h2>Login</h2>
+
+        <!-- Success/error messages -->
+        <div class="popup-message">
+            @if (Model.errornum == -1) { }
+
+            @if (Model.errornum == 0)
+            {
+                <!-- Error Alert -->
+                <div class="alert alert-danger alert-dismissible fade show mx-auto" id="popup">
+                    <strong>Error!</strong> The username or password is incorrect
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+        </div>
+
+        <!-- Login form -->
         <form method="post" asp-page-handler="Login">
             <div class="form-floating">
                 <input id="username" class="form-control" name="username" placeholder=" " required>
@@ -16,7 +32,7 @@
             </div>
 
             <div class="form-floating">
-                <input type="password" class="form-control" name="password" id="password" placeholder=" " required>
+                <input type="password" class="form-control" name="Password" id="Password" placeholder=" " required>
                 <label for="password">Password</label>
                 <span class="password-toggle" onclick="togglePassword()">Show</span>
             </div>
@@ -34,26 +50,13 @@
                 <a href="/Register" class="text-primary">Sign Up</a>
             </div>
         </form>
-    </div>
-</div>
-
-<div class="popup-message">
-    @if (Model.errornum == -1) { }
-
-    @if (Model.errornum == 0)
-    {
-        <!-- Error Alert -->
-        <div class="alert alert-danger alert-dismissible fade show mx-auto" id="popup">
-            <strong>Error!</strong> The username or password is incorrect
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    }
+    </div>    
 </div>
 
 <!-- Console logger -->
 <script>
     function togglePassword() {
-        const passwordInput = document.getElementById('password');
+        const passwordInput = document.getElementById('Password');
         passwordInput.type = (passwordInput.type === 'password') ? 'text' : 'password';
     }
 

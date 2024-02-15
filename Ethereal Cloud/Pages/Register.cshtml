@@ -9,6 +9,40 @@
 <div class="main">
     <div class="login-container align-items-center">
         <h2>Register</h2>
+
+        <!-- Success/error messages -->
+        <div class="popup-message">
+            @if (Model.errornum == -1) { }
+
+            @if (Model.errornum == 0)
+            {
+                <!-- Success Alert -->
+                <div class="alert alert-success alert-dismissible fade show mx-auto">
+                    <strong>Success!</strong> You have successfully registered.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            @if (Model.errornum == 1)
+            {
+                <!-- Error Alert -->
+                <div class="alert alert-danger alert-dismissible fade show mx-auto">
+                    <strong>Error!</strong> Username or Email already exists.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            @if (Model.errornum == 2)
+            {
+                <!-- Error Alert -->
+                <div class="alert alert-danger alert-dismissible fade show mx-auto" id="popup">
+                    <strong>Error!</strong> Your passwords must match in both inputs
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+        </div>
+
+        <!-- Register form -->
         <div class="signup">
             <form method="post" asp-page-handler="Signup">
                 <div class="form-floating">
@@ -45,38 +79,6 @@
     </div>
 </div>
 
-<div class="popup-message">
-    @if (Model.errornum == -1) { }
-
-    @if (Model.errornum == 0)
-    {
-        <!-- Success Alert -->
-        <div class="alert alert-success alert-dismissible fade show mx-auto">
-            <strong>Success!</strong> You have successfully registered.
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    }
-
-    @if (Model.errornum == 1)
-    {
-        <!-- Error Alert -->
-        <div class="alert alert-danger alert-dismissible fade show mx-auto">
-            <strong>Error!</strong> A problem has been occurred while submitting your data.
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    }
-
-    @if (Model.errornum == 2)
-    {
-        <!-- Error Alert -->
-        <div class="alert alert-danger alert-dismissible fade show mx-auto" id="popup">
-            <strong>Error!</strong> Your passwords must match in both inputs
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    }
-</div>
-
-<!-- Console logger -->
 <script>
     function togglePassword() {
         const passwordInput1 = document.getElementById('Password');
