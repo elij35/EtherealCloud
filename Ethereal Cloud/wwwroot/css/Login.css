@@ -50,3 +50,9 @@
     align-content: center;
     background-color: darkslategrey;
 }
+
+
+/* Terms and conditions popup formatting */
+.modal-body p {
+    font-size: 16px;
+}
