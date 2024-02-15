@@ -1,5 +1,3 @@
-
-
 function toggleImage() {
     var imageElement = document.getElementById('toggleImage');
     if (imageElement.src.endsWith('sort-alpha-down.svg')) {
