@@ -195,7 +195,7 @@ namespace Ethereal_Cloud.Pages
                     await uploadedFile.CopyToAsync(stream);
 
                     byte[] bytes = stream.ToArray();
-                    string hexBytes = BitConverter.ToString(bytes).Replace("-", "");
+                    string hexBytes = Convert.ToHexString(bytes);
 
                     //create file object
                     var dataObject = new Dictionary<string, object?>
@@ -211,7 +211,7 @@ namespace Ethereal_Cloud.Pages
                         dataObject.Add("FolderId", currentFolder);
                     }
 
-
+                    
                     //Make request
                     var response = await ApiRequest.Files(ViewData, HttpContext, "v1/file", dataObject);
 
@@ -222,7 +222,7 @@ namespace Ethereal_Cloud.Pages
                     }
                     else
                     {
-                        Logger.LogToConsole(ViewData, "Bad upload response");
+                        //Logger.LogToConsole(ViewData, "Bad upload response");
                     }
                 }
 
