@@ -7,6 +7,24 @@ namespace StorageController.Data
     public class BucketAPIHandler
     {
 
+        public static async Task<Response<string>> DeleteFileContent(int fileID, Bucket bucket)
+        {
+
+            Response<string> responseObj;
+            using (HttpClient client = new HttpClient())
+            {
+
+                HttpResponseMessage response = await client.DeleteAsync($"http://{bucket.BucketIP}:{bucket.BucketPort}/file/{fileID}");
+                string responseText = await response.Content.ReadAsStringAsync();
+
+                responseObj = await Response<string>.DeserializeJSON(responseText);
+
+            }
+
+            return responseObj;
+
+        }
+
         public static async Task<Response<string>> GetFileContent(int fileID, Bucket bucket)
         {
 

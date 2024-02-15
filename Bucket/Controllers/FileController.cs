@@ -1,7 +1,9 @@
 ﻿using Bucket.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Buffers;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -75,7 +77,30 @@ namespace Bucket.Controllers
 
         }
 
-        
+        [HttpDelete]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        public async Task<string> DeleteFile([FromRoute] int id)
+        {
+
+            DatabaseContext database = new();
+            FileData? fileData = database.FileData.Where(file => file.FileID == id).FirstOrDefault();
+
+            if (fileData == null)
+                return await new Response<string>(false, "File doesn't exist.").Serialize();
+
+            File.Delete(fileData.FilePath);
+
+            int success = await database.FileData.Where(file => file.FileID == id).ExecuteDeleteAsync();
+
+            if (success < 1)
+                return await new Response<string>(false, "Couldn't delete file entry.").Serialize();
+
+            if (success > 1)
+                return await new Response<string>(false, "Something REALLY fucked up.").Serialize();
+
+            return await new Response<string>(true, "File deleted successfully").Serialize();
+        }
 
     }
 }
