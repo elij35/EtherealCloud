@@ -52,9 +52,9 @@
     <div id="filebox" class="col-lg-11 col-md-10 col-sm-10">
         <!-- FilePath -->
         <div id="filepath" class="row">
-            <div class="col-11">
+            <div id="content-container" class="col-11">
                 <!-- Root Image -->
-                <div cl ass="col" id="path-root">
+                <div class="col" id="path-root">
                     <a asp-page-handler="GoToFolderInPath" asp-route-folderId="-2">
                         <img src="~/images/file-path/path-root.svg" alt="path">
                     </a>
@@ -134,6 +134,15 @@
             var txt = document.createElement("textarea");
             txt.innerHTML = html;
             return txt.value;
+        }
+
+        function toggleImage() {
+            var imageElement = document.getElementById('toggleImage');
+            if (imageElement.src.endsWith('sort-alpha-down.svg')) {
+                imageElement.src = 'images/tools/sort-alpha-up.svg';
+            } else {
+                imageElement.src = 'images/tools/sort-alpha-down.svg';
+            }
         }
     </script>
 
