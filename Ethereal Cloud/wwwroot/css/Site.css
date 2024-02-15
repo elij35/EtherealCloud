@@ -48,16 +48,6 @@ a {
     text-align: center;
 }
 
-.btn {
-    background: #9877c5;
-    border-color: black;
-}
-
-    .btn:hover {
-        background-color: #705892;
-        border-color: black;
-    }
-
 #footer {
     position: fixed;
     height: 50px;

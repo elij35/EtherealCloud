@@ -169,3 +169,13 @@
         border-color: #cbbbe2;
         border-radius: 5px;
     }
+
+.btn {
+    background: #9877c5;
+    border-color: black;
+}
+
+    .btn:hover {
+        background-color: #705892;
+        border-color: black;
+    }
