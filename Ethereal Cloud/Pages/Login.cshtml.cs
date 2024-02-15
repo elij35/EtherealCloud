@@ -7,16 +7,10 @@ namespace Ethereal_Cloud.Pages
     public class LoginModel : PageModel
     {
         [BindProperty]
-        public string Email { get; set; }
-
-        [BindProperty]
         public string Password { get; set; }
 
         [BindProperty]
         public string Username { get; set; }
-
-        [BindProperty]
-        public string PasswordConf { get; set; }
 
         public int errornum = -1;
 
@@ -24,10 +18,10 @@ namespace Ethereal_Cloud.Pages
         {
             //create body object
             var dataObject = new Dictionary<string, object?>
-                {
-                    { "Username", Username }, //This is the username or email
-                    { "Password", Password }
-                };
+            {
+                { "Username", Username }, //This is the username or email
+                { "Password", Password }
+            };
 
             //Make request
             var response = await ApiRequest.Files(ViewData, HttpContext, "v1/user/login", dataObject);
@@ -42,55 +36,17 @@ namespace Ethereal_Cloud.Pages
                 //Save authtoken as a cookie
                 AuthTokenManagement.SetToken(HttpContext, response.ToString());
 
-
-
                 //reset the folderpath cookie
                 PathManagement.Remove(HttpContext);
 
-
                 //goto the my files page
-                Response.Redirect("/Upload");
+                Response.Redirect("/Index");
             }
             else
             {
                 Logger.LogToConsole(ViewData, "Invalid: Invalid Login");
+                errornum = 0;
             }
-        }
-
-        public async Task OnPostSignupAsync()
-        {
-            if (PasswordConf == Password)
-            {
-                //create body object
-                var dataObject = new Dictionary<string, object?>
-                    {
-                        { "Username", Username },
-                        { "Email", Email },
-                        { "Password", Password }
-                    };
-
-                //Make request
-                var response = await ApiRequest.Files(ViewData, HttpContext, "v1/user/signup", dataObject);
-
-                if (response != null)
-                {
-                    //Valid Signup
-                    Logger.LogToConsole(ViewData, "Successfull signup of user " + Username);
-                    errornum = 0;
-                }
-
-                else
-                {
-                    Logger.LogToConsole(ViewData, "Invalid: Couldn't signup");
-                    errornum = 1;
-                }
-            }
-            else
-            {
-                Logger.LogToConsole(ViewData, "Invalid: passwords must match!");
-                errornum = 2;
-            }
-
         }
     }
 }
