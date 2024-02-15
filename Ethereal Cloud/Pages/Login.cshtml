@@ -26,11 +26,14 @@
 
         <!-- Login form -->
         <form method="post" asp-page-handler="Login">
+
+            <!-- Username field -->
             <div class="form-floating">
                 <input id="username" class="form-control" name="username" placeholder=" " required>
                 <label for="email">Email</label>
             </div>
 
+            <!-- Password field -->
             <div class="form-floating">
                 <input type="password" class="form-control" name="Password" id="Password" placeholder=" " required>
                 <label for="password">Password</label>
@@ -41,6 +44,7 @@
                 <a href="/Register" class="text-muted text-end">Forgot Password?</a>
             </div>
 
+            <!-- Submit button -->
             <div class="mb-3">
                 <button type="submit" id="button2" class="btn btn-primary">Login</button>
             </div>
@@ -50,16 +54,17 @@
                 <a href="/Register" class="text-primary">Sign Up</a>
             </div>
         </form>
-    </div>    
+    </div>
 </div>
 
-<!-- Console logger -->
 <script>
+    // Toggle button to show passwords
     function togglePassword() {
         const passwordInput = document.getElementById('Password');
         passwordInput.type = (passwordInput.type === 'password') ? 'text' : 'password';
     }
 
+    // Logger for errors
     var logger = '@ViewData["logger"]';
     if (logger !== null) {
         console.log(logger);
