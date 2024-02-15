@@ -58,7 +58,7 @@
             @if (Model.errornum == 0)
             {
                 <!-- Success Alert -->
-                <div class="alert alert-success alert-dismissible fade show">
+                <div class="alert alert-success alert-dismissible fade show mx-auto">
                     <strong>Success!</strong> You have successfully registered.
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
@@ -67,7 +67,7 @@
             @if (Model.errornum == 1)
             {
                 <!-- Error Alert -->
-                <div class="alert alert-danger alert-dismissible fade show">
+                <div class="alert alert-danger alert-dismissible fade show mx-auto">
                     <strong>Error!</strong> A problem has been occurred while submitting your data.
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
@@ -76,8 +76,8 @@
             @if (Model.errornum == 2)
             {
                 <!-- Error Alert -->
-                <div class="alert alert-danger alert-dismissible fade show" id="popup">
-                    <strong>Error!</strong> Your passwords didn't match
+                <div class="alert alert-danger alert-dismissible fade show mx-auto" id="popup">
+                    <strong>Error!</strong> Your passwords must match in both inputs
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             }
