@@ -17,6 +17,8 @@ namespace Ethereal_Cloud.Pages
 
         public List<FolderDataRecieve> FolderPath = new List<FolderDataRecieve>();
 
+        public int errornum = -1;
+
         public void FolderPathForDisplay()
         {
             //Sets the filepath list to be displayed on the interface
@@ -81,6 +83,7 @@ namespace Ethereal_Cloud.Pages
             else
             {
                 Logger.LogToConsole(ViewData, "Failed Get");
+                errornum = 0;
             }
         }
 

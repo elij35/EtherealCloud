@@ -85,6 +85,21 @@
 
         <!-- Appears when the files are loaded -->
         <div id="scrollbox" class="row">
+
+            <!-- Success/error messages -->
+            <div class="popup-message">
+                @if (Model.errornum == -1) { }
+
+                @if (Model.errornum == 0)
+                {
+                    <!-- Error Alert -->
+                    <div class="alert alert-danger alert-dismissible fade show mx-auto" id="popup">
+                        <strong>Error!</strong> Upload failed, are you logged in?
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+            </div>
+
             @if (Model.DisplayList.Count > 0)
             {
                 @foreach (var display in Model.DisplayList)
