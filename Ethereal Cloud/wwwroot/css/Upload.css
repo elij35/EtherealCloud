@@ -84,7 +84,7 @@
 
 #filepath-button {
     text-align: center;
-    margin-left: auto; /* Push back button to the right */
+    display: flow;
 }
 
 .no-files {
@@ -93,7 +93,7 @@
     justify-content: center;
     text-align: center;
     margin: 0px;
-    height: 100%;
+    height: 40%;
     align-items: center;
 }
 
