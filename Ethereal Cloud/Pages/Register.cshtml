@@ -73,17 +73,17 @@
 
                 <!-- Terms and conditions form -->
                 <div class="mb-3">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="termsCheckbox" required>
-                        <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#termsModal">
-                            View Terms and Conditions
-                        </button>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="termsCheckbox" name="termsCheckbox" disabled>
+                        <label class="form-check-label">
+                            I have read and agree to the <a href="#" onclick="openTermsWindow(); enableCheckbox();">terms and conditions</a>
+                        </label>
                     </div>
                 </div>
 
                 <!-- Submit button -->
                 <div class="mb-3">
-                    <button type="submit" id="button2" class="btn btn-primary">Register</button>
+                    <button type="submit" id="button2" class="btn btn-primary" onclick="return validateForm();">Register</button>
                 </div>
 
                 <div class="mb-3">
@@ -91,25 +91,6 @@
                     <a href="/Login" class="text-primary">Sign In</a>
                 </div>
             </form>
-        </div>
-    </div>
-
-    <!-- Terms and Conditions Modal -->
-    <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-
-                <!-- Header of terms and conditions (just has a close button) -->
-                <div class="modal-header">
-                    <h4 class="modal-title" id="termsModalLabel">Ethereal Cloud Terms and Conditions</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-
-                <!-- Type out the terms and conditions here -->
-                <div class="modal-body">
-                    <p>Uploads must be uploaded at your own risk </p>
-                </div>
-            </div>
         </div>
     </div>
 </div>
@@ -127,5 +108,25 @@
     var logger = '@ViewData["logger"]';
     if (logger !== null) {
         console.log(logger);
+    }
+
+    function openTermsWindow() {
+        var termsUrl = "/TermsAndConditions";
+        window.open(termsUrl, "_blank", "width=800,height=600");
+    }
+
+    function enableCheckbox() {
+        var checkbox = document.getElementById('termsCheckbox');
+        checkbox.removeAttribute('disabled');
+        checkbox.setAttribute('required', true);
+    }
+
+    function validateForm() {
+        var checkbox = document.getElementById('termsCheckbox');
+        if (!checkbox.checked) {
+            alert("Please agree to the terms and conditions.");
+            return false;
+        }
+        return true;
     }
 </script>

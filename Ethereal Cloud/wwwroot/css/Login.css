@@ -51,8 +51,11 @@
     background-color: darkslategrey;
 }
 
+/* Terms and conditions checkbox */
+.form-check-inline {
+    display: inline-block;
+}
 
-/* Terms and conditions popup formatting */
-.modal-body p {
-    font-size: 16px;
+.form-check-input {
+    margin-right: 5px;
 }
