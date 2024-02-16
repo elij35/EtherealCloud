@@ -51,6 +51,13 @@
     <div id="filebox" class="col-lg-11 col-md-10 col-sm-10">
         <!-- FilePath -->
         <div id="filepath" class="row">
+            <!-- Path Back button-->
+            <div id="filepath-button" class="col-1">
+                <a asp-page-handler="GoToFolderInPath" asp-route-folderId="-1">
+                    <img src="~/images/file-path/path-back.svg" alt="path">
+                </a>
+            </div>
+
             <div id="content-container" class="col-11">
                 <!-- Root Image -->
                 <div class="col" id="path-root">
@@ -64,23 +71,16 @@
                 {
                     @foreach (var display in Model.FolderPath)
                     {
-                        <div id="path-divider" class="col">\</div>
+                        <div id="path-divider" class="col">></div>
 
-                        <div class="file-hover" class="col">
+                        <div class="file-hover">
                             <a asp-page-handler="GoToFolderInPath" asp-route-folderId="@display.FolderID">
                                 <p id="path-folder">@display.Foldername</p>
                             </a>
                         </div>
                     }
                 }
-            </div>
-
-            <!-- Path Back button-->
-            <div id="filepath-button" class="col-1">
-                <a asp-page-handler="GoToFolderInPath" asp-route-folderId="-1">
-                    <img src="~/images/file-path/path-back.svg" alt="path">
-                </a>
-            </div>
+            </div>            
         </div>
 
         <!-- Appears when the files are loaded -->

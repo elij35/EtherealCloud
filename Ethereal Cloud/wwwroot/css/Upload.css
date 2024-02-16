@@ -1,28 +1,15 @@
-﻿.upload-page {
-    padding-bottom: 10px;
-}
-
-.no-files{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    margin:0px;
-    height:100%;
-    align-items: center;
-}
-
-#file-explorer{
+﻿#file-explorer {
     padding: 0px;
-    justify-content:center;
+    justify-content: center;
 }
 
+/* Side nav for tools */
 #toolbox {
     padding: 10px;
 }
 
 #tools {
-    justify-content:center;
+    justify-content: center;
     display: flex;
     overflow: hidden;
     height: 100%;
@@ -36,41 +23,35 @@
     padding: 5px;
     margin: 0px;
 }
-    #tool-row {
-        text-align: -webkit-center;
-        display: flow;
-        width: fit-content;
-        cursor: pointer;
-        align-self:center
-    }
-    #tool-label {
-        display: flow;
-        width: fit-content;
-        cursor: pointer;
-        align-self: center
-    }
-    #tools img {
-        padding: 0px;
-        width: 40px;
-        height: auto;
-    }
-    #tools p {
-        justify-content: center;
-        margin:0px;
-        padding:0px;
-    }
 
-/* This is where the scrollbox is contained */
-#filebox {
-    height: fit-content;
-    background: #f2f2f2;
-    border: solid;
-    border-color: #808080;
-    border-radius: 20px;
-    padding: 0px;
-    overflow: hidden;
+#tool-row {
+    text-align: -webkit-center;
+    display: flow;
+    width: fit-content;
+    cursor: pointer;
+    align-self: center
 }
 
+#tool-label {
+    display: flow;
+    width: fit-content;
+    cursor: pointer;
+    align-self: center
+}
+
+#tools img {
+    padding: 0px;
+    width: 40px;
+    height: auto;
+}
+
+#tools p {
+    justify-content: center;
+    margin: 0px;
+    padding: 0px;
+}
+
+/* Directory at top of page */
 #filepath {
     box-sizing: border-box;
     border-bottom: solid #808080;
@@ -79,13 +60,16 @@
     padding-right: 10%;
     background-color: #cbbbe2;
     box-shadow: inset 0px 0px 20px 0px #80808066;
+    display: flex;
+    align-items: center; /* Align items vertically */
 }
 
 #path-root {
     display: contents;
 }
-    #path-root img{
-        height:25px;
+
+    #path-root img {
+        height: 25px;
         padding-right: 5px;
     }
 
@@ -100,7 +84,30 @@
 
 #filepath-button {
     text-align: center;
+    margin-left: auto; /* Push back button to the right */
 }
+
+.no-files {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 0px;
+    height: 100%;
+    align-items: center;
+}
+
+#content-container {
+    display: flex; /* Make content container a flex container */
+}
+
+#filepath-button {
+    display: flex;
+}
+
+    #filepath-button img {
+        height: 25px;
+    }
 
 /* This is where all the uploaded files are contained */
 #scrollbox {
@@ -116,7 +123,7 @@
 #uploaded-files {
     width: 120px;
     height: fit-content;
-    padding:5px;
+    padding: 5px;
     margin: 5px;
 }
 
@@ -151,13 +158,34 @@
 
 /* Input box for choosing a file */
 #file-input-box input {
-    overflow:auto;
+    overflow: auto;
     width: fit-content;
-    max-width:100%;
+    max-width: 100%;
     display: inline-block;
 }
 
-/* Define the default style for the element */
+.btn {
+    background: #9877c5;
+    border-color: black;
+}
+
+    .btn:hover {
+        background-color: #705892;
+        border-color: black;
+    }
+
+
+/* This is where the scrollbox is contained */
+#filebox {
+    height: fit-content;
+    background: #f2f2f2;
+    border: solid;
+    border-color: #808080;
+    border-radius: 20px;
+    padding: 0px;
+    overflow: hidden;
+}
+
 .file-hover {
     transition: background-color 0.3s ease; /* Add a smooth transition effect */
 }
@@ -168,14 +196,4 @@
         border: 2px solid;
         border-color: #cbbbe2;
         border-radius: 5px;
-    }
-
-.btn {
-    background: #9877c5;
-    border-color: black;
-}
-
-    .btn:hover {
-        background-color: #705892;
-        border-color: black;
     }
