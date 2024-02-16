@@ -43,19 +43,12 @@ namespace StorageController.Controllers
         public async Task<string> GetFile([FromBody] FileRequest fileRequest, [FromRoute] int id)
         {
 
-            JwtSecurityToken? token = await AuthManager.ValidateToken(fileRequest.AuthToken);
+            Response<string> authResponse = await AuthManager.AuthorizeUser(fileRequest.AuthToken);
 
-            if (token == null)
-            {
-                return await new Response<string>(false, "Invalid auth token.").Serialize();
-            }
+            if (!authResponse.Success)
+                return await authResponse.Serialize();
 
-            int? userID = await AuthManager.GetUserIDFromToken(token);
-
-            if (userID == null)
-            {
-                return await new Response<string>(false, "Invalid auth token.").Serialize();
-            }
+            int userID = int.Parse(authResponse.Message);
 
             DataHandler db = new();
 
@@ -109,19 +102,12 @@ namespace StorageController.Controllers
         public async Task<string> GetFolderContent([FromBody] FileRequest fileRequest, [FromRoute] int? id = null)
         {
 
-            JwtSecurityToken? token = await AuthManager.ValidateToken(fileRequest.AuthToken);
+            Response<string> authResponse = await AuthManager.AuthorizeUser(fileRequest.AuthToken);
 
-            if (token == null)
-            {
-                return await new Response<string>(false, "Invalid auth token.").Serialize();
-            }
+            if (!authResponse.Success)
+                return await authResponse.Serialize();
 
-            int? userID = await AuthManager.GetUserIDFromToken(token);
-
-            if (userID == null)
-            {
-                return await new Response<string>(false, "Invalid auth token.").Serialize();
-            }
+            int userID = int.Parse(authResponse.Message);
 
             DataHandler db = new();
             User? user = db.Users.FirstOrDefault(user => user.UserID == userID);
