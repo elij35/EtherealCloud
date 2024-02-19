@@ -52,7 +52,7 @@
         <!-- FilePath -->
         <div id="filepath" class="row">
             <!-- Path Back button-->
-            <div id="filepath-button" class="col-1">
+            <div id="filepath-button" class="col-1" style="width: 6%;">
                 <a asp-page-handler="GoToFolderInPath" asp-route-folderId="-1">
                     <img src="~/images/file-path/path-back.png" alt="path">
                 </a>
@@ -75,7 +75,7 @@
 
                         <div class="file-hover">
                             <a asp-page-handler="GoToFolderInPath" asp-route-folderId="@display.FolderID">
-                                <p id="path-folder">@display.Foldername</p>
+                                <p id="path-folder" style="margin:0px;">@display.Foldername</p>
                             </a>
                         </div>
                     }
