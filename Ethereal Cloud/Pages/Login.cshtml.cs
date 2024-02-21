@@ -40,7 +40,7 @@ namespace Ethereal_Cloud.Pages
                 PathManagement.Remove(HttpContext);
 
                 //goto the my files page
-                Response.Redirect("/Index");
+                Response.Redirect("/Upload");
             }
             else
             {
