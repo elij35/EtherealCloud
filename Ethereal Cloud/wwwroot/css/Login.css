@@ -47,8 +47,7 @@
 
 /* Login and register submit button */
 #login-btn {
-    align-content: center;
-    background-color: darkslategrey;
+    width: -webkit-fill-available;
 }
 
 /* Terms and conditions checkbox */
@@ -58,4 +57,8 @@
 
 .form-check-input {
     margin-right: 5px;
+}
+
+#forgot-pass {
+    text-align: right;
 }
