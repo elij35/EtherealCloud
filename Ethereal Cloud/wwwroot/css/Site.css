@@ -88,3 +88,13 @@ a {
     text-align: center;
     margin-top: 10px;
 }
+
+.btn {
+    background: #9877c5;
+    border-color: black;
+}
+
+    .btn:hover {
+        background-color: #705892;
+        border-color: black;
+    }
