@@ -10,39 +10,37 @@ namespace Ethereal_Cloud.Pages
         [BindProperty]
         public SignupDetails signupDetails { get; set; }
 
-        public int errornum = -1;
 
         public async Task OnPostSignupAsync()
         {
-            if (signupDetails.PasswordConf == signupDetails.Password)
+            if (!ModelState.IsValid)
             {
-                //create body object
-                var dataObject = new Dictionary<string, object?>
-                {
-                    { "Username", signupDetails.Username },
-                    { "Email", signupDetails.Email },
-                    { "Password", signupDetails.Password }
-                };
+                Logger.LogToConsole(ViewData, "Invalid: Model error");
+                return;
+            }
 
-                //Make request
-                var response = await ApiRequest.Files(ViewData, HttpContext, "v1/user/signup", dataObject);
+            //create body object
+            var dataObject = new Dictionary<string, object?>
+            {
+                { "Username", signupDetails.Username },
+                { "Email", signupDetails.Email },
+                { "Password", signupDetails.Password }
+            };
 
-                if (response != null)
-                {
-                    //Valid Signup
-                    Logger.LogToConsole(ViewData, "Successfull signup of user " + signupDetails.Username);
-                    errornum = 0;
-                }
-                else
-                {
-                    Logger.LogToConsole(ViewData, "Invalid: Couldn't signup");
-                    errornum = 1;
-                }
+            //Make request
+            var response = await ApiRequest.Files(ViewData, HttpContext, "v1/user/signup", dataObject);
+
+            if (response != null)
+            {
+                //Valid Signup
+                Logger.LogToConsole(ViewData, "Successfull signup of user " + signupDetails.Username);
+                
+                ViewData["SuccessMessage"] = "You have successfully registered.";
             }
             else
             {
-                Logger.LogToConsole(ViewData, "Invalid: passwords must match!");
-                errornum = 2;
+                Logger.LogToConsole(ViewData, "Invalid: Couldn't signup");
+                ViewData["FailureMessage"] = "Signup failed.";
             }
         }
     }
