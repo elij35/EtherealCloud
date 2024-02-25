@@ -63,25 +63,25 @@
 
                     <!-- Username field -->
                     <div class="form-floating">
-                        <input id="username" class="form-control" name="username" placeholder=" " required>
+                        <input asp-for="signupDetails.Username" class="form-control" placeholder=" " required>
                         <label for="username">Username</label>
                     </div>
 
                     <!-- Email field -->
                     <div class="form-floating">
-                        <input type="email" class="form-control" id="email" placeholder=" " name="email" required>
+                        <input type="email" asp-for="signupDetails.Email" class="form-control" placeholder=" " required>
                         <label for="email">Email</label>
                     </div>
 
                     <!-- Password field -->
                     <div class="form-floating">
-                        <input type="password" class="form-control" name="Password" placeholder=" " id="Password" required>
+                        <input type="password" id="PasswordConf" asp-for="signupDetails.Password" class="form-control" placeholder=" " required>
                         <label for="password">Password</label>
                     </div>
 
                     <!-- Confirm password field -->
                     <div class="form-floating">
-                        <input type="password" class="form-control" id="PasswordConf" placeholder=" " name="PasswordConf" required>
+                        <input type="password" id="PasswordConf" asp-for="signupDetails.PasswordConf" class="form-control" placeholder=" " required>
                         <label for="password">Confirm Password</label>
                         <span class="password-toggle" onclick="togglePassword()">Show</span>
                     </div>

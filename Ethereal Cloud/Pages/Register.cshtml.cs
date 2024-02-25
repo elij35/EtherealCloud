@@ -1,4 +1,5 @@
 using Ethereal_Cloud.Helpers;
+using Ethereal_Cloud.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -7,29 +8,20 @@ namespace Ethereal_Cloud.Pages
     public class RegisterModel : PageModel
     {
         [BindProperty]
-        public string Email { get; set; }
-
-        [BindProperty]
-        public string Password { get; set; }
-
-        [BindProperty]
-        public string Username { get; set; }
-
-        [BindProperty]
-        public string PasswordConf { get; set; }
+        public SignupDetails signupDetails { get; set; }
 
         public int errornum = -1;
 
         public async Task OnPostSignupAsync()
         {
-            if (PasswordConf == Password)
+            if (signupDetails.PasswordConf == signupDetails.Password)
             {
                 //create body object
                 var dataObject = new Dictionary<string, object?>
                 {
-                    { "Username", Username },
-                    { "Email", Email },
-                    { "Password", Password }
+                    { "Username", signupDetails.Username },
+                    { "Email", signupDetails.Email },
+                    { "Password", signupDetails.Password }
                 };
 
                 //Make request
@@ -38,7 +30,7 @@ namespace Ethereal_Cloud.Pages
                 if (response != null)
                 {
                     //Valid Signup
-                    Logger.LogToConsole(ViewData, "Successfull signup of user " + Username);
+                    Logger.LogToConsole(ViewData, "Successfull signup of user " + signupDetails.Username);
                     errornum = 0;
                 }
                 else
