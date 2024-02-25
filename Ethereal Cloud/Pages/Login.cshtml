@@ -43,13 +43,13 @@
 
                 <!-- Username field -->
                 <div class="form-floating">
-                    <input id="username" class="form-control" name="username" placeholder=" " required>
+                    <input asp-for="loginDetails.UsernameOrEmail" class="form-control" placeholder=" " required>
                     <label for="email">Email</label>
                 </div>
 
                 <!-- Password field -->
                 <div class="form-floating">
-                    <input type="password" class="form-control" name="Password" id="Password" placeholder=" " required>
+                    <input type="password" asp-for="loginDetails.Password" class="form-control" placeholder=" " required>
                     <label for="password">Password</label>
                     <span class="password-toggle" onclick="togglePassword()">Show</span>
                 </div>

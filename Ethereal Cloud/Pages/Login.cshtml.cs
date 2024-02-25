@@ -1,4 +1,5 @@
 using Ethereal_Cloud.Helpers;
+using Ethereal_Cloud.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -7,10 +8,7 @@ namespace Ethereal_Cloud.Pages
     public class LoginModel : PageModel
     {
         [BindProperty]
-        public string Password { get; set; }
-
-        [BindProperty]
-        public string Username { get; set; }
+        public LoginDetails loginDetails { get; set; }
 
         public int errornum = -1;
 
@@ -19,8 +17,8 @@ namespace Ethereal_Cloud.Pages
             //create body object
             var dataObject = new Dictionary<string, object?>
             {
-                { "Username", Username }, //This is the username or email
-                { "Password", Password }
+                { "Username", loginDetails.UsernameOrEmail }, //This is the username or email
+                { "Password", loginDetails.Password }
             };
 
             //Make request
@@ -31,7 +29,7 @@ namespace Ethereal_Cloud.Pages
             if (response != null)
             {
                 //Valid login
-                Logger.LogToConsole(ViewData, "Successfull login of user " + Username);
+                Logger.LogToConsole(ViewData, "Successfull login of user " + loginDetails.UsernameOrEmail);
 
                 //Save authtoken as a cookie
                 AuthTokenManagement.SetToken(HttpContext, response.ToString());
