@@ -52,20 +52,19 @@
         <!-- FilePath -->
         <div id="filepath" class="row">
             <!-- Path Back button-->
-            <div id="filepath-button" class="col-1" style="width: 6%;">
+            <div id="filepath-button" class="col">
                 <a asp-page-handler="GoToFolderInPath" asp-route-folderId="-1">
-                    <img src="~/images/file-path/path-back.png" alt="path">
+                    <img src="~/images/file-path/path-back.svg" alt="path">
+                </a>
+            </div>
+            <!-- Root Image -->
+            <div class="col" id="path-root">
+                <a asp-page-handler="GoToFolderInPath" asp-route-folderId="-2">
+                    <img src="~/images/file-path/path-root.svg" alt="path">
                 </a>
             </div>
 
-            <div id="content-container" class="col-11">
-                <!-- Root Image -->
-                <div class="col" id="path-root">
-                    <a asp-page-handler="GoToFolderInPath" asp-route-folderId="-2">
-                        <img src="~/images/file-path/path-root.png" alt="path">
-                    </a>
-                </div>
-
+            <div id="content-container" class="col">
                 <!-- Current Filepath-->
                 @if (Model.FolderPath.Count > 0)
                 {

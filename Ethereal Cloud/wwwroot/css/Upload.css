@@ -78,17 +78,19 @@
 }
 
     #path-root img {
-        height: 25px;
+        height: 30px;
+        margin-left: 10px;
+        margin-right: 10px;
     }
 
 #filepath-button {
-    text-align: center;
-    display: grid;
-    margin-left: 8px;
+    display: contents;
 }
 
     #filepath-button img {
-        width: 45px;
+        height: 30px;
+        margin-left: 20px;
+        margin-right: 10px;
     }
 
 /* Filepath styling */
