@@ -236,7 +236,7 @@ namespace Ethereal_Cloud.Pages
         }
 
 
-        public async Task OnGetCreatefolderAsync(string foldername)
+        public async Task OnPostCreatefolderAsync(string foldername)
         {
             //create file object
             var dataObject = new Dictionary<string, object?>
