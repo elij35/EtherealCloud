@@ -10,10 +10,14 @@ namespace Ethereal_Cloud.Pages
         [BindProperty]
         public LoginDetails loginDetails { get; set; }
 
-        public int errornum = -1;
-
         public async Task OnPostLoginAsync()
         {
+            if (!ModelState.IsValid)
+            {
+                Logger.LogToConsole(ViewData, "Invalid: Model error");
+                return;
+            }
+
             //create body object
             var dataObject = new Dictionary<string, object?>
             {
@@ -43,7 +47,7 @@ namespace Ethereal_Cloud.Pages
             else
             {
                 Logger.LogToConsole(ViewData, "Invalid: Invalid Login");
-                errornum = 0;
+                ViewData["FailureMessage"] = "Invalid login.";
             }
         }
     }
