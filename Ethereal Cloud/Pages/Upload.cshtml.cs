@@ -89,16 +89,8 @@ namespace Ethereal_Cloud.Pages
         }
 
 
-        public async Task<IActionResult> OnGetDownload(string itemname)
+        public async Task<IActionResult> OnGetDownload(DownNavDetails details)
         {
-            Logger.LogToConsole(ViewData, "Hello");
-
-            string[] fileData = itemname.Split(':');
-
-            int fileId = int.Parse(fileData[0]);
-
-            Logger.LogToConsole(ViewData, "Fileid: " + fileData[0]);
-
 
             //create object
             var dataObject = new Dictionary<string, object?>
@@ -107,7 +99,7 @@ namespace Ethereal_Cloud.Pages
             };
 
             //Make request
-            var response = await ApiRequest.Files(ViewData, HttpContext, "v1/file/" + fileId, dataObject);
+            var response = await ApiRequest.Files(ViewData, HttpContext, "v1/file/" + details.Id, dataObject);
 
             if (response != null)
             {
@@ -124,7 +116,7 @@ namespace Ethereal_Cloud.Pages
             }
             else
             {
-                Logger.LogToConsole(ViewData, "Fail: " + fileId);
+                Logger.LogToConsole(ViewData, "Fail: " + details.Id);
 
                 return RedirectToPage("/Upload");
             }
@@ -132,11 +124,8 @@ namespace Ethereal_Cloud.Pages
 
         }
 
-        public async Task OnGetNavigate(string itemname)
+        public async Task OnGetNavigate(DownNavDetails details)
         {
-            string[] folderData = itemname.Split(':');
-
-
             var path = PathManagement.Get(HttpContext);
 
             List<FolderDataRecieve> folderPath = new List<FolderDataRecieve>();
@@ -148,8 +137,8 @@ namespace Ethereal_Cloud.Pages
 
             FolderDataRecieve navigateTo = new()
             {
-                FolderID = int.Parse(folderData[0]),
-                Foldername = folderData[1]
+                FolderID = details.Id,
+                Foldername = details.Name
             };
 
             folderPath.Add(navigateTo);

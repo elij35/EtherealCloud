@@ -1,4 +1,5 @@
 ﻿@page
+@using Ethereal_Cloud.Models
 @model Ethereal_Cloud.Pages.UploadModel
 @{
     ViewBag.Title = "Upload";
@@ -104,7 +105,7 @@
                 @foreach (var display in Model.DisplayList)
                 {
                     <div id="uploaded-files" class="file-hover">
-                        <a asp-page-handler="@GetFileItemHandler(display.Type)" asp-route-itemname="@display.Id : @display.Name">
+                        <a asp-page-handler="@GetFileItemHandler(display.Type)" asp-route-id="@display.Id" asp-route-name="@display.Name">
                             <img src="~/images/file-icons/@GetImageForFileType(@display.Type)" alt="logo" class="logo">
                         </a>
                         <p>@display.Name</p>
