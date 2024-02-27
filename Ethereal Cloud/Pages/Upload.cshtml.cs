@@ -161,18 +161,18 @@ namespace Ethereal_Cloud.Pages
 
         }
 
-        public async Task OnGetGoToFolderInPathAsync(int folderId)
+        public async Task OnGetGoToFolderInPathAsync(GotoDetails details)
         {
-            bool success = PathManagement.GoBackInFolderPath(HttpContext, folderId, ViewData);
+            bool success = PathManagement.GoBackInFolderPath(HttpContext, details.Id, ViewData);
 
             if (success)
             {
-                Logger.LogToConsole(ViewData, "Navigated to folder with id: " + folderId);
+                Logger.LogToConsole(ViewData, "Navigated to folder with id: " + details.Id);
 
             }
             else
             {
-                Logger.LogToConsole(ViewData, "Failed navigation to: " + folderId);
+                Logger.LogToConsole(ViewData, "Failed navigation to: " + details.Id);
 
             }
 

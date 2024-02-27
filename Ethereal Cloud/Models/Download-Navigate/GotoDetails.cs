@@ -2,12 +2,9 @@
 
 namespace Ethereal_Cloud.Models
 {
-    public class DownNavDetails
+    public class GotoDetails
     {
         [Required]
         public int Id { get; set; }
-
-        [Required]
-        public string Name { get; set; }
     }
 }
