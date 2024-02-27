@@ -10,9 +10,6 @@ namespace Ethereal_Cloud.Pages
     [DisableRequestSizeLimit] //Disables the file upload limit
     public class UploadModel : PageModel
     {
-        [BindProperty]
-        public string Username { get; set; }
-
         //list of files to be shown to user
         public List<FolderContentDisplay> DisplayList = new List<FolderContentDisplay>();
 
@@ -91,6 +88,12 @@ namespace Ethereal_Cloud.Pages
 
         public async Task<IActionResult> OnGetDownload(DownNavDetails details)
         {
+            if (!ModelState.IsValid)
+            {
+                Logger.LogToConsole(ViewData, "Invalid: Model error");
+                return RedirectToPage("/Upload");
+            }
+
 
             //create object
             var dataObject = new Dictionary<string, object?>
@@ -126,6 +129,13 @@ namespace Ethereal_Cloud.Pages
 
         public async Task OnGetNavigate(DownNavDetails details)
         {
+            if (!ModelState.IsValid)
+            {
+                Logger.LogToConsole(ViewData, "Invalid: Model error");
+                return;
+            }
+
+
             var path = PathManagement.Get(HttpContext);
 
             List<FolderDataRecieve> folderPath = new List<FolderDataRecieve>();
@@ -225,13 +235,23 @@ namespace Ethereal_Cloud.Pages
         }
 
 
-        public async Task OnPostCreatefolderAsync(string foldername)
+
+        [BindProperty]
+        public CreateFolderDetails createFolderDetails { get; set; }
+
+        public async Task OnPostCreateFolderAsync()
         {
+            if (!ModelState.IsValid)
+            {
+                Logger.LogToConsole(ViewData, "Invalid: Model error");
+                return;
+            }
+
             //create file object
             var dataObject = new Dictionary<string, object?>
             {
                 { "AuthToken", AuthTokenManagement.GetToken(HttpContext) },
-                { "FolderName", foldername },
+                { "FolderName", createFolderDetails.FolderName },
                 { "ParentFolder", PathManagement.GetCurrentFolderId(HttpContext) }
             };
 
@@ -246,6 +266,7 @@ namespace Ethereal_Cloud.Pages
             else
             {
                 Logger.LogToConsole(ViewData, "Bad folder response");
+                return;
             }
 
         }

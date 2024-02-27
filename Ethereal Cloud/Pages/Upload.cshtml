@@ -142,9 +142,18 @@
 
 <!-- Hidden input box -->
 <div id="input-box" style="display:none;">
-    <form id="folder-form" method="post" asp-page-handler="Createfolder">
-        <input type="text" name="foldername" required />
-        <input type="submit" value="Submit" />
+    <form id="folder-form" method="post" asp-page-handler="CreateFolder">
+        <!--FileName Field-->
+        <div class="form-floating">
+            <input asp-for="createFolderDetails.FolderName" class="form-control" placeholder=" ">
+            <label for="email">Email</label>
+            <span asp-validation-for="createFolderDetails.FolderName" class="text-danger"></span>
+        </div>
+
+        <!-- Submit button -->
+        <div class="mb-3">
+            <button type="submit" id="login-btn" class="btn btn-primary">Login</button>
+        </div>
     </form>
 </div>
 
