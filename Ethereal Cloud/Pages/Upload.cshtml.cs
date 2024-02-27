@@ -2,7 +2,6 @@ using Ethereal_Cloud.Helpers;
 using Ethereal_Cloud.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Text;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Ethereal_Cloud.Pages
@@ -14,8 +13,6 @@ namespace Ethereal_Cloud.Pages
         public List<FolderContentDisplay> DisplayList = new List<FolderContentDisplay>();
 
         public List<FolderDataRecieve> FolderPath = new List<FolderDataRecieve>();
-
-        public int errornum = -1;
 
         public void FolderPathForDisplay()
         {
@@ -42,7 +39,6 @@ namespace Ethereal_Cloud.Pages
 
             if (response != null)
             {
-
                 //Put response in form of FolderContentRecieve
                 string jsonString = response.ToString();
                 FolderContentRecieve folderContent = JsonSerializer.Deserialize<FolderContentRecieve>(jsonString);
@@ -81,7 +77,8 @@ namespace Ethereal_Cloud.Pages
             else
             {
                 Logger.LogToConsole(ViewData, "Failed Get");
-                errornum = 0;
+
+                ViewData["FailureMessage"] = "Failed to get files & folders. Please try again.";
             }
         }
 

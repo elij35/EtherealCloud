@@ -88,13 +88,10 @@
 
             <!-- Success/error messages -->
             <div class="popup-message">
-                @if (Model.errornum == -1) { }
-
-                @if (Model.errornum == 0)
+                @if (ViewData["FailureMessage"] != null)
                 {
-                    <!-- Error Alert -->
-                    <div class="alert alert-danger alert-dismissible fade show mx-auto" id="popup">
-                        <strong>Error!</strong> Upload failed, are you logged in?
+                    <div class="alert alert-danger alert-dismissible fade show mx-auto">
+                        <strong>Error!</strong> @ViewData["FailureMessage"]
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 }
