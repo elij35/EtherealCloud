@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Ethereal_Cloud.Models
+namespace Ethereal_Cloud.Models.Upload.CreateFolder
 {
     public class CreateFolderDetails
     {

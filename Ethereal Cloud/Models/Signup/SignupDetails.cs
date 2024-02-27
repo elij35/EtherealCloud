@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
-namespace Ethereal_Cloud.Models
+namespace Ethereal_Cloud.Models.Signup
 {
     public class SignupDetails
     {

@@ -1,5 +1,5 @@
 using Ethereal_Cloud.Helpers;
-using Ethereal_Cloud.Models;
+using Ethereal_Cloud.Models.Login;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 

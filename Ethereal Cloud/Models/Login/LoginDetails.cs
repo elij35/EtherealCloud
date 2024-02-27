@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Ethereal_Cloud.Models
+namespace Ethereal_Cloud.Models.Login
 {
     public class LoginDetails
     {
