@@ -10,7 +10,7 @@ namespace StorageController.Data.Models
         [Key]
         public int FileID { get; set; }
 
-        [StringLength(64)]
+        [StringLength(255)]
         public string FileType { get; set; }
 
         [Required]

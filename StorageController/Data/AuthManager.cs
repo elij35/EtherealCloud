@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using static StorageController.Controllers.FileGetController;
 
 namespace StorageController.Data
 {
@@ -63,6 +64,27 @@ namespace StorageController.Data
             catch { }
 
             return userID;
+
+        }
+
+        public static async Task<Response<string>> AuthorizeUser(string tokenString)
+        {
+
+            JwtSecurityToken? token = await AuthManager.ValidateToken(tokenString);
+
+            if (token == null)
+            {
+                return new Response<string>(false, "Invalid auth token.");
+            }
+
+            int? userID = await AuthManager.GetUserIDFromToken(token);
+
+            if (userID == null)
+            {
+                return new Response<string>(false, "Invalid auth token.");
+            }
+
+            return new Response<string>(true, userID.ToString());
 
         }
 

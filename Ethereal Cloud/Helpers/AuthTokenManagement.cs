@@ -17,7 +17,17 @@
 
         public static string? GetToken(HttpContext context)
         {
-            return context.Request.Cookies["AuthToken"];
+            var cookie = context.Request.Cookies["AuthToken"];
+
+            if (cookie != null)
+            {
+                return cookie;
+            }
+            else
+            {
+                context.Response.Redirect("/Index");
+                return null;
+            }
         }
 
         public static void RemoveToken(HttpContext context)

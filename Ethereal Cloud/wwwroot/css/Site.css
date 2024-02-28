@@ -2,6 +2,7 @@ body {
     font-family: 'Jost', sans-serif;
     background: #f5f6fa;
     overflow: auto;
+    margin-bottom: 50px;
 }
 
 * {
@@ -15,8 +16,25 @@ body {
 
 .logo {
     width: auto;
-    height: 5rem;
+    height: 3rem;
 }
+
+.navbar-brand {
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    background-color: white;
+    display: flex;
+    align-items: center;
+}
+
+    .navbar-brand img {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        padding: 5px;
+    }
 
 li {
     list-style: none;
@@ -29,3 +47,54 @@ a {
     justify-content: center;
     text-align: center;
 }
+
+#footer {
+    position: fixed;
+    height: 50px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    margin-bottom: 0px;
+}
+
+/* Profile Picture on nav bar right side */
+.profile-pic {
+    display: inline-block;
+    vertical-align: middle;
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+    .profile-pic img {
+        width: 100%;
+        height: auto;
+        object-fit: fill;
+    }
+
+.profile-menu .dropdown-menu {
+    right: 0;
+    left: unset;
+}
+
+.profile-menu .fa-fw {
+    margin-right: 8px;
+}
+
+.popup-message {
+    width: fit-content;
+    position: relative;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.btn {
+    background: #9877c5;
+    border-color: black;
+}
+
+    .btn:hover {
+        background-color: #705892;
+        border-color: black;
+    }
