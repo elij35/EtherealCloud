@@ -136,7 +136,6 @@ namespace Ethereal_Cloud.Pages
                 return;
             }
 
-
             var path = PathManagement.Get(HttpContext);
 
             List<FolderDataRecieve> folderPath = new List<FolderDataRecieve>();

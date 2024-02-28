@@ -9,7 +9,7 @@ namespace Ethereal_Cloud.Models.Signup
         public string Username { get; set; }
 
         [Required(ErrorMessage = "Email is required.")]
-        [EmailAddress(ErrorMessage = "Invalid email format.")]
+        [EmailAddress(ErrorMessage = "Not a Email.")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Password is required.")]
