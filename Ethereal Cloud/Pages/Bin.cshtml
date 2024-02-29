@@ -4,9 +4,35 @@
     ViewBag.Title = "Bin";
     Layout = "Shared/_Layout.cshtml";
     <link rel="stylesheet" href="/css/Bin.css" asp-append-version="true">
+    <link rel="stylesheet" href="/css/Upload.css" asp-append-version="true">
 }
 
-<div class="container mt-3">
-    <h3 style="text-align:center;"><b>Bin</b></h3>
-    <p style="text-align:center;">Here the user will be able to restore or permanently delete files</p>
+<div class="row mt-3">
+    <div id="toolbox" class="col-lg-1 col-md-2 col-sm-2">
+        <div id="tools" class="row">
+
+            <!-- Restore button -->
+            <div id="tool-row" onclick="toggleImage()">
+                <a id="tool-label">
+                    <img id="toggleImage" class="row" src="~/images/tools/search.svg" alt="Image 1">
+                </a>
+                <p class="row">Restore</p>
+            </div>
+
+            <!-- Delete button -->
+            <div id="tool-row">
+                <a id="tool-label">
+                    <img class="row" src="~/images/tools/trash.svg" alt="trash">
+                </a>
+                <p class="row">Delete</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Files Box -->
+    <div id="filebox" class="col-lg-11 col-md-10 col-sm-10 align-content-center">
+        <div id="scrollbox" class="row">
+            <h2>Deleted files will appear here</h2>
+        </div>
+    </div>
 </div>

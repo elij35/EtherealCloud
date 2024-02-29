@@ -34,7 +34,7 @@ namespace Ethereal_Cloud.Pages
             {
                 //Valid Signup
                 Logger.LogToConsole(ViewData, "Successfull signup of user " + signupDetails.Username);
-                
+
                 ViewData["SuccessMessage"] = "You have successfully registered.";
             }
             else
