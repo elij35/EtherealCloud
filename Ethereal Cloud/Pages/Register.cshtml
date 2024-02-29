@@ -65,6 +65,7 @@
                         <input type="password" id="Password" asp-for="signupDetails.Password" class="form-control" placeholder=" ">
                         <label for="password">Password</label>
                         <span asp-validation-for="signupDetails.Password" class="text-danger"></span>
+                        <span class="password-toggle" onclick="togglePassword()">Show</span>
                     </div>
 
                     <!-- Confirm password field -->
@@ -72,13 +73,13 @@
                         <input type="password" id="PasswordConf" asp-for="signupDetails.PasswordConf" class="form-control" placeholder=" ">
                         <label for="password">Confirm Password</label>
                         <span asp-validation-for="signupDetails.PasswordConf" class="text-danger"></span>
-                        <span class="password-toggle" onclick="togglePassword()">Show</span>
+                        <span class="password-toggle" onclick="togglePassword2()">Show</span>
                     </div>
 
                     <!-- Terms and conditions form -->
                     <div class="mb-3">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="termsCheckbox" name="termsCheckbox">
+                        <div class="form-check form-check-inline links">
+                            <input class="form-check-input" type="checkbox" id="termsCheckbox" name="termsCheckbox" onchange="document.getElementById('login-btn').disabled = !this.checked;">
                             <label class="form-check-label">
                                 I have read and agree to both the
                                 <a href="#" onclick="openTermsWindow();">Terms and Conditions</a>
@@ -89,12 +90,12 @@
 
                     <!-- Submit button -->
                     <div class="mb-3">
-                        <button type="submit" id="login-btn" class="btn btn-primary" onclick="return validateForm();">Register</button>
+                        <button type="submit" id="login-btn" class="btn btn-primary" onclick="return validateForm();" disabled>Register</button>
                     </div>
 
-                    <div class="mb-3">
-                        Already have an account?
-                        <a href="/Login" class="text-primary">Login</a>
+                    <div class="mb-3 links">
+                        <p>Already have an account?</p>
+                        <a href="/Login">Login</a>
                     </div>
                 </form>
             </div>
@@ -105,8 +106,11 @@
         // Toggle button to show passwords
         function togglePassword() {
             const passwordInput1 = document.getElementById('Password');
-            const passwordInput2 = document.getElementById('PasswordConf');
             passwordInput1.type = (passwordInput1.type === 'password') ? 'text' : 'password';
+        }
+
+        function togglePassword2() {
+            const passwordInput2 = document.getElementById('PasswordConf');
             passwordInput2.type = (passwordInput2.type === 'password') ? 'text' : 'password';
         }
 
@@ -124,15 +128,6 @@
         function openPolicyWindow() {
             var termsUrl = "/PrivacyPolicy";
             window.open(termsUrl, "_blank", "width=800,height=600");
-        }
-
-        function validateForm() {
-            var checkbox = document.getElementById('termsCheckbox');
-            if (!checkbox.checked) {
-                alert("Please agree to the terms and conditions.");
-                return false;
-            }
-            return true;
         }
     </script>
 }
