@@ -1,16 +1,15 @@
 ﻿@page
 @model Ethereal_Cloud.Pages.RegisterModel
 @{
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="/css/Site.css" asp-append-version="true">
+    <link rel="stylesheet" href="/css/Login.css" asp-append-version="true">
     <title>Register</title>
     Layout = null;
-    <link rel="stylesheet" href="/css/Login.css" asp-append-version="true">
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
@@ -79,9 +78,11 @@
                     <!-- Terms and conditions form -->
                     <div class="mb-3">
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="termsCheckbox" name="termsCheckbox" disabled>
+                            <input class="form-check-input" type="checkbox" id="termsCheckbox" name="termsCheckbox">
                             <label class="form-check-label">
-                                I have read and agree to the <a href="#" onclick="openTermsWindow(); enableCheckbox();">terms and conditions</a>
+                                I have read and agree to both the
+                                <a href="#" onclick="openTermsWindow();">Terms and Conditions</a>
+                                <a href="#" onclick="openPolicyWindow();">Privacy Policy</a>
                             </label>
                         </div>
                     </div>
@@ -120,10 +121,9 @@
             window.open(termsUrl, "_blank", "width=800,height=600");
         }
 
-        function enableCheckbox() {
-            var checkbox = document.getElementById('termsCheckbox');
-            checkbox.removeAttribute('disabled');
-            checkbox.setAttribute('required', true);
+        function openPolicyWindow() {
+            var termsUrl = "/PrivacyPolicy";
+            window.open(termsUrl, "_blank", "width=800,height=600");
         }
 
         function validateForm() {
