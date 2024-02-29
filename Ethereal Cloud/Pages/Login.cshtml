@@ -54,7 +54,7 @@
                 </div>
 
                 <!-- Password field -->
-                <div class="form-floating">
+                <div class="form-floating password-input">
                     <input type="password" id="Password" asp-for="loginDetails.Password" class="form-control" placeholder=" ">
                     <label for="password">Password</label>
                     <span class="password-toggle" onclick="togglePassword()">Show</span>
@@ -62,7 +62,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <a href="/Register" id="forgot-pass" class="text-muted text-end">Forgot Password?</a>
+                    <a href="/Register" id="forgot-pass" class="float-end text-end">Forgot Password?</a>
                 </div>
 
                 <!-- Submit button -->
@@ -70,9 +70,9 @@
                     <button type="submit" id="login-btn" class="btn btn-primary">Login</button>
                 </div>
 
-                <div class="mb-3">
-                    Don't have an account?
-                    <a href="/Register" class="text-primary">Register</a>
+                <div class="mb-3 links">
+                    <p>Don't have an account?</p>
+                    <a href="/Register">Register</a>
                 </div>
             </form>
         </div>
