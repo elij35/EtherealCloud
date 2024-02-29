@@ -211,7 +211,7 @@ namespace Ethereal_Cloud.Pages
                         dataObject.Add("FolderId", currentFolder);
                     }
 
-                    
+
                     //Make request
                     var response = await ApiRequest.Files(ViewData, HttpContext, "v1/file", dataObject);
 
