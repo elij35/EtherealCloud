@@ -1,0 +1,31 @@
+﻿@page
+@using Ethereal_Cloud.Models
+@model Ethereal_Cloud.Pages.UploadModel
+@{
+    ViewBag.Title = "Shared";
+    Layout = "Shared/_Layout.cshtml";
+    <link rel="stylesheet" href="/css/Upload.css" asp-append-version="true">
+    <link rel="stylesheet" href="/css/Shared.css" asp-append-version="true">
+}
+
+<div id="file-explorer" class="row mt-3 align-content-center">
+    <div class="col-md-6">
+
+        <!-- Files Box -->
+        <div id="filebox" class="col-lg-11 col-md-10 col-sm-10">
+            <div id="scrollbox" class="row">
+                <h2>Files shared with me</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+
+        <!-- Files Box -->
+        <div id="filebox" class="col-lg-11 col-md-10 col-sm-10">
+            <div id="scrollbox" class="row">
+                <h2>Files shared to others</h2>
+            </div>
+        </div>
+    </div>
+</div>
