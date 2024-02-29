@@ -18,6 +18,10 @@ h2 {
     font-size: 22px;
 }
 
+a {
+    font-size: 16px;
+}
+
 .logo {
     width: auto;
     height: 3rem;
@@ -62,10 +66,8 @@ a {
 }
 
 .popup-message {
-    width: fit-content;
-    position: relative;
     text-align: center;
-    margin-top: 10px;
+    margin-top: 5px;
 }
 
 .btn {

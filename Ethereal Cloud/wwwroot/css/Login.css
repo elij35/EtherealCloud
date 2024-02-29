@@ -48,6 +48,8 @@
 /* Login and register submit button */
 #login-btn {
     width: -webkit-fill-available;
+    background: #9877c5;
+    margin-top: 10px;
 }
 
 /* Terms and conditions checkbox */
@@ -60,9 +62,22 @@
 }
 
 #forgot-pass {
-    text-align: right;
+    width: fit-content;
 }
 
 h2 {
     font-size: 28px;
+}
+
+.links a {
+    display: inline-block;
+    width: fit-content;
+}
+
+.links p {
+    margin-bottom: 0px;
+}
+
+.password-input {
+    margin-bottom: 10px;
 }
