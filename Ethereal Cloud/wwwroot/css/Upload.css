@@ -25,18 +25,16 @@
 }
 
 #tool-row {
-    text-align: -webkit-center;
-    display: flow;
-    width: fit-content;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
     cursor: pointer;
-    align-self: center
+    align-items: center;
 }
 
 #tool-label {
-    display: flow;
-    width: fit-content;
+    display: block;
     cursor: pointer;
-    align-self: center
 }
 
 #tools img {
@@ -53,7 +51,7 @@
 
 /* This is where the scrollbox is contained */
 #filebox {
-    height: fit-content;
+    height: 40vh;
     background: #f2f2f2;
     border: solid;
     border-color: #808080;
