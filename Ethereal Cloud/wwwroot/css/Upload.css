@@ -201,6 +201,7 @@
     background-color: #f1f1f1;
     border: 5px solid #ccc;
     width: 50%;
+    z-index: 1;
 }
 
 .popup-input-btn {
