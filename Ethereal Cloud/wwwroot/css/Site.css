@@ -18,13 +18,16 @@ h2 {
     font-size: 22px;
 }
 
-a {
-    font-size: 16px;
-}
-
 .logo {
     width: auto;
     height: 3rem;
+}
+
+/* Navigation bar at top */
+header::after {
+    content: '';
+    display: table;
+    clear: both;
 }
 
 .navbar-brand {
@@ -44,18 +47,50 @@ a {
         padding: 5px;
     }
 
-li {
+.main-nav {
+    float: left;
+    width: 100%;
+}
+
+.nav-pages {
+    margin: 0;
+    padding: 0;
     list-style: none;
+}
+
+.nav-item {
+    display: inline-block;
+    margin-left: 50px;
+    padding-top: 12px;
+    position: relative;
+}
+
+.nav-link {
     text-decoration: none;
+    text-transform: uppercase;
+    font-size: 16px;
 }
 
-a {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
+.nav-link:hover {
+    color: whitesmoke;
 }
 
+.nav-link::before {
+    content: '';
+    display: block;
+    height: 5px;
+    background-color: #444;
+    position: absolute;
+    top: 0;
+    width: 0%;
+    transition: all ease-in-out 250ms;
+}
+
+.nav-link:hover::before {
+    width: 100%;
+}
+
+/* Footer */
 #footer {
     position: fixed;
     height: 50px;
@@ -64,12 +99,13 @@ a {
     right: 0px;
     margin-bottom: 0px;
 }
-
+/* Error message popups */
 .popup-message {
     text-align: center;
     margin-top: 5px;
 }
 
+/* Buttons on every page (to keep consistency) */
 .btn {
     background: #9877c5;
     border-color: black;

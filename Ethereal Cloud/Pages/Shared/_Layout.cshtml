@@ -10,42 +10,44 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark main-nav">
+            <div class="container">
 
-            <!-- Logo on left side -->
-            <div class="navbar-brand">
-                <img src="~/images/LogoVector.svg" alt="logo" class="logo">
+                <!-- Logo on left side -->
+                <div class="navbar-brand">
+                    <img src="~/images/LogoVector.svg" alt="logo" class="logo">
+                </div>
+
+                <!-- Toggle sidebar when screen is small -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Links on left side -->
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 nav-pages">
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Upload">Upload</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Bin">Bin</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Shared">Shared</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Account">Account</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-
-            <!-- Toggle sidebar when screen is small -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <!-- Links on left side -->
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="/Upload">Upload</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="/Bin">Bin</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="/Shared">Shared</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="/Account">Account</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+        </nav>
+    </header>
 
     <div class="upload-page container mx-auto">
         @RenderBody()
