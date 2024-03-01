@@ -5,7 +5,7 @@
 
 /* Side nav for tools */
 #toolbox {
-    padding: 10px;
+    padding: 2px 8px;
 }
 
 #tools {
@@ -207,7 +207,6 @@
 .popup-input-btn {
     margin-top: 10px;
 }
-
 
 /* Disables scrolling when input box is open */
 /*
