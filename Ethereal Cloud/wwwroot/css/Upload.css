@@ -121,13 +121,9 @@
 }
 
 .no-files {
-    display: flex;
-    align-items: center;
+    display: grid;
     justify-content: center;
-    text-align: center;
-    margin: 0px;
     height: 40%;
-    align-items: center;
 }
 
 .col {
@@ -143,9 +139,10 @@
 #scrollbox {
     margin: 0px;
     width: 100%;
+    display: ruby-text;
     height: 48vh;
     max-height: inherit;
-    justify-content: center;
+    justify-content: flex-start;
     overflow-y: scroll;
     text-align: center;
 }
