@@ -31,7 +31,6 @@
     top: 50%;
     right: 10px;
     transform: translateY(-50%);
-    font-size: 0.8rem;
     color: #6c757d;
 }
 
@@ -80,4 +79,8 @@ h2 {
 
 .password-input {
     margin-bottom: 10px;
+}
+
+.error-output-spacing {
+    text-align: center;
 }

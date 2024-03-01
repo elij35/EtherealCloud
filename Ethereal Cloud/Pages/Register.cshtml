@@ -50,30 +50,44 @@
                     <div class="form-floating">
                         <input asp-for="signupDetails.Username" class="form-control" placeholder=" ">
                         <label for="username">Username</label>
-                        <span asp-validation-for="signupDetails.Username" class="text-danger"></span>
+
+                        <div class="error-output-spacing">
+                            <span asp-validation-for="signupDetails.Username" class="text-danger"></span>
+                        </div>
                     </div>
+
 
                     <!-- Email field -->
                     <div class="form-floating">
                         <input type="text" asp-for="signupDetails.Email" class="form-control" placeholder=" ">
                         <label for="email">Email</label>
-                        <span asp-validation-for="signupDetails.Email" class="text-danger"></span>
+
+                        <div class="error-output-spacing">
+                            <span asp-validation-for="signupDetails.Email" class="text-danger"></span>
+                        </div>
                     </div>
+
 
                     <!-- Password field -->
                     <div class="form-floating">
                         <input type="password" id="Password" asp-for="signupDetails.Password" class="form-control" placeholder=" ">
                         <label for="password">Password</label>
-                        <span asp-validation-for="signupDetails.Password" class="text-danger"></span>
                         <span class="password-toggle" onclick="togglePassword()">Show</span>
+
+                        <div class="error-output-spacing">
+                            <span asp-validation-for="signupDetails.Password" class="text-danger"></span>
+                        </div>
                     </div>
 
                     <!-- Confirm password field -->
                     <div class="form-floating">
                         <input type="password" id="PasswordConf" asp-for="signupDetails.PasswordConf" class="form-control" placeholder=" ">
                         <label for="password">Confirm Password</label>
-                        <span asp-validation-for="signupDetails.PasswordConf" class="text-danger"></span>
                         <span class="password-toggle" onclick="togglePassword2()">Show</span>
+
+                        <div class="error-output-spacing">
+                            <span asp-validation-for="signupDetails.PasswordConf" class="text-danger"></span>
+                        </div>
                     </div>
 
                     <!-- Terms and conditions form -->
