@@ -86,6 +86,24 @@
         <!-- Appears when the files are loaded -->
         <div id="scrollbox" class="row">
 
+            <!-- Hidden folder naming input box -->
+            <div id="input-box" class="popup-input" style="display:none;">
+                <form id="folder-form" method="post" asp-page-handler="CreateFolder">
+                    <!--FileName Field-->
+                    <div class="form-floating">
+                        <input asp-for="createFolderDetails.FolderName" class="form-control" placeholder=" ">
+                        <label for="folderName">Folder Name</label>
+                        <span asp-validation-for="createFolderDetails.FolderName" class="text-danger"></span>
+                    </div>
+
+                    <!-- Submit button -->
+                    <div class="mb-3 ">
+                        <button type="submit" id="create-folder-btn" class="popup-input-btn btn btn-primary">Create Folder</button>
+                        <!-- Add: onclick="enableScroll()" to above to disable scrolling when input is open -->
+                    </div>
+                </form>
+            </div>
+
             <!-- Success/error messages -->
             <div class="popup-message">
                 @if (ViewData["FailureMessage"] != null)
@@ -131,58 +149,23 @@
     </form>
 </div>
 
-<!--NEW FOLDER INPUT BOX-->
-<!-- Hidden input box -->
-<div id="input-box" style="display:none;">
-    <form id="folder-form" method="post" asp-page-handler="CreateFolder">
-        <!--FileName Field-->
-        <div class="form-floating">
-            <input asp-for="createFolderDetails.FolderName" class="form-control" placeholder=" ">
-            <label for="folderName">Folder Name</label>
-            <span asp-validation-for="createFolderDetails.FolderName" class="text-danger"></span>
-        </div>
-
-        <!-- Submit button -->
-        <div class="mb-3">
-            <button type="submit" id="create-folder-btn" class="btn btn-primary">Create Folder</button>
-        </div>
-    </form>
-</div>
-
-<script>
-    function showInputBox() {
-        // Show the input box
-        document.getElementById('input-box').style.display = 'block';
-
-        // Set focus on the input field
-        document.querySelector('#input-box input[name="foldername"]').focus();
-    }
-</script>
-
-
-
-
-
-
-
-
-
-
-
 @{
-    <!-- Console logger -->
+    <!-- Scripts -->
     <script>
+        // Console logger
         var logger = '@ViewData["logger"]';
         if (logger !== null) {
             console.log(decodeHtml(logger));
         }
 
+        //Decodes html text
         function decodeHtml(html) {
             var txt = document.createElement("textarea");
             txt.innerHTML = html;
             return txt.value;
         }
 
+        //Changes the sort image when pressed
         function toggleImage() {
             var imageElement = document.getElementById('toggleImage');
             if (imageElement.src.endsWith('sort-alpha-down.svg')) {
@@ -191,6 +174,24 @@
                 imageElement.src = 'images/tools/sort-alpha-down.svg';
             }
         }
+
+        //Loads naming foler popup
+        function showInputBox() {
+            // Show the input box
+            document.getElementById('input-box').style.display = 'block';
+            //document.body.classList.add('popup-open'); // This disable scrolling in the background
+
+            // Set focus on the input field
+            document.querySelector('#input-box input[name="foldername"]').focus();
+        }
+
+        /*
+        //Re enable background scrolling
+        function enableScroll() {
+            // Show the input box
+            document.body.classList.remove('popup-open'); // This enables scrolling in the background
+        }
+        */
     </script>
 
     string GetFileItemHandler(string fileHandler)

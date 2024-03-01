@@ -180,7 +180,7 @@
     border: dashed;
     border-color: #808080;
     height: min-content;
-    background-color: #e6e6e6;
+    background-color: #f2f2f2;
     border-radius: 20px
 }
 
@@ -191,3 +191,26 @@
     max-width: 100%;
     display: inline-block;
 }
+
+.popup-input {
+    position: fixed;
+    top: 40%;
+    left: 53%;
+    transform: translate(-50%, -50%);
+    padding: 15px;
+    background-color: #f1f1f1;
+    border: 5px solid #ccc;
+    width: 50%;
+}
+
+.popup-input-btn {
+    margin-top: 10px;
+}
+
+
+/* Disables scrolling when input box is open */
+/*
+body.popup-open {
+    overflow: hidden;
+}
+*/
