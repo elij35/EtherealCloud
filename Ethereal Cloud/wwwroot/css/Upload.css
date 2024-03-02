@@ -30,6 +30,7 @@
     flex-direction: column;
     cursor: pointer;
     align-items: center;
+    width: fit-content;
 }
 
 #tool-label {
@@ -110,7 +111,7 @@
     }
 
     .file-hover :hover {
-        color: aqua;
+        font-weight: bold;
     }
 
 #path-folder {
@@ -206,9 +207,7 @@
     margin-top: 10px;
 }
 
-/* Disables scrolling when input box is open */
-/*
-body.popup-open {
-    overflow: hidden;
+.mt-3 {
+    margin-left: 5px;
+    margin-right: 5px;
 }
-*/
