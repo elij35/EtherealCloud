@@ -1,22 +1,42 @@
-﻿.main {
+﻿body {
+    background-color: #dfcffb;
+    color: black;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.main {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 30px;
+    min-height: 88vh;
 }
 
 .login-container {
     background-color: #ffffff;
     padding: 30px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 350px;
-    max-width: 100%;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 400px;
 }
 
     .login-container h2 {
         text-align: center;
         margin-bottom: 30px;
+    }
+
+.logo {
+    display: inline;
+    margin-bottom: 20px;
+}
+
+    .logo img {
+        max-width: 85%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+        margin-bottom: 8px;
     }
 
 .form-floating {
@@ -83,4 +103,10 @@ h2 {
 
 .error-output-spacing {
     text-align: center;
+}
+
+@media (max-width: 768px) {
+    .login-container {
+        width: 90%;
+    }
 }

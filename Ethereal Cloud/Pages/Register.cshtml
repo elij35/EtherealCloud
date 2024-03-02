@@ -11,18 +11,13 @@
     <title>Register</title>
     Layout = null;
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <!-- Logo on left side -->
-            <div class="navbar-brand">
-                <img src="~/images/LogoVector.svg" alt="logo" class="logo">
-            </div>
-        </div>
-    </nav>
-
     <div class="main">
-        <div class="login-container align-items-center">
-            <h2>Register</h2>
+        <div class="login-container">
+            <div class="logo">
+                <img src="~/images/LogoVector.svg" alt="logo">
+            </div>
+
+            <h2><strong>Register</strong></h2>
 
             <!-- Success/error messages -->
             <div class="popup-message">
@@ -136,12 +131,12 @@
 
         function openTermsWindow() {
             var termsUrl = "/TermsAndConditions";
-            window.open(termsUrl, "_blank", "width=800,height=600");
+            window.open(termsUrl, "_blank", "width=800,height=600,top=350");
         }
 
         function openPolicyWindow() {
             var termsUrl = "/PrivacyPolicy";
-            window.open(termsUrl, "_blank", "width=800,height=600");
+            window.open(termsUrl, "_blank", "width=800,height=600,top=350");
         }
     </script>
 }
