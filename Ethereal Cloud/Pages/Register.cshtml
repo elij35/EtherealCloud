@@ -65,7 +65,7 @@
 
                     <!-- Password field -->
                     <div class="form-floating">
-                        <input type="password" id="Password" asp-for="signupDetails.Password" class="form-control" placeholder=" ">
+                        <input type="password" oninput="passStrengthCheck()" id="Password" asp-for="signupDetails.Password" class="form-control" placeholder=" ">
                         <label for="password">Password</label>
                         <span class="password-toggle" onclick="togglePassword()">Show</span>
 
@@ -137,6 +137,10 @@
         function openPolicyWindow() {
             var termsUrl = "/PrivacyPolicy";
             window.open(termsUrl, "_blank", "width=800,height=600,top=350");
+        }
+        function passStrengthCheck() {
+            var password = document.getElementById('Password').value;
+            console.log(password);
         }
     </script>
 }
