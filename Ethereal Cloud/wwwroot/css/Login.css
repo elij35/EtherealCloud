@@ -40,8 +40,7 @@
     }
 
 .form-floating {
-    margin-bottom: 15px;
-    position: relative;
+    margin-top: 15px;
 }
 
 /* Password revealer toggle */
@@ -82,10 +81,15 @@
 
 #forgot-pass {
     width: fit-content;
+    margin-top: 8px;
 }
 
 h2 {
     font-size: 28px;
+}
+
+.spacing {
+    margin-top: 15px;
 }
 
 .links a {
@@ -97,11 +101,7 @@ h2 {
     margin-bottom: 0px;
 }
 
-.password-input {
-    margin-bottom: 10px;
-}
-
-.error-output-spacing {
+.error-text {
     text-align: center;
 }
 
