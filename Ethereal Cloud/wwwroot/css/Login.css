@@ -1,0 +1,112 @@
+﻿body {
+    background-color: #dfcffb;
+    color: black;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+}
+
+.login-container {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 400px;
+}
+
+    .login-container h2 {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+.logo {
+    display: inline;
+    margin-bottom: 20px;
+}
+
+    .logo img {
+        max-width: 85%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+        margin-bottom: 8px;
+    }
+
+.form-floating {
+    margin-bottom: 15px;
+    position: relative;
+}
+
+/* Password revealer toggle */
+.password-toggle {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    color: #6c757d;
+}
+
+    .password-toggle:hover {
+        color: #495057;
+    }
+
+/* Login and register page input box style */
+.mb-3 {
+    text-align: center;
+    align-content: center;
+}
+
+/* Login and register submit button */
+#login-btn {
+    width: -webkit-fill-available;
+    background: #9877c5;
+    margin-top: 10px;
+}
+
+/* Terms and conditions checkbox */
+.form-check-inline {
+    display: inline-block;
+}
+
+.form-check-input {
+    margin-right: 5px;
+}
+
+#forgot-pass {
+    width: fit-content;
+}
+
+h2 {
+    font-size: 28px;
+}
+
+.links a {
+    display: inline-block;
+    width: fit-content;
+}
+
+.links p {
+    margin-bottom: 0px;
+}
+
+.password-input {
+    margin-bottom: 10px;
+}
+
+.error-output-spacing {
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .login-container {
+        width: 90%;
+    }
+}

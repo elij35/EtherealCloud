@@ -1,5 +1,9 @@
 using Ethereal_Cloud.Helpers;
 using Ethereal_Cloud.Models;
+using Ethereal_Cloud.Models.Upload.CreateFolder;
+using Ethereal_Cloud.Models.Upload.Get;
+using Ethereal_Cloud.Models.Upload.Get.File;
+using Ethereal_Cloud.Models.Upload.Get.Folder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using JsonSerializer = System.Text.Json.JsonSerializer;
@@ -9,9 +13,6 @@ namespace Ethereal_Cloud.Pages
     [DisableRequestSizeLimit] //Disables the file upload limit
     public class UploadModel : PageModel
     {
-        [BindProperty]
-        public string Username { get; set; }
-
         //list of files to be shown to user
         public List<FolderContentDisplay> DisplayList = new List<FolderContentDisplay>();
 
@@ -42,7 +43,6 @@ namespace Ethereal_Cloud.Pages
 
             if (response != null)
             {
-
                 //Put response in form of FolderContentRecieve
                 string jsonString = response.ToString();
                 FolderContentRecieve folderContent = JsonSerializer.Deserialize<FolderContentRecieve>(jsonString);
@@ -81,21 +81,19 @@ namespace Ethereal_Cloud.Pages
             else
             {
                 Logger.LogToConsole(ViewData, "Failed Get");
-            }
 
+                ViewData["FailureMessage"] = "Failed to get files & folders. Please try again.";
+            }
         }
 
 
-
-        public async Task<IActionResult> OnGetDownload(string itemname)
+        public async Task<IActionResult> OnGetDownload(DownNavDetails details)
         {
-            Logger.LogToConsole(ViewData, "Hello");
-
-            string[] fileData = itemname.Split(':');
-
-            int fileId = int.Parse(fileData[0]);
-
-            Logger.LogToConsole(ViewData, "Fileid: " + fileData[0]);
+            if (!ModelState.IsValid)
+            {
+                Logger.LogToConsole(ViewData, "Invalid: Model error");
+                return RedirectToPage("/Upload");
+            }
 
 
             //create object
@@ -105,7 +103,7 @@ namespace Ethereal_Cloud.Pages
             };
 
             //Make request
-            var response = await ApiRequest.Files(ViewData, HttpContext, "v1/file/" + fileId, dataObject);
+            var response = await ApiRequest.Files(ViewData, HttpContext, "v1/file/" + details.Id, dataObject);
 
             if (response != null)
             {
@@ -116,11 +114,13 @@ namespace Ethereal_Cloud.Pages
 
                 //Response.Redirect("/Upload");
 
-                return File(Convert.FromBase64String(file.Content), file.Filetype, file.Filename);
+                byte[] bytes = Convert.FromHexString(file.Content);
+
+                return File(bytes, file.Filetype, file.Filename);
             }
             else
             {
-                Logger.LogToConsole(ViewData, "Fail: " + fileId);
+                Logger.LogToConsole(ViewData, "Fail: " + details.Id);
 
                 return RedirectToPage("/Upload");
             }
@@ -128,11 +128,13 @@ namespace Ethereal_Cloud.Pages
 
         }
 
-        public async Task OnGetNavigate(string itemname)
+        public async Task OnGetNavigate(DownNavDetails details)
         {
-            //\
-            string[] folderData = itemname.Split(':');
-
+            if (!ModelState.IsValid)
+            {
+                Logger.LogToConsole(ViewData, "Invalid: Model error");
+                return;
+            }
 
             var path = PathManagement.Get(HttpContext);
 
@@ -145,8 +147,8 @@ namespace Ethereal_Cloud.Pages
 
             FolderDataRecieve navigateTo = new()
             {
-                FolderID = int.Parse(folderData[0]),
-                Foldername = folderData[1]
+                FolderID = details.Id,
+                Foldername = details.Name
             };
 
             folderPath.Add(navigateTo);
@@ -159,18 +161,18 @@ namespace Ethereal_Cloud.Pages
 
         }
 
-        public async Task OnGetGoToFolderInPathAsync(int folderId)
+        public async Task OnGetGoToFolderInPathAsync(GotoDetails details)
         {
-            bool success = PathManagement.GoBackInFolderPath(HttpContext, folderId, ViewData);
+            bool success = PathManagement.GoBackInFolderPath(HttpContext, details.Id, ViewData);
 
             if (success)
             {
-                Logger.LogToConsole(ViewData, "Navigated to folder with id: " + folderId);
+                Logger.LogToConsole(ViewData, "Navigated to folder with id: " + details.Id);
 
             }
             else
             {
-                Logger.LogToConsole(ViewData, "Failed navigation to: " + folderId);
+                Logger.LogToConsole(ViewData, "Failed navigation to: " + details.Id);
 
             }
 
@@ -192,7 +194,8 @@ namespace Ethereal_Cloud.Pages
                     //Hold the file contents in the stream
                     await uploadedFile.CopyToAsync(stream);
 
-
+                    byte[] bytes = stream.ToArray();
+                    string hexBytes = Convert.ToHexString(bytes);
 
                     //create file object
                     var dataObject = new Dictionary<string, object?>
@@ -200,7 +203,7 @@ namespace Ethereal_Cloud.Pages
                         { "AuthToken", AuthTokenManagement.GetToken(HttpContext) },
                         { "Filename", uploadedFile.FileName },
                         { "Filetype", MimeType.GetMimeType(uploadedFile.FileName) },
-                        { "Content", Convert.ToBase64String(stream.ToArray()) }
+                        { "Content", hexBytes }
                     };
                     //If the user isnt in the root
                     if (currentFolder != null)
@@ -219,7 +222,7 @@ namespace Ethereal_Cloud.Pages
                     }
                     else
                     {
-                        Logger.LogToConsole(ViewData, "Bad upload response");
+                        //Logger.LogToConsole(ViewData, "Bad upload response");
                     }
                 }
 
@@ -232,13 +235,23 @@ namespace Ethereal_Cloud.Pages
         }
 
 
-        public async Task OnGetCreatefolderAsync(string foldername)
+
+        [BindProperty]
+        public CreateFolderDetails createFolderDetails { get; set; }
+
+        public async Task OnPostCreateFolderAsync()
         {
+            if (!ModelState.IsValid)
+            {
+                Logger.LogToConsole(ViewData, "Invalid: Model error");
+                return;
+            }
+
             //create file object
             var dataObject = new Dictionary<string, object?>
             {
                 { "AuthToken", AuthTokenManagement.GetToken(HttpContext) },
-                { "FolderName", foldername },
+                { "FolderName", createFolderDetails.FolderName },
                 { "ParentFolder", PathManagement.GetCurrentFolderId(HttpContext) }
             };
 
@@ -253,6 +266,7 @@ namespace Ethereal_Cloud.Pages
             else
             {
                 Logger.LogToConsole(ViewData, "Bad folder response");
+                return;
             }
 
         }

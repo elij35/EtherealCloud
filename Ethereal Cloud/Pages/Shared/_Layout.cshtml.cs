@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Ethereal_Cloud.Pages
+namespace Ethereal_Cloud.Pages.Shared
 {
-    public class LoginSignupModel : PageModel
+    public class navigationModel : PageModel
     {
         public void OnGet()
         {

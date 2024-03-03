@@ -1,4 +1,4 @@
-﻿namespace Ethereal_Cloud.Pages
+﻿namespace Ethereal_Cloud.Models.Upload.Get.Folder
 {
     public class FolderContentDisplay
     {
