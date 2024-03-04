@@ -138,11 +138,15 @@
             var termsUrl = "/PrivacyPolicy";
             window.open(termsUrl, "_blank", "width=800,height=600,top=350");
         }
-        var weak = /^(?=.*[a-z])*$/
+        var weakest = /^(?=.*[a-z])*$/
+        var weaker = /^(?=.*[a-z])(?=.*[A-Z])$/
         function passStrengthCheck() {
             var password = document.getElementById('Password').value;
-            if(weak.test(password)) {
-                console.log("weak")
+            if(weakest.test(password)) {
+                console.log("weakest")
+            } 
+            if (weaker.test(password)) {
+                console.log("weaker")
             }
         }
     </script>
