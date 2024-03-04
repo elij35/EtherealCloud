@@ -138,10 +138,12 @@
             var termsUrl = "/PrivacyPolicy";
             window.open(termsUrl, "_blank", "width=800,height=600,top=350");
         }
-        var test = "a"
+        var weak = /^(?=.*[a-z])*$/
         function passStrengthCheck() {
             var password = document.getElementById('Password').value;
-            console.log(test)
+            if(weak.test(password)) {
+                console.log("weak")
+            }
         }
     </script>
 }
