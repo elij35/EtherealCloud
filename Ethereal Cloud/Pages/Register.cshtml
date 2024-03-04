@@ -140,9 +140,9 @@
         }
 
         var low = /(?=.*[a-zA-Z\d!#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])/;
-        var med = /(?=.*[a-z])(?=.[A-Z])/
-        var high = /(?=.*[a-z])(?=.[A-Z])(?=.*\d){10,}/
-        var highest = /(?=.*[a-z])(?=.[A-Z])(?=.*\d)(?=.*[!#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]){10,}/
+        var med = /(?=.*[a-z])(?=.*[A-Z])/;
+        var high = /(?=.*[a-z])(?=.*[A-Z])(?=.*[\d!#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{10,}/;
+        var highest = /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{10,}/;
         function passStrengthCheck() {
             var password = document.getElementById('Password').value;
             if (highest.test(password)) {
