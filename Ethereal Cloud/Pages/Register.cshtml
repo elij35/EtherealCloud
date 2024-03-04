@@ -145,18 +145,20 @@
         var highest = /(?=.*[a-z])(?=.[A-Z])(?=.*\d)(?=.*[!#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]){10,}/
         function passStrengthCheck() {
             var password = document.getElementById('Password').value;
-            if (low.test(password)) {
-                console.log("red");
-            }
-            if (med.test(password)) {
-                console.log("amber low");
+            if (highest.test(password)) {
+                console.log("green");
+                return null;
             }
             if (high.test(password)) {
                 console.log("amber high");
             }
-            if (highest.test(password)) {
-                console.log("green");
+            if (med.test(password)) {
+                console.log("amber low");
             }
+            if (low.test(password)) {
+                console.log("red");
+            }
+            
         }
     </script>
 }
