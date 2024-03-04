@@ -142,8 +142,8 @@
         var weakest = /(?=.[a-z])/;
         function passStrengthCheck() {
             var password = document.getElementById('Password').value;
-            if (weakest.test()){
-                console.log(password);
+            if (weakest.test(password)) {
+                console.log("red");
             }
         }
     </script>
