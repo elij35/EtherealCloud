@@ -139,11 +139,23 @@
             window.open(termsUrl, "_blank", "width=800,height=600,top=350");
         }
 
-        var weakest = /(?=.[a-z])/;
+        var low = /(?=.*[a-z])/;
+        var med = /(?=.*[a-z])(?=.[A-Z])/
+        var high = /(?=.*[a-z])(?=.[A-Z])(?=.*\d){10,}/
+        var highest = /(?=.*[a-z])(?=.[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]){10,}/
         function passStrengthCheck() {
             var password = document.getElementById('Password').value;
-            if (weakest.test(password)) {
+            if (low.test(password)) {
                 console.log("red");
+            }
+            if (med.test(password)) {
+                console.log("amber low");
+            }
+            if (high.test(password)) {
+                console.log("amber high");
+            }
+            if (highest.test(password)) {
+                console.log("green");
             }
         }
     </script>
