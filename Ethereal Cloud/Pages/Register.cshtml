@@ -146,17 +146,22 @@
         function passStrengthCheck() {
             var password = document.getElementById('Password').value;
             if (highest.test(password)) {
-                console.log("green");
-                return null;
+                console.log("green full");
+                return;
             }
             if (high.test(password)) {
                 console.log("amber high");
+                return;
             }
             if (med.test(password)) {
-                console.log("amber low");
+                console.log("orange low");
+                return;
+
             }
             if (low.test(password)) {
-                console.log("red");
+                console.log("red lowest");
+                return;
+
             }
             
         }
