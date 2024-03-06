@@ -84,37 +84,7 @@
         </div>
 
         <!-- Appears when the files are loaded -->
-        <div id="scrollbox" class="row">
-
-            <!-- Hidden folder naming input box -->
-            <div id="input-box" class="popup-input" style="display:none;">
-                <form id="folder-form" method="post" asp-page-handler="CreateFolder">
-                    <!--FileName Field-->
-                    <div class="form-floating">
-                        <input asp-for="createFolderDetails.FolderName" class="form-control" placeholder=" ">
-                        <label for="folderName">Folder Name</label>
-                        <span asp-validation-for="createFolderDetails.FolderName" class="text-danger"></span>
-                    </div>
-
-                    <!-- Submit button -->
-                    <div class="mb-3 ">
-                        <button type="submit" id="create-folder-btn" class="popup-input-btn btn btn-primary">Create Folder</button>
-                        <!-- Add: onclick="enableScroll()" to above to disable scrolling when input is open -->
-                    </div>
-                </form>
-            </div>
-
-            <!-- Success/error messages -->
-            <div class="popup-message">
-                @if (ViewData["FailureMessage"] != null)
-                {
-                    <div class="alert alert-danger alert-dismissible fade show mx-auto">
-                        <strong>Error!</strong> @ViewData["FailureMessage"]
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                }
-            </div>
-
+        <div id="scrollbox" class="row d-flex align-items-center justify-content-center">
             @if (Model.DisplayList.Count > 0)
             {
                 @foreach (var display in Model.DisplayList)
@@ -129,13 +99,31 @@
             }
             else
             {
-                <div class="no-files">
+                <div class="no-files text-center">
                     <img class="row" src="~/images/tools/search.svg" alt="search" style="width: -webkit-fill-available; opacity: 50%;">
                     <h3 class="row">No files here</h3>
                 </div>
             }
         </div>
+
+        <!-- Hidden folder naming input box -->
+        <div id="input-box" class="popup-input" style="display:none;">
+            <form id="folder-form" method="post" asp-page-handler="CreateFolder">
+                <!--FileName Field-->
+                <div class="form-floating">
+                    <input asp-for="createFolderDetails.FolderName" class="form-control" placeholder=" ">
+                    <label for="folderName">Folder Name</label>
+                    <span asp-validation-for="createFolderDetails.FolderName" class="text-danger"></span>
+                </div>
+
+                <!-- Submit button -->
+                <div class="mb-3 ">
+                    <button type="submit" id="create-folder-btn" class="popup-input-btn btn btn-primary">Create Folder</button>
+                </div>
+            </form>
+        </div>
     </div>
+</div>
 </div>
 
 <!-- Bottom upload dotted box -->
@@ -175,23 +163,11 @@
             }
         }
 
-        //Loads naming foler popup
+        //Loads naming folder popup
         function showInputBox() {
-            // Show the input box
             document.getElementById('input-box').style.display = 'block';
-            //document.body.classList.add('popup-open'); // This disable scrolling in the background
-
-            // Set focus on the input field
             document.querySelector('#input-box input[name="foldername"]').focus();
         }
-
-        /*
-        //Re enable background scrolling
-        function enableScroll() {
-            // Show the input box
-            document.body.classList.remove('popup-open'); // This enables scrolling in the background
-        }
-        */
     </script>
 
     string GetFileItemHandler(string fileHandler)
