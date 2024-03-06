@@ -1,0 +1,13 @@
+All in attendance
+
+Online
+
+Stand up - bug fixes and quality of life improvements
+
+14:41 improved file encoding/decoding bug (Will)
+14:57 reworking of file upload process (Ben, Will)
+15:16 Working on pop up messages (Eli)
+15:37 further improved file encoding/decoding bug (Will)
+15:51 Login page migrated to bootstrap (Eli)
+
+

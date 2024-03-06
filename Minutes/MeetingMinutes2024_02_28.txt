@@ -1,0 +1,32 @@
+Meeting minutes 28-02-2024
+
+all in attendance smb 109
+
+
+Checking of live documents
+catch up on work done
+
+
+Riley
+Checking live documents
+revised db constraints
+revised model constraints
+
+
+Eli
+Researching legalities (T&C's, privacy policy)
+Design touchups/changes to web pages
+
+
+Ben  
+name folders being uploaded 
+optimised input forms
+navbar improvements
+
+
+Will
+Researching streamlines between storage controller, web api, buckets
+
+
+
+

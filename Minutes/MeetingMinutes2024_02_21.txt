@@ -1,0 +1,16 @@
+Meeting minutes
+smb109 all in attendance
+
+checking live documents
+progress check, demo of new project element
+discussing design decisions
+discussing future workload
+
+Wills stuff:
+
+opt storage controller (simpler queries) authentication done in generalised way, no copy paste auth
+delete endpoint for files in the bucket
+fixed bugs 
+split endpoint (file is split into save and get)
+optimisation (db views) script optomisation
+response class for sending and receiving api requests
