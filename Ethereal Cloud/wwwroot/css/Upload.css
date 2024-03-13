@@ -122,8 +122,14 @@
 .no-files {
     display: grid;
     justify-content: center;
-    height: 40%;
+    height: 100%;
+    align-content: center;
 }
+
+    .no-files img {
+        width: 150px;
+        height: auto;
+    }
 
 .col {
     flex: none;

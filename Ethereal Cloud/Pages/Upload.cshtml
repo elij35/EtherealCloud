@@ -84,18 +84,20 @@
         </div>
 
         <!-- Appears when the files are loaded -->
-        <div id="scrollbox" class="row d-flex align-items-center justify-content-center">
+        <div id="scrollbox" class="row d-flex">
             @if (Model.DisplayList.Count > 0)
             {
-                @foreach (var display in Model.DisplayList)
-                {
-                    <div id="uploaded-files" class="file-hover">
-                        <a asp-page-handler="@GetFileItemHandler(display.Type)" asp-route-id="@display.Id" asp-route-name="@display.Name">
-                            <img src="~/images/file-icons/@GetImageForFileType(@display.Type)" alt="logo" class="logo">
-                        </a>
-                        <p>@display.Name</p>
-                    </div>
-                }
+                <div class="row d-flex">
+                    @foreach (var display in Model.DisplayList)
+                    {
+                        <div id="uploaded-files" class="file-hover">
+                            <a asp-page-handler="@GetFileItemHandler(display.Type)" asp-route-id="@display.Id" asp-route-name="@display.Name">
+                                <img src="~/images/file-icons/@GetImageForFileType(@display.Type)" alt="logo" class="logo">
+                            </a>
+                            <p>@display.Name</p>
+                        </div>
+                    }
+                </div>
             }
             else
             {
@@ -119,6 +121,7 @@
                 <!-- Submit button -->
                 <div class="mb-3 ">
                     <button type="submit" id="create-folder-btn" class="popup-input-btn btn btn-primary">Create Folder</button>
+                    <button type="button" onclick="cancelFolderCreation()" class="popup-input-btn btn btn-secondary">Cancel</button>
                 </div>
             </form>
         </div>
@@ -166,6 +169,11 @@
         function showInputBox() {
             document.getElementById('input-box').style.display = 'block';
             document.querySelector('#input-box input[name="foldername"]').focus();
+        }
+
+        //Cancels the folder creation
+        function cancelFolderCreation() {
+            document.getElementById('input-box').style.display = 'none';
         }
     </script>
 
