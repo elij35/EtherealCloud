@@ -65,7 +65,7 @@
 
 /* Login and register submit button */
 #login-btn {
-    width: -webkit-fill-available;
+    width: 100%;
     background: #9877c5;
     margin-top: 10px;
 }
