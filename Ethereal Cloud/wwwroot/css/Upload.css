@@ -3,53 +3,6 @@
     justify-content: center;
 }
 
-/* Side nav for tools */
-#toolbox {
-    padding: 2px 8px;
-}
-
-#tools {
-    justify-content: center;
-    display: flex;
-    overflow: hidden;
-    height: 100%;
-    width: 100%;
-    text-align: center;
-    align-items: center;
-    background: #cbbbe2;
-    border: solid;
-    border-color: #7045BA;
-    border-radius: 20px;
-    padding: 5px;
-    margin: 0px;
-}
-
-#tool-row {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    cursor: pointer;
-    align-items: center;
-    width: fit-content;
-}
-
-#tool-label {
-    display: block;
-    cursor: pointer;
-}
-
-#tools img {
-    padding: 0px;
-    width: 40px;
-    height: auto;
-}
-
-#tools p {
-    justify-content: center;
-    margin: 0px;
-    padding: 0px;
-}
-
 /* This is where the scrollbox is contained */
 #filebox {
     height: 40vh;
@@ -88,8 +41,8 @@
 
     #filepath-button img {
         height: 30px;
-        margin-left: 20px;
-        margin-right: 10px;
+        margin-left: 8px;
+        margin-right: 8px;
     }
 
 /* Filepath styling */
@@ -113,6 +66,11 @@
     .file-hover :hover {
         font-weight: bold;
     }
+
+#rotated-image {
+    transform: rotate(90deg);
+    margin: 0px;
+}
 
 #path-folder {
     text-overflow: ellipsis;

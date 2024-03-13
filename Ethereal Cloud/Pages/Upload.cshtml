@@ -10,54 +10,39 @@
 <!-- File explorer -->
 <div id="file-explorer" class="row mt-3">
 
-    <!-- Files Toolbox -->
-    <div id="toolbox" class="col-lg-1 col-md-2 col-sm-2">
-        <div id="tools" class="row">
+    <!-- Files Box -->
+    <div id="filebox" class="col-lg-12 col-md-12 col-sm-12 h-100">
+        <!-- FilePath -->
+        <div id="filepath" class="row">
 
             <!-- Sort button -->
-            <div id="tool-row" onclick="toggleImage()">
-                <a id="tool-label">
-                    <img id="toggleImage" class="row" src="~/images/tools/sort-alpha-down.svg" alt="Image 1">
+            <div id="filepath-button" class="col">
+                <a href="#" onclick="toggleImage()">
+                    <img id="toggleImage" class="row" src="~/images/tools/sort-alpha-down.svg" alt="path">
                 </a>
-                <p class="row">Sort</p>
             </div>
 
             <!-- New folder button -->
-            <div id="tool-row">
-                <a id="tool-label" href="#" onclick="showInputBox()">
-                    <img class="row" src="~/images/tools/folder-plus.svg" alt="new-folder">
+            <div id="filepath-button" class="col">
+                <a href="#" onclick="showInputBox()">
+                    <img class="row" src="~/images/tools/folder-plus.svg" alt="path">
                 </a>
-                <p class="row">New</p>
             </div>
 
-            <!-- Share button -->
-            <div id="tool-row">
-                <a id="tool-label">
-                    <img class="row" src="~/images/tools/share.svg" alt="share">
+            <!-- Divider -->
+            <div id="filepath-button" class="col">
+                <a>
+                    <img id="rotated-image" src="~/images/file-path/dash-lg.svg" alt="path">
                 </a>
-                <p class="row">Share</p>
             </div>
 
-            <!-- Delete button -->
-            <div id="tool-row">
-                <a id="tool-label">
-                    <img class="row" src="~/images/tools/trash.svg" alt="trash">
-                </a>
-                <p class="row">Delete</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Files Box -->
-    <div id="filebox" class="col-lg-11 col-md-10 col-sm-10 h-100">
-        <!-- FilePath -->
-        <div id="filepath" class="row">
             <!-- Path Back button-->
             <div id="filepath-button" class="col">
                 <a asp-page-handler="GoToFolderInPath" asp-route-Id="-1">
                     <img src="~/images/file-path/path-back.svg" alt="path">
                 </a>
             </div>
+
             <!-- Root Image -->
             <div class="col" id="path-root">
                 <a asp-page-handler="GoToFolderInPath" asp-route-Id="-2">
