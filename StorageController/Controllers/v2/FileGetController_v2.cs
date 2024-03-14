@@ -40,10 +40,12 @@ namespace StorageController.Controllers.v2
 
             string? auth = Request.Headers.Authorization.FirstOrDefault();
 
-            if (auth == null)
-                return await new Response<string>(false, "Auth Header Required.").Serialize();
+            if (auth == null || !auth.StartsWith("Bearer "))
+                return await new Response<string>(false, "Authorization Header missing or in wrong format.").Serialize();
 
-            Response<string> authResponse = await AuthManager.AuthorizeUser(auth);
+            string token = auth.Substring("Bearer ".Length).Trim();
+
+            Response<string> authResponse = await AuthManager.AuthorizeUser(token);
 
             if (!authResponse.Success)
                 return await authResponse.Serialize();
@@ -105,10 +107,12 @@ namespace StorageController.Controllers.v2
 
             string? auth = Request.Headers.Authorization.FirstOrDefault();
 
-            if (auth == null)
-                return await new Response<string>(false, "Auth Header Required.").Serialize();
+            if (auth == null || !auth.StartsWith("Bearer "))
+                return await new Response<string>(false, "Authorization Header missing or in wrong format.").Serialize();
 
-            Response<string> authResponse = await AuthManager.AuthorizeUser(auth);
+            string token = auth.Substring("Bearer ".Length).Trim();
+
+            Response<string> authResponse = await AuthManager.AuthorizeUser(token);
 
             if (!authResponse.Success)
                 return await authResponse.Serialize();
@@ -190,10 +194,12 @@ namespace StorageController.Controllers.v2
 
             string? auth = Request.Headers.Authorization.FirstOrDefault();
 
-            if (auth == null)
-                return await new Response<string>(false, "Auth Header Required.").Serialize();
+            if (auth == null || !auth.StartsWith("Bearer "))
+                return await new Response<string>(false, "Authorization Header missing or in wrong format.").Serialize();
 
-            Response<string> authResponse = await AuthManager.AuthorizeUser(auth);
+            string token = auth.Substring("Bearer ".Length).Trim();
+
+            Response<string> authResponse = await AuthManager.AuthorizeUser(token);
 
             if (!authResponse.Success)
                 return await authResponse.Serialize();
@@ -211,7 +217,7 @@ namespace StorageController.Controllers.v2
             IQueryable<UserFile> userFiles = db.UserFiles.Where(userFile => userFile.UserID == userID
                                           && db.FileBin.FirstOrDefault(removedFile => removedFile.FileID == userFile.FileID) != null);
             IQueryable<UserFolder> userFolders = db.UserFolders.Where(userFolder => userFolder.UserID == userID
-                                          && db.FolderBin.FirstOrDefault(removedFolder => removedFolder.FolderID == userFolder.FolderID) != null);
+                                              && db.FolderBin.FirstOrDefault(removedFolder => removedFolder.FolderID == userFolder.FolderID) != null);
 
             FileData[] files = db.Files.Where(file => userFiles.FirstOrDefault(link => link.FileID == file.FileID) != null).ToArray();
             Folder[] folders = db.Folders.Where(folder => userFolders.FirstOrDefault(link => link.FolderID == folder.FolderID) != null).ToArray();

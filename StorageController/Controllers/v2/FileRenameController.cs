@@ -24,10 +24,12 @@ namespace StorageController.Controllers.v2
 
             string? auth = Request.Headers.Authorization.FirstOrDefault();
 
-            if (auth == null)
-                return await new Response<string>(false, "Auth Header Required.").Serialize();
+            if (auth == null || !auth.StartsWith("Bearer "))
+                return await new Response<string>(false, "Authorization Header missing or in wrong format.").Serialize();
 
-            Response<string> authResponse = await AuthManager.AuthorizeUser(auth);
+            string token = auth.Substring("Bearer ".Length).Trim();
+
+            Response<string> authResponse = await AuthManager.AuthorizeUser(token);
 
             if (!authResponse.Success)
                 return await authResponse.Serialize();
@@ -62,10 +64,12 @@ namespace StorageController.Controllers.v2
 
             string? auth = Request.Headers.Authorization.FirstOrDefault();
 
-            if (auth == null)
-                return await new Response<string>(false, "Auth Header Required.").Serialize();
+            if (auth == null || !auth.StartsWith("Bearer "))
+                return await new Response<string>(false, "Authorization Header missing or in wrong format.").Serialize();
 
-            Response<string> authResponse = await AuthManager.AuthorizeUser(auth);
+            string token = auth.Substring("Bearer ".Length).Trim();
+
+            Response<string> authResponse = await AuthManager.AuthorizeUser(token);
 
             if (!authResponse.Success)
                 return await authResponse.Serialize();
