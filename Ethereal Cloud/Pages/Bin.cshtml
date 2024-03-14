@@ -17,9 +17,7 @@
                     @foreach (var display in Model.DisplayList)
                     {
                         <div id="uploaded-files" class="file-hover" oncontextmenu="showContextMenu(event, '@display.Id', '@display.Name', '@display.Type')">
-                            <a id="fileLink" asp-page-handler="@GetFileItemHandler(display.Type)" asp-route-id="@display.Id" asp-route-name="@display.Name">
-                                <img src="~/images/file-icons/@GetImageForFileType(@display.Type)" alt="logo" class="logo">
-                            </a>
+                            <img src="~/images/file-icons/@GetImageForFileType(@display.Type)" alt="logo" class="logo">
                             <p>@display.Name</p>
                         </div>
                     }
@@ -37,17 +35,6 @@
 </div>
 
 @{
-    string GetFileItemHandler(string fileHandler)
-    {
-        if (fileHandler == "Folder")
-        {
-            return "Navigate";
-        }
-        else
-        {
-            return "Download";
-        }
-    }
 
     string GetImageForFileType(string fileType)
     {
