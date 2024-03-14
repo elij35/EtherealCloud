@@ -13,7 +13,7 @@ namespace StorageController.Controllers.v2
         [HttpPost]
         [Produces("application/json")]
         [Consumes("application/json")]
-        [Route("/v2/file/remove/{int}")]
+        [Route("/v2/file/remove/{id}")]
         public async Task<string> DeleteFileController([FromRoute] int id)
         {
 
@@ -54,7 +54,7 @@ namespace StorageController.Controllers.v2
         [HttpPost]
         [Produces("application/json")]
         [Consumes("application/json")]
-        [Route("/v2/folder/remove/{int}")]
+        [Route("/v2/folder/remove/{id}")]
         public async Task<string> DeleteFolderController([FromRoute] int id)
         {
 

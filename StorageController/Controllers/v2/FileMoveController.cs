@@ -21,7 +21,7 @@ namespace StorageController.Controllers.v2
         [HttpPost]
         [Consumes("application/json")]
         [Produces("application/json")]
-        [Route("/v2/file/move/{int}")]
+        [Route("/v2/file/move/{id}")]
         public async Task<string> MoveFileController([FromBody] MoveData data, [FromRoute] int id)
         {
 
@@ -59,7 +59,7 @@ namespace StorageController.Controllers.v2
         [HttpPost]
         [Consumes("application/json")]
         [Produces("application/json")]
-        [Route("/v2/folder/move/{int}")]
+        [Route("/v2/folder/move/{id}")]
         public async Task<string> RenameFolderController([FromBody] MoveData data, [FromRoute] int id)
         {
 

@@ -10,7 +10,7 @@ namespace StorageController.Controllers.v2
         [HttpPost]
         [Consumes("application/json")]
         [Produces("application/json")]
-        [Route("/v2/file/restore/{int}")]
+        [Route("/v2/file/restore/{id}")]
         public async Task<string> RestoreFile([FromRoute] int id)
         {
 
@@ -48,7 +48,7 @@ namespace StorageController.Controllers.v2
         [HttpPost]
         [Consumes("application/json")]
         [Produces("application/json")]
-        [Route("/v2/folder/restore/{int}")]
+        [Route("/v2/folder/restore/{id}")]
         public async Task<string> RestoreFolder([FromRoute] int id)
         {
 
