@@ -280,7 +280,7 @@ namespace Ethereal_Cloud.Pages
             Logger.LogToConsole(ViewData, "Deleted: " + fileId + type);
 
             string uriFileType;
-            if (type == "folder")
+            if (type.ToLower() == "folder")
             {
                 uriFileType = "folder";
             } else
