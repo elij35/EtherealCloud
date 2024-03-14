@@ -285,10 +285,8 @@ namespace Ethereal_Cloud.Pages
 
             Logger.LogToConsole(ViewData, "Deleted: " + fileId + type);
 
-            int Id = int.Parse(fileId);
-
             //Make request
-            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/file/remove/" + Id, true, null);
+            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/file/remove/" + fileId, true, null);
 
             if (response != null)
             {
