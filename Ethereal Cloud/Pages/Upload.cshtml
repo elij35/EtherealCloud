@@ -5,6 +5,28 @@
     ViewBag.Title = "Upload";
     Layout = "Shared/_Layout.cshtml";
     <link rel="stylesheet" href="/css/Upload.css" asp-append-version="true">
+
+    <style>
+        .dropdown {
+            position: absolute;
+            display: none;
+            background-color: #f9f9f9;
+            min-width: 120px;
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-item {
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            cursor: pointer;
+        }
+
+            .dropdown-item:hover {
+                background-color: #f1f1f1;
+            }
+    </style>
 }
 
 <!-- File explorer -->
@@ -75,8 +97,8 @@
                 <div class="row d-flex">
                     @foreach (var display in Model.DisplayList)
                     {
-                        <div id="uploaded-files" class="file-hover">
-                            <a asp-page-handler="@GetFileItemHandler(display.Type)" asp-route-id="@display.Id" asp-route-name="@display.Name">
+                        <div id="uploaded-files" class="file-hover" oncontextmenu="showContextMenu(event, '@display.Id', '@display.Name', '@display.Type')">
+                            <a id="fileLink" asp-page-handler="@GetFileItemHandler(display.Type)" asp-route-id="@display.Id" asp-route-name="@display.Name">
                                 <img src="~/images/file-icons/@GetImageForFileType(@display.Type)" alt="logo" class="logo">
                             </a>
                             <p>@display.Name</p>
@@ -199,4 +221,51 @@
                 return "unknown.svg"; //Unknown type
         }
     }
+
+
+    <!--RIGHT CLICK MENU-->
+    <div id="contextMenu" class="dropdown">
+        <a class="dropdown-item" id="downloadItem" href="#">Download</a>
+        <a class="dropdown-item" id="deleteItem" href="#">Delete</a>
+    </div>
+
+    <script>
+        function showContextMenu(event, id, name, type) {
+            event.preventDefault();
+            var contextMenu = document.getElementById('contextMenu');
+            contextMenu.style.display = 'block';
+            contextMenu.style.left = event.clientX + 'px';
+            contextMenu.style.top = event.clientY + 'px';
+
+            // Store the file info in context menu for later use
+            contextMenu.dataset.fileId = id;
+            contextMenu.dataset.fileName = name;
+            contextMenu.dataset.fileType = type;
+
+            // Add event listeners for context menu items
+            document.getElementById('downloadItem').addEventListener('click', downloadFile);
+            document.getElementById('deleteItem').addEventListener('click', deleteFile);
+
+            // Hide the context menu when clicking elsewhere
+            document.addEventListener('click', hideContextMenu);
+        }
+
+        function hideContextMenu() {
+            var contextMenu = document.getElementById('contextMenu');
+            contextMenu.style.display = 'none';
+            document.removeEventListener('click', hideContextMenu);
+        }
+
+        function downloadFile() {
+            var fileId = document.getElementById('contextMenu').dataset.fileId;
+            // Implement download functionality using fileId
+        }
+
+        function deleteFile() {
+            var fileId = document.getElementById('contextMenu').dataset.fileId;
+            // Implement delete functionality using fileId
+        }
+    </script>
+
+
 }
