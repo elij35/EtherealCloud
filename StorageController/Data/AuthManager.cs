@@ -3,7 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using static StorageController.Controllers.FileGetController;
+using static StorageController.Controllers.v1.FileGetController;
 
 namespace StorageController.Data
 {

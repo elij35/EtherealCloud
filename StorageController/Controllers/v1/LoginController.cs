@@ -5,7 +5,7 @@ using StorageController.Data.Models;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace StorageController.Controllers
+namespace StorageController.Controllers.v1
 {
 
     [ApiController]

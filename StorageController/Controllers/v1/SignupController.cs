@@ -3,7 +3,7 @@ using Microsoft.Data.SqlClient;
 using StorageController.Data;
 using StorageController.Data.Models;
 
-namespace StorageController.Controllers
+namespace StorageController.Controllers.v1
 {
 
     [ApiController]

@@ -2,9 +2,9 @@
 using StorageController.Data.Models;
 using StorageController.Data;
 using System.IdentityModel.Tokens.Jwt;
-using static StorageController.Controllers.FileGetController;
+using static StorageController.Controllers.v1.FileGetController;
 
-namespace StorageController.Controllers
+namespace StorageController.Controllers.v1
 {
 
     [ApiController]
@@ -92,7 +92,7 @@ namespace StorageController.Controllers
             }
 
             // Trying to save the file in the bucket
-            Response<string> savedFile = (await BucketAPIHandler.SendFileContent(saved.FileID, fileData.Content, fileSave.BucketLocation));
+            Response<string> savedFile = await BucketAPIHandler.SendFileContent(saved.FileID, fileData.Content, fileSave.BucketLocation);
 
             FileSaveInfo fileSaveInfo = new FileSaveInfo()
             {
@@ -107,7 +107,7 @@ namespace StorageController.Controllers
         {
             public string AuthToken { get; set; }
             public string FolderName { get; set; }
-            public int? ParentFolder {  get; set; }
+            public int? ParentFolder { get; set; }
 
         }
 
@@ -152,7 +152,7 @@ namespace StorageController.Controllers
             }
 
             Folder folder = new();
-            folder.ParentID = (parentFolder == null) ? null : parentFolder.FolderID;
+            folder.ParentID = parentFolder == null ? null : parentFolder.FolderID;
             folder.FolderName = folderSaveData.FolderName;
 
             await db.Folders.AddAsync(folder);
