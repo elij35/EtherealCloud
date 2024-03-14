@@ -22,7 +22,13 @@ namespace StorageController.Controllers.v2
             if (auth == null)
                 return await new Response<string>(false, "Auth Header Required.").Serialize();
 
-            Response<string> authResponse = await AuthManager.AuthorizeUser(auth);
+            //Check correct format
+            if (!auth.StartsWith("Bearer "))
+                return await new Response<string>(false, "Invalid Authorization Header Format.").Serialize();
+            //You have the correct format get the token.
+            string token = auth.Substring("Bearer ".Length).Trim();
+
+            Response<string> authResponse = await AuthManager.AuthorizeUser(token);
 
             if (!authResponse.Success)
                 return await authResponse.Serialize();

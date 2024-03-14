@@ -7,6 +7,7 @@ using Ethereal_Cloud.Models.Upload.Get.File;
 using Ethereal_Cloud.Models.Upload.Get.Folder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Configuration;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Ethereal_Cloud.Pages
@@ -276,13 +277,29 @@ namespace Ethereal_Cloud.Pages
         public async Task OnPostDeleteAsync(string fileId, string type)
         {
             // Check fileId validity
-            if (fileId == null)
+            if (fileId == null || type == null)
             {
-                Logger.LogToConsole(ViewData, "Invalid: Model error: " + fileId + type);
+                Logger.LogToConsole(ViewData, "Invalid: Model error");
                 return;
             }
 
             Logger.LogToConsole(ViewData, "Deleted: " + fileId + type);
+
+            int Id = int.Parse(fileId);
+
+            //Make request
+            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/file/remove/" + Id, true, null);
+
+            if (response != null)
+            {
+                //Logger.LogToConsole(ViewData, "Successfull Deletion: " + fileId + " : " + type);
+                Response.Redirect("/Upload");
+            }
+            else
+            {
+                //Logger.LogToConsole(ViewData, "Bad delete response");
+                return;
+            }
         }
 
     }
