@@ -63,8 +63,11 @@
         color: black;
     }
 
-    .file-hover :hover {
-        font-weight: bold;
+    .file-hover:hover {
+        background-color: rgb(203 187 226 / 30%);
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.3s ease;
     }
 
 #rotated-image {
