@@ -10,16 +10,18 @@ namespace StorageController.Controllers.v2
         [HttpPost]
         [Consumes("application/json")]
         [Produces("application/json")]
-        [Route("/v2/file/restore/{int}")]
+        [Route("/v2/file/restore/{id}")]
         public async Task<string> RestoreFile([FromRoute] int id)
         {
 
             string? auth = Request.Headers.Authorization.FirstOrDefault();
 
-            if (auth == null)
-                return await new Response<string>(false, "Auth Header Required.").Serialize();
+            if (auth == null || !auth.StartsWith("Bearer "))
+                return await new Response<string>(false, "Authorization Header missing or in wrong format.").Serialize();
 
-            Response<string> authResponse = await AuthManager.AuthorizeUser(auth);
+            string token = auth.Substring("Bearer ".Length).Trim();
+
+            Response<string> authResponse = await AuthManager.AuthorizeUser(token);
 
             if (!authResponse.Success)
                 return await authResponse.Serialize();
@@ -48,16 +50,18 @@ namespace StorageController.Controllers.v2
         [HttpPost]
         [Consumes("application/json")]
         [Produces("application/json")]
-        [Route("/v2/folder/restore/{int}")]
+        [Route("/v2/folder/restore/{id}")]
         public async Task<string> RestoreFolder([FromRoute] int id)
         {
 
             string? auth = Request.Headers.Authorization.FirstOrDefault();
 
-            if (auth == null)
-                return await new Response<string>(false, "Auth Header Required.").Serialize();
+            if (auth == null || !auth.StartsWith("Bearer "))
+                return await new Response<string>(false, "Authorization Header missing or in wrong format.").Serialize();
 
-            Response<string> authResponse = await AuthManager.AuthorizeUser(auth);
+            string token = auth.Substring("Bearer ".Length).Trim();
+
+            Response<string> authResponse = await AuthManager.AuthorizeUser(token);
 
             if (!authResponse.Success)
                 return await authResponse.Serialize();

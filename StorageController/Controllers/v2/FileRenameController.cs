@@ -18,16 +18,18 @@ namespace StorageController.Controllers.v2
         [HttpPost]
         [Consumes("application/json")]
         [Produces("application/json")]
-        [Route("/v2/file/rename/{int}")]
+        [Route("/v2/file/rename/{id}")]
         public async Task<string> RenameFileController([FromBody] RenameData data, [FromRoute] int id)
         {
 
             string? auth = Request.Headers.Authorization.FirstOrDefault();
 
-            if (auth == null)
-                return await new Response<string>(false, "Auth Header Required.").Serialize();
+            if (auth == null || !auth.StartsWith("Bearer "))
+                return await new Response<string>(false, "Authorization Header missing or in wrong format.").Serialize();
 
-            Response<string> authResponse = await AuthManager.AuthorizeUser(auth);
+            string token = auth.Substring("Bearer ".Length).Trim();
+
+            Response<string> authResponse = await AuthManager.AuthorizeUser(token);
 
             if (!authResponse.Success)
                 return await authResponse.Serialize();
@@ -56,16 +58,18 @@ namespace StorageController.Controllers.v2
         [HttpPost]
         [Consumes("application/json")]
         [Produces("application/json")]
-        [Route("/v2/folder/rename/{int}")]
+        [Route("/v2/folder/rename/{id}")]
         public async Task<string> RenameFolderController([FromBody] RenameData data, [FromRoute] int id)
         {
 
             string? auth = Request.Headers.Authorization.FirstOrDefault();
 
-            if (auth == null)
-                return await new Response<string>(false, "Auth Header Required.").Serialize();
+            if (auth == null || !auth.StartsWith("Bearer "))
+                return await new Response<string>(false, "Authorization Header missing or in wrong format.").Serialize();
 
-            Response<string> authResponse = await AuthManager.AuthorizeUser(auth);
+            string token = auth.Substring("Bearer ".Length).Trim();
+
+            Response<string> authResponse = await AuthManager.AuthorizeUser(token);
 
             if (!authResponse.Success)
                 return await authResponse.Serialize();
