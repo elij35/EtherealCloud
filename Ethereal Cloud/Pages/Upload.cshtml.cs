@@ -1,171 +1,277 @@
-using Ethereal_Cloud.Pages;
+using Ethereal_Cloud.Helpers;
+using Ethereal_Cloud.Models;
+using Ethereal_Cloud.Models.Upload.CreateFolder;
+using Ethereal_Cloud.Models.Upload.Get;
+using Ethereal_Cloud.Models.Upload.Get.File;
+using Ethereal_Cloud.Models.Upload.Get.Folder;
 using Microsoft.AspNetCore.Mvc;
-using System.Text;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Text.Json;
-using System.Web;
-using System.Net.Http.Headers;
-using System.Diagnostics.Metrics;
-using Microsoft.AspNetCore.StaticFiles;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Ethereal_Cloud.Pages
 {
+    [DisableRequestSizeLimit] //Disables the file upload limit
     public class UploadModel : PageModel
     {
-        [BindProperty]
-        public string Username { get; set; }
+        //list of files to be shown to user
+        public List<FolderContentDisplay> DisplayList = new List<FolderContentDisplay>();
 
-        // Helper method to get or initialize the Files list from session
-        public List<FileModel> Files
+        public List<FolderDataRecieve> FolderPath = new List<FolderDataRecieve>();
+
+        public void FolderPathForDisplay()
         {
-            get
-            {
-                if (HttpContext.Session.TryGetValue("Files", out byte[] data) && data != null)
-                {
-                    string json = Encoding.UTF8.GetString(data);
-                    return Newtonsoft.Json.JsonConvert.DeserializeObject<List<FileModel>>(json);
-                }
-                else
-                {
-                    return new List<FileModel>();
-                }
-            }
-            set
-            {
-                string json = Newtonsoft.Json.JsonConvert.SerializeObject(value);
-                HttpContext.Session.Set("Files", Encoding.UTF8.GetBytes(json));
-            }
+            //Sets the filepath list to be displayed on the interface
+            FolderPath = PathManagement.Get(HttpContext);
         }
 
-        public async Task OnPostFileAsync()
+        public async Task OnGet()
         {
+            FolderPathForDisplay();
 
-            Files = new List<FileModel>();
+            int? folderId = PathManagement.GetCurrentFolderId(HttpContext);
 
-            bool fileFound = true;
-            int counter = 1;
-            while (fileFound)
+            //Logger.LogToConsole(ViewData, "Current Folder: " + folderId);
+
+            //create object
+            var dataObject = new Dictionary<string, object?>
             {
-                string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/file/" + counter;
+                { "authtoken", AuthTokenManagement.GetToken(HttpContext)}
+            };
 
-                using (HttpClient client = new HttpClient())
+            //Make request
+            var response = await ApiRequest.Files(ViewData, HttpContext, "v1/folder/files/" + folderId, dataObject);
+
+            if (response != null)
+            {
+                //Put response in form of FolderContentRecieve
+                string jsonString = response.ToString();
+                FolderContentRecieve folderContent = JsonSerializer.Deserialize<FolderContentRecieve>(jsonString);
+
+                DisplayList = new List<FolderContentDisplay>();
+
+                //Add folders to display list
+                foreach (FolderDataRecieve folder in folderContent.Folders)
                 {
-                    var content = new StringContent($"{{\"authtoken\":\"Temp\"}}", Encoding.UTF8, "application/json");
-                    var response = await client.PostAsync(apiUrl, content);
-
-                    if (response.IsSuccessStatusCode)
+                    FolderContentDisplay newFolder = new()
                     {
-                        string stringResponse = await response.Content.ReadAsStringAsync();
-                        Response<object> responseObject = await Response<object>.DeserializeJSON(stringResponse);
+                        Id = folder.FolderID,
+                        Name = folder.Foldername,
+                        Type = "Folder"
+                    };
 
-                        if (responseObject.Success)
-                        {
-                            Response<FileModel> file = await Response<FileModel>.DeserializeJSON(stringResponse);
-                            ShowPopup(file.Message.Content);
-                            var files = Files;
-                            files.Add(file.Message);
-                            Files = files;
-                        }
-                        else
-                        {
-                            fileFound = false;
-                        }
-
-                    }
-                    else
-                    {
-                        ShowPopup("Failure");
-                    }
-
+                    DisplayList.Add(newFolder);
                 }
 
+                //Add files to display list
+                foreach (FileMetaRecieve file in folderContent.Files)
+                {
 
-                counter++;
+                    FolderContentDisplay newFile = new()
+                    {
+                        Id = file.FileID,
+                        Name = file.Filename,
+                        Type = file.Filetype
+                    };
+
+                    DisplayList.Add(newFile);
+                }
+
+                //Logger.LogToConsole(ViewData, "Successful get of files: " + JsonSerializer.Serialize(DisplayList) + " FolderId: " + folderId);
             }
-
-        }
-
-        private void ShowPopup(string status)
-        {
-            ViewData["PopupStatus"] = status;
-        }
-
-
-
-        public IActionResult OnGetDownload(string filename)
-        {
-            var files = Files;
-
-            var file = files?.FirstOrDefault(f => f.Filename == filename);
-
-
-            if (file == null)
+            else
             {
-                return NotFound();
+                Logger.LogToConsole(ViewData, "Failed Get");
+
+                ViewData["FailureMessage"] = "Failed to get files & folders. Please try again.";
             }
-
-            byte[] fileContents = Convert.FromBase64String(file.Content);
-
-            // Determine content type based on file extension
-            var contentTypeProvider = new FileExtensionContentTypeProvider();
-            if (!contentTypeProvider.TryGetContentType(file.Filename, out var contentType))
-            {
-                contentType = "application/octet-stream";
-            }
-
-            return File(fileContents, contentType, file.Filename);
         }
 
 
-        public async Task<IActionResult> OnPostUploadAsync(IFormFile uploadedFile)
+        public async Task<IActionResult> OnGetDownload(DownNavDetails details)
+        {
+            if (!ModelState.IsValid)
+            {
+                Logger.LogToConsole(ViewData, "Invalid: Model error");
+                return RedirectToPage("/Upload");
+            }
+
+
+            //create object
+            var dataObject = new Dictionary<string, object?>
+            {
+                { "authtoken", AuthTokenManagement.GetToken(HttpContext)}
+            };
+
+            //Make request
+            var response = await ApiRequest.Files(ViewData, HttpContext, "v1/file/" + details.Id, dataObject);
+
+            if (response != null)
+            {
+                string jsonString = response.ToString();
+                FileModel file = JsonSerializer.Deserialize<FileModel>(jsonString);
+
+                Logger.LogToConsole(ViewData, "Successfull download: " + file.Content + " " + file.Filetype + " " + file.Filename);
+
+                //Response.Redirect("/Upload");
+
+                byte[] bytes = Convert.FromHexString(file.Content);
+
+                return File(bytes, file.Filetype, file.Filename);
+            }
+            else
+            {
+                Logger.LogToConsole(ViewData, "Fail: " + details.Id);
+
+                return RedirectToPage("/Upload");
+            }
+
+
+        }
+
+        public async Task OnGetNavigate(DownNavDetails details)
+        {
+            if (!ModelState.IsValid)
+            {
+                Logger.LogToConsole(ViewData, "Invalid: Model error");
+                return;
+            }
+
+            var path = PathManagement.Get(HttpContext);
+
+            List<FolderDataRecieve> folderPath = new List<FolderDataRecieve>();
+
+            if (path != null)
+            {
+                folderPath = path;
+            }
+
+            FolderDataRecieve navigateTo = new()
+            {
+                FolderID = details.Id,
+                Foldername = details.Name
+            };
+
+            folderPath.Add(navigateTo);
+
+            var serializedFolderPath = JsonSerializer.Serialize(folderPath);
+
+            PathManagement.Set(HttpContext, serializedFolderPath);
+
+            Response.Redirect("/Upload");
+
+        }
+
+        public async Task OnGetGoToFolderInPathAsync(GotoDetails details)
+        {
+            bool success = PathManagement.GoBackInFolderPath(HttpContext, details.Id, ViewData);
+
+            if (success)
+            {
+                Logger.LogToConsole(ViewData, "Navigated to folder with id: " + details.Id);
+
+            }
+            else
+            {
+                Logger.LogToConsole(ViewData, "Failed navigation to: " + details.Id);
+
+            }
+
+            Response.Redirect("/Upload");
+
+        }
+
+
+
+        public async Task OnPostUploadAsync(IFormFile uploadedFile)
         {
             if (uploadedFile != null && uploadedFile.Length > 0)
             {
                 using (var stream = new MemoryStream())
                 {
+                    //Where folder the user is in
+                    int? currentFolder = PathManagement.GetCurrentFolderId(HttpContext);
+
+                    //Hold the file contents in the stream
                     await uploadedFile.CopyToAsync(stream);
-                    var newFile = new FileModel
+
+                    byte[] bytes = stream.ToArray();
+                    string hexBytes = Convert.ToHexString(bytes);
+
+                    //create file object
+                    var dataObject = new Dictionary<string, object?>
                     {
-                        Filename = uploadedFile.FileName,
-                        Filetype = Path.GetExtension(uploadedFile.FileName),
-                        Content = Convert.ToBase64String(stream.ToArray())
+                        { "AuthToken", AuthTokenManagement.GetToken(HttpContext) },
+                        { "Filename", uploadedFile.FileName },
+                        { "Filetype", MimeType.GetMimeType(uploadedFile.FileName) },
+                        { "Content", hexBytes }
                     };
-
-                    string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/file";
-
-                    using (HttpClient client = new HttpClient())
+                    //If the user isnt in the root
+                    if (currentFolder != null)
                     {
-                        var content = new StringContent($"{{\"authtoken\":\"Test\",\"filename\":\"{newFile.Filename}\",\"filetype\":\"{newFile.Filetype}\",\"content\":\"{newFile.Content}\"}}", Encoding.UTF8, "application/json");
-                        var response = await client.PostAsync(apiUrl,content);
+                        dataObject.Add("FolderId", currentFolder);
+                    }
 
-                        if (response.IsSuccessStatusCode)
-                        {
-                            string stringResponse = await response.Content.ReadAsStringAsync();
-                            //response: success ,message        message: message, fileid
 
-                            Response<object> responseObject = await Response<object>.DeserializeJSON(stringResponse);
+                    //Make request
+                    var response = await ApiRequest.Files(ViewData, HttpContext, "v1/file", dataObject);
 
-                            if (!responseObject.Success)
-                            {
-                                ShowPopup("Response failed:" + responseObject.Message);
-                            }
-
-                        }
-                        else
-                        {
-                            ShowPopup("Failure");
-                        }
-
+                    if (response != null)
+                    {
+                        Logger.LogToConsole(ViewData, "Successfull file upload: " + response);
+                        Response.Redirect("/Upload");
+                    }
+                    else
+                    {
+                        //Logger.LogToConsole(ViewData, "Bad upload response");
                     }
                 }
+
             }
             else
             {
-                ShowPopup("Invalid file upload");
+                Logger.LogToConsole(ViewData, "Invalid file upload");
             }
 
-            return null;
         }
+
+
+
+        [BindProperty]
+        public CreateFolderDetails createFolderDetails { get; set; }
+
+        public async Task OnPostCreateFolderAsync()
+        {
+            if (!ModelState.IsValid)
+            {
+                Logger.LogToConsole(ViewData, "Invalid: Model error");
+                return;
+            }
+
+            //create file object
+            var dataObject = new Dictionary<string, object?>
+            {
+                { "AuthToken", AuthTokenManagement.GetToken(HttpContext) },
+                { "FolderName", createFolderDetails.FolderName },
+                { "ParentFolder", PathManagement.GetCurrentFolderId(HttpContext) }
+            };
+
+            //Make request
+            var response = await ApiRequest.Files(ViewData, HttpContext, "v1/folder", dataObject);
+
+            if (response != null)
+            {
+                Logger.LogToConsole(ViewData, "Successfull folder creation: " + response);
+                Response.Redirect("/Upload");
+            }
+            else
+            {
+                Logger.LogToConsole(ViewData, "Bad folder response");
+                return;
+            }
+
+        }
+
+
 
     }
 

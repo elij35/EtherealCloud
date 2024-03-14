@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using StorageController.Data;
+using StorageController.Data.Models;
 
 namespace StorageController.Controllers
 {
 
     [ApiController]
-    [Route("/user/signup")]
+    [Route("/v1/user/signup")]
     public class SignupController : Controller
     {
 
@@ -23,27 +24,32 @@ namespace StorageController.Controllers
         public async Task<string> Index([FromBody] SignupParams signupParams)
         {
 
-            string sql_addUser = "INSERT INTO ethereal.Users (Username, Email, Password, Administrator)" +
-                "VALUES (@Username, @Email, @Password, 0)";
+            DataHandler dataHandler = new();
 
-            SqlParameter[] sqlParameters = 
+            User? existingUser = dataHandler.Users.Where(user => user.Email == signupParams.Email || user.Username == signupParams.UserName).FirstOrDefault();
+
+            if (existingUser != null)
             {
-                new SqlParameter("@Username", signupParams.UserName),
-                new SqlParameter("@Email", signupParams.Email),
-                new SqlParameter("@Password", signupParams.Password)
-            };
-
-            DataHandler dataHandler = DataHandler.instance;
-            int rows_affected = await dataHandler.ParametizedNonQuery(sql_addUser, sqlParameters);
-
-            if (rows_affected < 1)
-            {
-                Response.StatusCode = 500;
-                return await new Response<string>(false, "An unexpected error occured.").Serialize();
+                return await new Response<string>(false, "User already exists").Serialize();
             }
+
+            string salt = SecurityUtils.GenerateSalt();
+            string hash = SecurityUtils.HashPassword(signupParams.Password, salt);
+
+            User userData = new User();
+            userData.Username = signupParams.UserName;
+            userData.Email = signupParams.Email;
+            userData.Password = hash;
+            userData.PasswordSalt = salt;
+            userData.Administrator = false;
+
+            await dataHandler.Users.AddAsync(userData);
+            await dataHandler.SaveChangesAsync();
 
             Response.StatusCode = 200;
             return await new Response<string>(true, "User successfully created.").Serialize();
+
         }
+
     }
 }
