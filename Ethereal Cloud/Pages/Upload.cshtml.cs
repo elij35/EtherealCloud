@@ -34,14 +34,8 @@ namespace Ethereal_Cloud.Pages
 
             //Logger.LogToConsole(ViewData, "Current Folder: " + folderId);
 
-            //create object
-            var dataObject = new Dictionary<string, object?>
-            {
-                { "authtoken", AuthTokenManagement.GetToken(HttpContext)}
-            };
-
             //Make request
-            var response = await ApiRequest.Files(ViewData, HttpContext, "v1/folder/files/" + folderId, dataObject);
+            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/folder/files/" + folderId, true, null);
 
             if (response != null)
             {
@@ -285,8 +279,17 @@ namespace Ethereal_Cloud.Pages
 
             Logger.LogToConsole(ViewData, "Deleted: " + fileId + type);
 
+            string uriFileType;
+            if (type == "folder")
+            {
+                uriFileType = "folder";
+            } else
+            {
+                uriFileType = "file";
+            }
+
             //Make request
-            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/file/remove/" + fileId, true, null);
+            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/" + uriFileType + "/remove/" + fileId, true, null);
 
             if (response != null)
             {
