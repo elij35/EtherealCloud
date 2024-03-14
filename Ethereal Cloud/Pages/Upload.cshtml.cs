@@ -1,5 +1,6 @@
 using Ethereal_Cloud.Helpers;
 using Ethereal_Cloud.Models;
+using Ethereal_Cloud.Models.Delete;
 using Ethereal_Cloud.Models.Upload.CreateFolder;
 using Ethereal_Cloud.Models.Upload.Get;
 using Ethereal_Cloud.Models.Upload.Get.File;
@@ -272,7 +273,17 @@ namespace Ethereal_Cloud.Pages
         }
 
 
+        public async Task OnPostDeleteAsync(string fileId, string type)
+        {
+            // Check fileId validity
+            if (fileId == null)
+            {
+                Logger.LogToConsole(ViewData, "Invalid: Model error: " + fileId + type);
+                return;
+            }
+
+            Logger.LogToConsole(ViewData, "Deleted: " + fileId + type);
+        }
 
     }
-
 }
