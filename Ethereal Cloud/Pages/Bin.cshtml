@@ -11,7 +11,67 @@
     <!-- Files Box -->
     <div id="filebox" class="col-lg-11 col-md-10 col-sm-10 align-content-center">
         <div id="scrollbox" class="row">
-            <h2>Deleted files will appear here</h2>
+            @if (Model.DisplayList.Count > 0)
+            {
+                <div class="row d-flex">
+                    @foreach (var display in Model.DisplayList)
+                    {
+                        <div id="uploaded-files" class="file-hover" oncontextmenu="showContextMenu(event, '@display.Id', '@display.Name', '@display.Type')">
+                            <a id="fileLink" asp-page-handler="@GetFileItemHandler(display.Type)" asp-route-id="@display.Id" asp-route-name="@display.Name">
+                                <img src="~/images/file-icons/@GetImageForFileType(@display.Type)" alt="logo" class="logo">
+                            </a>
+                            <p>@display.Name</p>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="no-files text-center">
+                    <img class="row" src="~/images/tools/search.svg" alt="search" style="width: -webkit-fill-available; opacity: 50%;">
+                    <h3 class="row">No files here</h3>
+                </div>
+            }
         </div>
     </div>
 </div>
+
+@{
+    string GetFileItemHandler(string fileHandler)
+    {
+        if (fileHandler == "Folder")
+        {
+            return "Navigate";
+        }
+        else
+        {
+            return "Download";
+        }
+    }
+
+    string GetImageForFileType(string fileType)
+    {
+        //looks at files Mime type and gets appropriate image
+        switch (fileType.ToLower())
+        {
+            case "folder":
+                return "folder.svg";
+            case "image/png":
+            case "image/jpeg":
+            case "image/gif":
+                return "file-image.svg";
+            case "audio/mpeg":
+                return "file-music.svg";
+            case "video/mp4":
+                return "file-video.svg";
+            case "application/pdf":
+                return "file-pdf.svg";
+            case "application/msword":
+            case "text/plain":
+                return "file-doc.svg";
+            default:
+                return "unknown.svg"; //Unknown type
+        }
+    }
+}
+
