@@ -44,9 +44,9 @@ namespace StorageController.Controllers.v2
                 return await new Response<string>(false, "File not found").Serialize();
 
             FileBin removedFile = new FileBin();
-            removedFile.FileID = id;
+            removedFile.FileData = fileData;
 
-            await db.AddAsync(removedFile);
+            await db.FileBin.AddAsync(removedFile);
             await db.SaveChangesAsync();
 
             return await new Response<string>(true, "File removed successfully.").Serialize();
@@ -87,7 +87,7 @@ namespace StorageController.Controllers.v2
                 return await new Response<string>(false, "Folder not found").Serialize();
 
             FolderBin removedFolder = new FolderBin();
-            removedFolder.FolderID = id;
+            removedFolder.FolderData = folderData;
 
             await db.FolderBin.AddAsync(removedFolder);
             await db.SaveChangesAsync();

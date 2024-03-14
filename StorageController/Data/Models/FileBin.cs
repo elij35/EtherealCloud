@@ -1,13 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StorageController.Data.Models
 {
     [Table("FileBin", Schema = "ethereal")]
+    [PrimaryKey("FileID")]
     public class FileBin
     {
 
-        [Key]
         [Required]
         public int FileID { get; set; }
 
