@@ -60,4 +60,28 @@
                 return "unknown.svg"; //Unknown type
         }
     }
+
+    <!-- RIGHT CLICK MENU -->
+    <div id="contextMenu" class="dropdown">
+        <a class="dropdown-item" id="restoreItem" href="#">Restore</a>
+    </div>
+
+    <script>
+        function showContextMenu(event, id, name, type) {
+            event.preventDefault();
+            var contextMenu = document.getElementById('contextMenu');
+            contextMenu.style.display = 'block';
+            contextMenu.style.left = event.clientX + 'px';
+            contextMenu.style.top = event.clientY + 'px';
+
+            // Hide the context menu when clicking elsewhere
+            document.addEventListener('click', hideContextMenu);
+        }
+
+        function hideContextMenu() {
+            var contextMenu = document.getElementById('contextMenu');
+            contextMenu.style.display = 'none';
+            document.removeEventListener('click', hideContextMenu);
+        }
+    </script>
 }
