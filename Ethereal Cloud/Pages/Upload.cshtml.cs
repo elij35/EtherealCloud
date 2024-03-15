@@ -1,13 +1,11 @@
 using Ethereal_Cloud.Helpers;
 using Ethereal_Cloud.Models;
-using Ethereal_Cloud.Models.Delete;
 using Ethereal_Cloud.Models.Upload.CreateFolder;
 using Ethereal_Cloud.Models.Upload.Get;
 using Ethereal_Cloud.Models.Upload.Get.File;
 using Ethereal_Cloud.Models.Upload.Get.Folder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Configuration;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Ethereal_Cloud.Pages
@@ -283,7 +281,8 @@ namespace Ethereal_Cloud.Pages
             if (type.ToLower() == "folder")
             {
                 uriFileType = "folder";
-            } else
+            }
+            else
             {
                 uriFileType = "file";
             }
