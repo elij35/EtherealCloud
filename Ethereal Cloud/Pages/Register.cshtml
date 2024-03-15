@@ -62,7 +62,7 @@
 
                     <!-- Password field -->
                     <div class="form-floating">
-                        <input type="password" id="Password" asp-for="signupDetails.Password" class="form-control" placeholder=" ">
+                        <input type="password" oninput="passStrengthCheck()" id="Password" asp-for="signupDetails.Password" class="form-control" placeholder=" ">
                         <label for="password">Password</label>
                         <span class="password-toggle" onclick="togglePassword()">Show</span>
                     </div>
@@ -132,6 +132,41 @@
         function openPolicyWindow() {
             var termsUrl = "/PrivacyPolicy";
             window.open(termsUrl, "_blank", "width=800,height=600,top=350");
+        }
+
+        //Low means it contains 1 of any characters in the available set
+        var low = /(?=.*[a-zA-Z\d!#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])/;
+
+        //med needs to at least contain 1 lower and any 1 of any other character at a min length of 6 characters
+        var med = /(?=.*[a-z])(?=.*[A-Z\d!#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{6,}/;
+
+        //high needs to contain at least 1 lower, 1 upper and 1 of any other character at a min length of 8 characters
+        var high = /(?=.*[a-z])(?=.*[A-Z])(?=.*[\d!#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}/;
+
+        //highest needs to contain at least 1 lower, 1 upper, 1 number and 1 special character at a min length of 10 characters
+        var highest = /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{10,}/;
+        function passStrengthCheck() {
+            var password = document.getElementById('Password').value;
+            if (highest.test(password)) {
+                //inside these parts is where the progress bar would need to change to match the console log colour given
+                console.log("green full");
+                return;
+            }
+            if (high.test(password)) {
+                console.log("amber high");
+                return;
+            }
+            if (med.test(password)) {
+                console.log("orange low");
+                return;
+
+            }
+            if (low.test(password)) {
+                console.log("red lowest");
+                return;
+
+            }
+            
         }
     </script>
 }

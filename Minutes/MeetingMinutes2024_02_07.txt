@@ -1,0 +1,30 @@
+All in attendance smb109
+
+meeting online (Riley Working from one of Eli's devices)
+
+Ben - working on uploaded and using a folder
+Will - Storage Controller observations and password hashing
+Eli - Researching security implementations
+Riley - Meeting Minutes and white box testing
+
+
+*Fixed file get bug which displayed all files(Will)
+
+*Password hashing working (Will)
+
+*Gained temporary SSL certificate (Eli)
+
+*Performed white box testing on website (Riley)
+
+*Performed user testing (Riley)
+
+*Compiled bug list report on Trello (Riley)
+
+*AuthToken Issue 1 fixed (Ben)
+
+*AuthToken Issue 2 fixed (Ben)
+
+*File leak Issue fixed (Will)
+
+*Passwords now salted then hashed (Will) 
+====================================================
