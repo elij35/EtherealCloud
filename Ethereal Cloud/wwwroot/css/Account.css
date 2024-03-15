@@ -74,18 +74,8 @@ h2 {
 /* Logout Styles */
 .logout {
     text-align: center;
-    margin-top: 5px;
-}
-
-    .logout h2 {
-        color: #333;
-        margin-bottom: 20px;
-    }
-
-.logout-button {
-    margin-top: 10px;
 }
 
 #logout-btn {
-    width: 12%;
+    width: 15%;
 }
