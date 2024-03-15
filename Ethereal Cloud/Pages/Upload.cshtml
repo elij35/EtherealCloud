@@ -228,6 +228,9 @@
     <!--RIGHT CLICK MENU-->
     <div id="contextMenu" class="dropdown">
         <a class="dropdown-item" id="downloadItem" href="#">Download</a>
+        <a class="dropdown-item" id="moveItem" href="#">Move</a>
+        <a class="dropdown-item" id="moveItem" href="#">Rename</a>
+        <a class="dropdown-item" id="moveItem" href="#">Share</a>
         <a class="dropdown-item" id="deleteItem" href="#">Delete</a>
     </div>
 
@@ -250,6 +253,8 @@
             contextMenu.dataset.fileName = name;
             contextMenu.dataset.fileType = type;
 
+            console.log("Id: " + id + "  Name: " + name + "   Type: " + type);
+
             // Add event listeners for context menu items
             document.getElementById('downloadItem').addEventListener('click', downloadFile);
             document.getElementById('deleteItem').addEventListener('click', deleteFile);
@@ -270,11 +275,15 @@
         }
 
         function deleteFile() {
-            var menu = document.getElementById('contextMenu').dataset;
+            var contextMenu = document.getElementById('contextMenu');
+            var fileId = contextMenu.dataset.fileId;
+            var fileType = contextMenu.dataset.fileType;
+            console.log("Deleting  -  Id: " + fileId +"   Type: " + fileType);
 
-            // Set fileIdInput value
-            document.getElementById('fileIdInput').value = menu.fileId;
-            document.getElementById('typeInput').value = menu.fileType;
+            // Fill the hidden form inputs with fileId and fileType
+            document.getElementById('fileIdInput').value = fileId;
+            document.getElementById('typeInput').value = fileType;
+
             // Submit the form
             document.getElementById('deleteForm').submit();
 

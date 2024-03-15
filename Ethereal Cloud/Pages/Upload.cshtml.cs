@@ -277,6 +277,9 @@ namespace Ethereal_Cloud.Pages
                 return;
             }
 
+            
+
+
             Logger.LogToConsole(ViewData, "Deleted: " + fileId + type);
 
             string uriFileType;
@@ -294,6 +297,7 @@ namespace Ethereal_Cloud.Pages
             if (response != null)
             {
                 //Logger.LogToConsole(ViewData, "Successfull Deletion: " + fileId + " : " + type);
+                Logger.LogToConsole(ViewData, "After: " + fileId + type);
                 Response.Redirect("/Upload");
             }
             else
