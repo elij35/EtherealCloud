@@ -5,9 +5,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace StorageController.Data.Models
 {
     [Table("FolderBin", Schema = "ethereal")]
-    [PrimaryKey("FolderID")]
+    [PrimaryKey("DeleteID")]
     public class FolderBin
     {
+
+        [Required]
+        public int DeleteID { get; set; }
 
         [Required]
         public int FolderID { get; set; }
@@ -15,7 +18,7 @@ namespace StorageController.Data.Models
         /// <summary>
         /// Foreign keys
         /// </summary>
-        public Folder FolderData { get; set; }
+        public Folder Folder { get; set; }
 
     }
 }
