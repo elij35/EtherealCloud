@@ -1,17 +1,24 @@
-﻿.main {
+﻿body {
+    background-color: #dfcffb;
+    color: black;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.main {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 30px;
+    min-height: 100vh;
 }
 
 .login-container {
     background-color: #ffffff;
     padding: 30px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 350px;
-    max-width: 100%;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 400px;
 }
 
     .login-container h2 {
@@ -19,9 +26,21 @@
         margin-bottom: 30px;
     }
 
+.logo {
+    display: inline;
+    margin-bottom: 20px;
+}
+
+    .logo img {
+        max-width: 85%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+        margin-bottom: 8px;
+    }
+
 .form-floating {
-    margin-bottom: 15px;
-    position: relative;
+    margin-top: 15px;
 }
 
 /* Password revealer toggle */
@@ -31,7 +50,6 @@
     top: 50%;
     right: 10px;
     transform: translateY(-50%);
-    font-size: 0.8rem;
     color: #6c757d;
 }
 
@@ -47,7 +65,9 @@
 
 /* Login and register submit button */
 #login-btn {
-    width: -webkit-fill-available;
+    width: 100%;
+    background: #9877c5;
+    margin-top: 10px;
 }
 
 /* Terms and conditions checkbox */
@@ -60,9 +80,33 @@
 }
 
 #forgot-pass {
-    text-align: right;
+    width: fit-content;
+    margin-top: 8px;
 }
 
 h2 {
     font-size: 28px;
+}
+
+.spacing {
+    margin-top: 15px;
+}
+
+.links a {
+    display: inline-block;
+    width: fit-content;
+}
+
+.links p {
+    margin-bottom: 0px;
+}
+
+.error-text {
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .login-container {
+        width: 90%;
+    }
 }

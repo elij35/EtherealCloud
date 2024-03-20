@@ -3,57 +3,9 @@
     justify-content: center;
 }
 
-/* Side nav for tools */
-#toolbox {
-    padding: 10px;
-}
-
-#tools {
-    justify-content: center;
-    display: flex;
-    overflow: hidden;
-    height: 100%;
-    width: 100%;
-    text-align: center;
-    align-items: center;
-    background: #cbbbe2;
-    border: solid;
-    border-color: #7045BA;
-    border-radius: 20px;
-    padding: 5px;
-    margin: 0px;
-}
-
-#tool-row {
-    text-align: -webkit-center;
-    display: flow;
-    width: fit-content;
-    cursor: pointer;
-    align-self: center
-}
-
-#tool-label {
-    display: flow;
-    width: fit-content;
-    cursor: pointer;
-    align-self: center
-}
-
-#tools img {
-    padding: 0px;
-    width: 40px;
-    height: auto;
-}
-
-#tools p {
-    justify-content: center;
-    margin: 0px;
-    padding: 0px;
-}
-
 /* This is where the scrollbox is contained */
 #filebox {
-    height: fit-content;
+    height: 40vh;
     background: #f2f2f2;
     border: solid;
     border-color: #808080;
@@ -89,8 +41,8 @@
 
     #filepath-button img {
         height: 30px;
-        margin-left: 20px;
-        margin-right: 10px;
+        margin-left: 8px;
+        margin-right: 8px;
     }
 
 /* Filepath styling */
@@ -111,9 +63,16 @@
         color: black;
     }
 
-    .file-hover :hover {
-        color: aqua;
+    .file-hover:hover {
+        background-color: rgb(203 187 226 / 30%);
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.3s ease;
     }
+
+#rotated-image {
+    transform: rotate(90deg);
+}
 
 #path-folder {
     text-overflow: ellipsis;
@@ -121,14 +80,16 @@
 }
 
 .no-files {
-    display: flex;
-    align-items: center;
+    display: grid;
     justify-content: center;
-    text-align: center;
-    margin: 0px;
-    height: 40%;
-    align-items: center;
+    height: 100%;
+    align-content: center;
 }
+
+    .no-files img {
+        width: 150px;
+        height: auto;
+    }
 
 .col {
     flex: none;
@@ -143,9 +104,10 @@
 #scrollbox {
     margin: 0px;
     width: 100%;
+    display: ruby-text;
     height: 48vh;
     max-height: inherit;
-    justify-content: center;
+    justify-content: flex-start;
     overflow-y: scroll;
     text-align: center;
 }
@@ -183,7 +145,7 @@
     border: dashed;
     border-color: #808080;
     height: min-content;
-    background-color: #e6e6e6;
+    background-color: #f2f2f2;
     border-radius: 20px
 }
 
@@ -194,3 +156,45 @@
     max-width: 100%;
     display: inline-block;
 }
+
+.popup-input {
+    position: fixed;
+    top: 40%;
+    left: 53%;
+    transform: translate(-50%, -50%);
+    padding: 15px;
+    background-color: #f1f1f1;
+    border: 5px solid #ccc;
+    width: 50%;
+    z-index: 1;
+}
+
+.popup-input-btn {
+    margin-top: 10px;
+}
+
+.mt-3 {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+/* Drop down menu when selecting files/folders: */
+.dropdown {
+    position: absolute;
+    display: none;
+    background-color: #f9f9f9;
+    min-width: 120px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-item {
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    cursor: pointer;
+}
+
+    .dropdown-item:hover {
+        background-color: #f1f1f1;
+    }

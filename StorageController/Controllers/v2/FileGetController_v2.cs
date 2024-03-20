@@ -2,12 +2,13 @@
 using StorageController.Data.Models;
 using StorageController.Data;
 using System.IdentityModel.Tokens.Jwt;
+using Azure.Core;
 
-namespace StorageController.Controllers
+namespace StorageController.Controllers.v2
 {
 
     [ApiController]
-    public class FileGetController
+    public class FileGetController_v2 : Controller
     {
 
         public struct FileDataReturn
@@ -30,20 +31,21 @@ namespace StorageController.Controllers
             public string Foldername { get; set; }
         }
 
-        public struct FileRequest
-        {
-            public string AuthToken { get; set; }
-
-        }
-
         [HttpPost]
         [Consumes("application/json")]
         [Produces("application/json")]
-        [Route("/v1/file/{id}")]
-        public async Task<string> GetFile([FromBody] FileRequest fileRequest, [FromRoute] int id)
+        [Route("/v2/file/{id}")]
+        public async Task<string> GetFile([FromRoute] int id)
         {
 
-            Response<string> authResponse = await AuthManager.AuthorizeUser(fileRequest.AuthToken);
+            string? auth = Request.Headers.Authorization.FirstOrDefault();
+
+            if (auth == null || !auth.StartsWith("Bearer "))
+                return await new Response<string>(false, "Authorization Header missing or in wrong format.").Serialize();
+
+            string token = auth.Substring("Bearer ".Length).Trim();
+
+            Response<string> authResponse = await AuthManager.AuthorizeUser(token);
 
             if (!authResponse.Success)
                 return await authResponse.Serialize();
@@ -52,7 +54,8 @@ namespace StorageController.Controllers
 
             DataHandler db = new();
 
-            FileData? file = db.Files.FirstOrDefault(file => file.FileID == id);
+            FileData? file = db.Files.FirstOrDefault(file => file.FileID == id 
+                                                          && db.FileBin.FirstOrDefault(removedFile => removedFile.FileID == file.FileID) == null);
 
             if (file == null)
             {
@@ -98,11 +101,18 @@ namespace StorageController.Controllers
         [HttpPost]
         [Produces("application/json")]
         [Consumes("application/json")]
-        [Route("/v1/folder/files/{id?}")]
-        public async Task<string> GetFolderContent([FromBody] FileRequest fileRequest, [FromRoute] int? id = null)
+        [Route("/v2/folder/files/{id?}")]
+        public async Task<string> GetFolderContent([FromRoute] int? id = null)
         {
 
-            Response<string> authResponse = await AuthManager.AuthorizeUser(fileRequest.AuthToken);
+            string? auth = Request.Headers.Authorization.FirstOrDefault();
+
+            if (auth == null || !auth.StartsWith("Bearer "))
+                return await new Response<string>(false, "Authorization Header missing or in wrong format.").Serialize();
+
+            string token = auth.Substring("Bearer ".Length).Trim();
+
+            Response<string> authResponse = await AuthManager.AuthorizeUser(token);
 
             if (!authResponse.Success)
                 return await authResponse.Serialize();
@@ -136,11 +146,81 @@ namespace StorageController.Controllers
 
             }
 
-            IQueryable<UserFile> userFiles = db.UserFiles.Where(userFile => userFile.UserID == userID);
-            IQueryable<UserFolder> userFolders = db.UserFolders.Where(userFolder => userFolder.UserID == userID);
+            IQueryable<UserFile> userFiles = db.UserFiles.Where(userFile => userFile.UserID == userID
+                                          && db.FileBin.FirstOrDefault(removedFile => removedFile.FileID == userFile.FileID) == null); ;
+            IQueryable<UserFolder> userFolders = db.UserFolders.Where(userFolder => userFolder.UserID == userID
+                                          && db.FolderBin.FirstOrDefault(removedFolder => removedFolder.FolderID == userFolder.FolderID) == null); ;
 
             FileData[] files = db.Files.Where(file => userFiles.FirstOrDefault(link => link.FileID == file.FileID) != null && file.FolderID == id).ToArray();
             Folder[] folders = db.Folders.Where(folder => userFolders.FirstOrDefault(link => link.FolderID == folder.FolderID) != null && folder.ParentID == id).ToArray();
+
+            FileMetaReturn[] fileData = new FileMetaReturn[files.Length];
+            for (int i = 0; i < files.Length; i++)
+            {
+                fileData[i] = new FileMetaReturn()
+                {
+                    FileID = files[i].FileID,
+                    Filename = files[i].FileName,
+                    Filetype = files[i].FileType
+                };
+            }
+
+            FolderDataReturn[] folderData = new FolderDataReturn[folders.Length];
+            for (int i = 0; i < folderData.Length; i++)
+            {
+                folderData[i] = new()
+                {
+                    FolderID = folders[i].FolderID,
+                    Foldername = folders[i].FolderName
+                };
+            }
+
+            FolderContentReturn folderContentReturn = new()
+            {
+                Files = fileData,
+                Folders = folderData
+            };
+
+            return await new Response<FolderContentReturn>(true, folderContentReturn).Serialize();
+
+        }
+
+        [HttpPost]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        [Route("/v2/bin")]
+        public async Task<string> GetBinContent()
+        {
+
+            string? auth = Request.Headers.Authorization.FirstOrDefault();
+
+            if (auth == null || !auth.StartsWith("Bearer "))
+                return await new Response<string>(false, "Authorization Header missing or in wrong format.").Serialize();
+
+            string token = auth.Substring("Bearer ".Length).Trim();
+
+            Response<string> authResponse = await AuthManager.AuthorizeUser(token);
+
+            if (!authResponse.Success)
+                return await authResponse.Serialize();
+
+            int userID = int.Parse(authResponse.Message);
+
+            DataHandler db = new();
+            User? user = db.Users.FirstOrDefault(user => user.UserID == userID);
+
+            if (user == null)
+            {
+                return await new Response<string>(false, "Invalid user.").Serialize();
+            }
+
+            IQueryable<UserFile> userFiles = db.UserFiles.Where(userFile => userFile.UserID == userID
+                                          && db.FileBin.FirstOrDefault(removedFile => removedFile.FileID == userFile.FileID) != null);
+            IQueryable<UserFolder> userFolders = db.UserFolders.Where(userFolder => userFolder.UserID == userID
+                                              && db.FolderBin.FirstOrDefault(removedFolder => removedFolder.FolderID == userFolder.FolderID) != null);
+
+            FileData[] files = db.Files.Where(file => userFiles.FirstOrDefault(link => link.FileID == file.FileID) != null).ToArray();
+            Folder[] folders = db.Folders.Where(folder => userFolders.FirstOrDefault(link => link.FolderID == folder.FolderID) != null).ToArray();
 
             FileMetaReturn[] fileData = new FileMetaReturn[files.Length];
             for (int i = 0; i < files.Length; i++)

@@ -4,35 +4,84 @@
     ViewBag.Title = "Bin";
     Layout = "Shared/_Layout.cshtml";
     <link rel="stylesheet" href="/css/Bin.css" asp-append-version="true">
-    <link rel="stylesheet" href="/css/Upload.css" asp-append-version="true">
 }
 
-<div class="row mt-3">
-    <div id="toolbox" class="col-lg-1 col-md-2 col-sm-2">
-        <div id="tools" class="row">
-
-            <!-- Restore button -->
-            <div id="tool-row" onclick="toggleImage()">
-                <a id="tool-label">
-                    <img id="toggleImage" class="row" src="~/images/tools/search.svg" alt="Image 1">
-                </a>
-                <p class="row">Restore</p>
-            </div>
-
-            <!-- Delete button -->
-            <div id="tool-row">
-                <a id="tool-label">
-                    <img class="row" src="~/images/tools/trash.svg" alt="trash">
-                </a>
-                <p class="row">Delete</p>
-            </div>
-        </div>
-    </div>
+<!-- File explorer -->
+<div id="file-explorer" class="row mt-3">
 
     <!-- Files Box -->
-    <div id="filebox" class="col-lg-11 col-md-10 col-sm-10 align-content-center">
+    <div id="filebox" class="col-lg-12 col-md-12 col-sm-12 h-100">
         <div id="scrollbox" class="row">
-            <h2>Deleted files will appear here</h2>
+            @if (Model.DisplayList.Count > 0)
+            {
+                <div class="row d-flex">
+                    @foreach (var display in Model.DisplayList)
+                    {
+                        <div id="uploaded-files" class="file-hover" oncontextmenu="showContextMenu(event, '@display.Id', '@display.Name', '@display.Type')">
+                            <img src="~/images/file-icons/@GetImageForFileType(@display.Type)" alt="logo" class="logo">
+                            <p>@display.Name</p>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="no-files text-center">
+                    <img class="row" src="~/images/tools/search.svg" alt="search" style="width: -webkit-fill-available; opacity: 50%;">
+                    <h3 class="row">No files here</h3>
+                </div>
+            }
         </div>
     </div>
 </div>
+
+@{
+    string GetImageForFileType(string fileType)
+    {
+        //looks at files Mime type and gets appropriate image
+        switch (fileType.ToLower())
+        {
+            case "folder":
+                return "folder.svg";
+            case "image/png":
+            case "image/jpeg":
+            case "image/gif":
+                return "file-image.svg";
+            case "audio/mpeg":
+                return "file-music.svg";
+            case "video/mp4":
+                return "file-video.svg";
+            case "application/pdf":
+                return "file-pdf.svg";
+            case "application/msword":
+            case "text/plain":
+                return "file-doc.svg";
+            default:
+                return "unknown.svg"; //Unknown type
+        }
+    }
+
+    <!-- RIGHT CLICK MENU -->
+    <div id="contextMenu" class="dropdown">
+        <a class="dropdown-item" id="restoreItem" href="#">Restore</a>
+    </div>
+
+    <script>
+        function showContextMenu(event, id, name, type) {
+            event.preventDefault();
+            var contextMenu = document.getElementById('contextMenu');
+            contextMenu.style.display = 'block';
+            contextMenu.style.left = event.clientX + 'px';
+            contextMenu.style.top = event.clientY + 'px';
+
+            // Hide the context menu when clicking elsewhere
+            document.addEventListener('click', hideContextMenu);
+        }
+
+        function hideContextMenu() {
+            var contextMenu = document.getElementById('contextMenu');
+            contextMenu.style.display = 'none';
+            document.removeEventListener('click', hideContextMenu);
+        }
+    </script>
+}

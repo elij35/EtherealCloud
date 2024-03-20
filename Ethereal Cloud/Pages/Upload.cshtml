@@ -10,54 +10,39 @@
 <!-- File explorer -->
 <div id="file-explorer" class="row mt-3">
 
-    <!-- Files Toolbox -->
-    <div id="toolbox" class="col-lg-1 col-md-2 col-sm-2">
-        <div id="tools" class="row">
+    <!-- Files Box -->
+    <div id="filebox" class="col-lg-12 col-md-12 col-sm-12 h-100">
+        <!-- FilePath -->
+        <div id="filepath" class="row">
 
             <!-- Sort button -->
-            <div id="tool-row" onclick="toggleImage()">
-                <a id="tool-label">
-                    <img id="toggleImage" class="row" src="~/images/tools/sort-alpha-down.svg" alt="Image 1">
+            <div id="filepath-button" class="col">
+                <a href="#" onclick="toggleImage()">
+                    <img id="toggleImage" class="row" src="~/images/tools/sort-alpha-down.svg" alt="path">
                 </a>
-                <p class="row">Sort</p>
             </div>
 
             <!-- New folder button -->
-            <div id="tool-row">
-                <a id="tool-label" href="#" onclick="showInputBox()">
-                    <img class="row" src="~/images/tools/folder-plus.svg" alt="new-folder">
+            <div id="filepath-button" class="col">
+                <a href="#" onclick="showInputBox()">
+                    <img class="row" src="~/images/tools/folder-plus.svg" alt="path">
                 </a>
-                <p class="row">New</p>
             </div>
 
-            <!-- Share button -->
-            <div id="tool-row">
-                <a id="tool-label">
-                    <img class="row" src="~/images/tools/share.svg" alt="share">
+            <!-- Divider -->
+            <div id="filepath-button" class="col">
+                <a>
+                    <img id="rotated-image" style="margin:0;" src="~/images/file-path/dash-lg.svg" alt="path">
                 </a>
-                <p class="row">Share</p>
             </div>
 
-            <!-- Delete button -->
-            <div id="tool-row">
-                <a id="tool-label">
-                    <img class="row" src="~/images/tools/trash.svg" alt="trash">
-                </a>
-                <p class="row">Delete</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Files Box -->
-    <div id="filebox" class="col-lg-11 col-md-10 col-sm-10">
-        <!-- FilePath -->
-        <div id="filepath" class="row">
             <!-- Path Back button-->
             <div id="filepath-button" class="col">
                 <a asp-page-handler="GoToFolderInPath" asp-route-Id="-1">
                     <img src="~/images/file-path/path-back.svg" alt="path">
                 </a>
             </div>
+
             <!-- Root Image -->
             <div class="col" id="path-root">
                 <a asp-page-handler="GoToFolderInPath" asp-route-Id="-2">
@@ -84,110 +69,78 @@
         </div>
 
         <!-- Appears when the files are loaded -->
-        <div id="scrollbox" class="row">
-
-            <!-- Success/error messages -->
-            <div class="popup-message">
-                @if (ViewData["FailureMessage"] != null)
-                {
-                    <div class="alert alert-danger alert-dismissible fade show mx-auto">
-                        <strong>Error!</strong> @ViewData["FailureMessage"]
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                }
-            </div>
-
+        <div id="scrollbox" class="row d-flex">
             @if (Model.DisplayList.Count > 0)
             {
-                @foreach (var display in Model.DisplayList)
-                {
-                    <div id="uploaded-files" class="file-hover">
-                        <a asp-page-handler="@GetFileItemHandler(display.Type)" asp-route-id="@display.Id" asp-route-name="@display.Name">
-                            <img src="~/images/file-icons/@GetImageForFileType(@display.Type)" alt="logo" class="logo">
-                        </a>
-                        <p>@display.Name</p>
-                    </div>
-                }
+                <div class="row d-flex">
+                    @foreach (var display in Model.DisplayList)
+                    {
+                        <div id="uploaded-files" class="file-hover" oncontextmenu="showContextMenu(event, '@display.Id', '@display.Name', '@display.Type')">
+                            <a id="fileLink" asp-page-handler="@GetFileItemHandler(display.Type)" asp-route-id="@display.Id" asp-route-name="@display.Name">
+                                <img src="~/images/file-icons/@GetImageForFileType(@display.Type)" alt="logo" class="logo">
+                            </a>
+                            <p>@display.Name</p>
+                        </div>
+                    }
+                </div>
             }
             else
             {
-                <div class="no-files">
-                    <div>
-                        <img class="row" src="~/images/tools/search.svg" alt="search" style="width: -webkit-fill-available; opacity: 50%;">
-                        <h3 class="row">No files here</h3>
-                    </div>
+                <div class="no-files text-center">
+                    <img class="row" src="~/images/tools/search.svg" alt="search" style="width: -webkit-fill-available; opacity: 50%;">
+                    <h3 class="row">No files here</h3>
                 </div>
             }
         </div>
+
+        <!-- Hidden folder naming input box -->
+        <div id="input-box" class="popup-input" style="display:none;">
+            <form id="folder-form" method="post" asp-page-handler="CreateFolder">
+                <!--FileName Field-->
+                <div class="form-floating">
+                    <input asp-for="createFolderDetails.FolderName" class="form-control" placeholder=" ">
+                    <label for="folderName">Folder Name</label>
+                    <span asp-validation-for="createFolderDetails.FolderName" class="text-danger"></span>
+                </div>
+
+                <!-- Submit button -->
+                <div class="mb-3 ">
+                    <button type="submit" id="create-folder-btn" class="popup-input-btn btn btn-primary">Create Folder</button>
+                    <button type="button" onclick="cancelFolderCreation()" class="popup-input-btn btn btn-secondary">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bottom upload dotted box -->
+    <div id="upload-box" class="row mt-3">
+        <h3>Upload your files</h3>
+        <form method="post" enctype="multipart/form-data" asp-page-handler="Upload">
+            <div class="mb-3" id="file-input-box">
+                <input class="form-control" type="file" name="uploadedFile" id="fileInput" multiple>
+                <input type="submit" class="btn btn-success" value="Upload" />
+            </div>
+        </form>
     </div>
 </div>
 
-<!-- Bottom upload dotted box -->
-<div id="upload-box" class="row mt-3">
-    <h3>Upload your files</h3>
-    <form method="post" enctype="multipart/form-data" asp-page-handler="Upload">
-        <div class="mb-3" id="file-input-box">
-            <input class="form-control" type="file" name="uploadedFile" id="fileInput" multiple>
-            <input type="submit" class="btn btn-success" value="Upload" />
-        </div>
-    </form>
-</div>
-
-
-
-<!--NEW FOLDER INPUT BOX-->
-
-<!-- Hidden input box -->
-<div id="input-box" style="display:none;">
-    <form id="folder-form" method="post" asp-page-handler="CreateFolder">
-        <!--FileName Field-->
-        <div class="form-floating">
-            <input asp-for="createFolderDetails.FolderName" class="form-control" placeholder=" ">
-            <label for="folderName">Folder Name</label>
-            <span asp-validation-for="createFolderDetails.FolderName" class="text-danger"></span>
-        </div>
-
-        <!-- Submit button -->
-        <div class="mb-3">
-            <button type="submit" id="create-folder-btn" class="btn btn-primary">Create Folder</button>
-        </div>
-    </form>
-</div>
-
-<script>
-    function showInputBox() {
-        // Show the input box
-        document.getElementById('input-box').style.display = 'block';
-
-        // Set focus on the input field
-        document.querySelector('#input-box input[name="foldername"]').focus();
-    }
-</script>
-
-
-
-
-
-
-
-
-
-
-
 @{
-    <!-- Console logger -->
+    <!-- Scripts -->
     <script>
+        // Console logger
         var logger = '@ViewData["logger"]';
         if (logger !== null) {
             console.log(decodeHtml(logger));
         }
 
+        //Decodes html text
         function decodeHtml(html) {
             var txt = document.createElement("textarea");
             txt.innerHTML = html;
             return txt.value;
         }
 
+        //Changes the sort image when pressed
         function toggleImage() {
             var imageElement = document.getElementById('toggleImage');
             if (imageElement.src.endsWith('sort-alpha-down.svg')) {
@@ -196,6 +149,18 @@
                 imageElement.src = 'images/tools/sort-alpha-down.svg';
             }
         }
+
+        //Loads naming folder popup
+        function showInputBox() {
+            document.getElementById('input-box').style.display = 'block';
+            document.querySelector('#input-box input[name="foldername"]').focus();
+        }
+
+        //Cancels the folder creation
+        function cancelFolderCreation() {
+            document.getElementById('input-box').style.display = 'none';
+        }
+
     </script>
 
     string GetFileItemHandler(string fileHandler)
@@ -234,4 +199,69 @@
                 return "unknown.svg"; //Unknown type
         }
     }
+
+    <!-- RIGHT CLICK MENU -->
+    <div id="contextMenu" class="dropdown">
+        <a class="dropdown-item" id="downloadItem" href="#">Download</a>
+        <a class="dropdown-item" id="moveItem" href="#">Move</a>
+        <a class="dropdown-item" id="moveItem" href="#">Rename</a>
+        <a class="dropdown-item" id="moveItem" href="#">Share</a>
+        <a class="dropdown-item" id="deleteItem" href="#">Delete</a>
+    </div>
+
+    <!-- Hidden form for delete action -->
+    <form id="deleteForm" method="post" asp-page-handler="Delete">
+        <input name="fileId" type="hidden" id="fileIdInput">
+        <input name="type" type="hidden" id="typeInput">
+    </form>
+
+    <script>
+        function showContextMenu(event, id, name, type) {
+            event.preventDefault();
+            var contextMenu = document.getElementById('contextMenu');
+            contextMenu.style.display = 'block';
+            contextMenu.style.left = event.clientX + 'px';
+            contextMenu.style.top = event.clientY + 'px';
+
+            // Store the file info in context menu for later use
+            contextMenu.dataset.fileId = id;
+            contextMenu.dataset.fileName = name;
+            contextMenu.dataset.fileType = type;
+
+            console.log("Id: " + id + "  Name: " + name + "   Type: " + type);
+
+            // Add event listeners for context menu items
+            document.getElementById('downloadItem').addEventListener('click', downloadFile);
+            document.getElementById('deleteItem').addEventListener('click', deleteFile);
+
+            // Hide the context menu when clicking elsewhere
+            document.addEventListener('click', hideContextMenu);
+        }
+
+        function hideContextMenu() {
+            var contextMenu = document.getElementById('contextMenu');
+            contextMenu.style.display = 'none';
+            document.removeEventListener('click', hideContextMenu);
+        }
+
+        function downloadFile() {
+            var fileId = document.getElementById('contextMenu').dataset.fileId;
+            // Implement download functionality using fileId
+        }
+
+        function deleteFile() {
+            var contextMenu = document.getElementById('contextMenu');
+            var fileId = contextMenu.dataset.fileId;
+            var fileType = contextMenu.dataset.fileType;
+            console.log("Deleting  -  Id: " + fileId + "   Type: " + fileType);
+
+            // Fill the hidden form inputs with fileId and fileType
+            document.getElementById('fileIdInput').value = fileId;
+            document.getElementById('typeInput').value = fileType;
+
+            // Submit the form
+            document.getElementById('deleteForm').submit();
+
+        }
+    </script>
 }

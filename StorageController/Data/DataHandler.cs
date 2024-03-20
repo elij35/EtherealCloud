@@ -64,5 +64,7 @@ namespace StorageController.Data
         public DbSet<Bucket> Buckets { get; set; }
         public DbSet<Folder> Folders { get; set; }
         public DbSet<UserFolder> UserFolders { get; set; }
+        public DbSet<FolderBin> FolderBin { get; set; }
+        public DbSet<FileBin> FileBin { get; set; }
     }
 }

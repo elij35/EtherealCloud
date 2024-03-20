@@ -7,8 +7,66 @@
 }
 
 <div class="row mt-3 align-content-center">
-    <h2>Manage your account</h2>
-    <div class="logout-button text-center">
-        <a href="/Login" class="btn btn-primary">Logout here!</a>
+    <div class="popup-message">
+        <!-- Success/error messages -->
+        @if (ViewData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show mx-auto">
+                <strong>Success!</strong> @ViewData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+        @if (ViewData["FailureMessage"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show mx-auto">
+                <strong>Error!</strong> @ViewData["FailureMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+    </div>
+
+    <div class="main">
+        <div class="new-pass-form">
+            <h2><strong>Change your password</strong></h2>
+            <form asp-page-handler="ChangePassword" method="post">
+                <!-- Password field -->
+                <div class="form-floating password-input">
+                    <input type="password" id="Password" asp-for="changePasswordDetails.NewPassword" class="form-control" placeholder=" ">
+                    <label for="password">New Password</label>
+                    <span class="password-toggle" onclick="togglePassword()">Show</span>
+                </div>
+                <div class="error-text">
+                    <span asp-validation-for="changePasswordDetails.NewPassword" class="text-danger"></span>
+                </div>
+
+                <!-- Submit button -->
+                <div class="mb-3 justify-content-center">
+                    <button type="submit" id="login-btn" class="btn btn-primary">Change Password</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="logout">
+        <h2><strong>Sign out of your account?</strong></h2>
+        <form asp-page-handler="Logout" method="post">
+            <div class="mb-3 justify-content-center">
+                <button type="submit" id="logout-btn" class="btn btn-primary">Logout here!</button>
+            </div>
+        </form>
     </div>
 </div>
+
+<script>
+    // Toggle button to show passwords
+    function togglePassword() {
+        const passwordInput = document.getElementById('Password');
+        passwordInput.type = (passwordInput.type === 'password') ? 'text' : 'password';
+    }
+
+    // Logger for errors
+    var logger = '@ViewData["logger"]';
+    if (logger !== null) {
+        console.log(logger);
+    }
+</script>

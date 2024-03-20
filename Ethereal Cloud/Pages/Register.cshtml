@@ -8,21 +8,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="/css/Site.css" asp-append-version="true">
     <link rel="stylesheet" href="/css/Login.css" asp-append-version="true">
+    <link rel="stylesheet" href="/css/Normalise.css" asp-append-version="true">
     <title>Register</title>
     Layout = null;
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <!-- Logo on left side -->
-            <div class="navbar-brand">
-                <img src="~/images/LogoVector.svg" alt="logo" class="logo">
-            </div>
-        </div>
-    </nav>
-
     <div class="main">
-        <div class="login-container align-items-center">
-            <h2>Register</h2>
+        <div class="login-container">
+            <div class="logo">
+                <img src="~/images/LogoVector.svg" alt="logo">
+            </div>
+
+            <h2><strong>Register</strong></h2>
 
             <!-- Success/error messages -->
             <div class="popup-message">
@@ -50,6 +46,8 @@
                     <div class="form-floating">
                         <input asp-for="signupDetails.Username" class="form-control" placeholder=" ">
                         <label for="username">Username</label>
+                    </div>
+                    <div class="error-text">
                         <span asp-validation-for="signupDetails.Username" class="text-danger"></span>
                     </div>
 
@@ -57,13 +55,18 @@
                     <div class="form-floating">
                         <input type="text" asp-for="signupDetails.Email" class="form-control" placeholder=" ">
                         <label for="email">Email</label>
+                    </div>
+                    <div class="error-text">
                         <span asp-validation-for="signupDetails.Email" class="text-danger"></span>
                     </div>
 
                     <!-- Password field -->
                     <div class="form-floating">
-                        <input type="password" id="Password" asp-for="signupDetails.Password" class="form-control" placeholder=" ">
+                        <input type="password" oninput="passStrengthCheck()" id="Password" asp-for="signupDetails.Password" class="form-control" placeholder=" ">
                         <label for="password">Password</label>
+                        <span class="password-toggle" onclick="togglePassword()">Show</span>
+                    </div>
+                    <div class="error-text">
                         <span asp-validation-for="signupDetails.Password" class="text-danger"></span>
                     </div>
 
@@ -71,14 +74,16 @@
                     <div class="form-floating">
                         <input type="password" id="PasswordConf" asp-for="signupDetails.PasswordConf" class="form-control" placeholder=" ">
                         <label for="password">Confirm Password</label>
+                        <span class="password-toggle" onclick="togglePassword2()">Show</span>
+                    </div>
+                    <div class="error-text">
                         <span asp-validation-for="signupDetails.PasswordConf" class="text-danger"></span>
-                        <span class="password-toggle" onclick="togglePassword()">Show</span>
                     </div>
 
                     <!-- Terms and conditions form -->
-                    <div class="mb-3">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="termsCheckbox" name="termsCheckbox">
+                    <div class="mb-3 spacing">
+                        <div class="form-check form-check-inline links">
+                            <input class="form-check-input" type="checkbox" id="termsCheckbox" name="termsCheckbox" onchange="document.getElementById('login-btn').disabled = !this.checked;">
                             <label class="form-check-label">
                                 I have read and agree to both the
                                 <a href="#" onclick="openTermsWindow();">Terms and Conditions</a>
@@ -89,12 +94,12 @@
 
                     <!-- Submit button -->
                     <div class="mb-3">
-                        <button type="submit" id="login-btn" class="btn btn-primary" onclick="return validateForm();">Register</button>
+                        <button type="submit" id="login-btn" class="btn btn-primary" onclick="return validateForm();" disabled>Register</button>
                     </div>
 
-                    <div class="mb-3">
-                        Already have an account?
-                        <a href="/Login" class="text-primary">Login</a>
+                    <div class="mb-3 links">
+                        <p>Already have an account?</p>
+                        <a href="/Login">Login</a>
                     </div>
                 </form>
             </div>
@@ -105,8 +110,11 @@
         // Toggle button to show passwords
         function togglePassword() {
             const passwordInput1 = document.getElementById('Password');
-            const passwordInput2 = document.getElementById('PasswordConf');
             passwordInput1.type = (passwordInput1.type === 'password') ? 'text' : 'password';
+        }
+
+        function togglePassword2() {
+            const passwordInput2 = document.getElementById('PasswordConf');
             passwordInput2.type = (passwordInput2.type === 'password') ? 'text' : 'password';
         }
 
@@ -118,21 +126,47 @@
 
         function openTermsWindow() {
             var termsUrl = "/TermsAndConditions";
-            window.open(termsUrl, "_blank", "width=800,height=600");
+            window.open(termsUrl, "_blank", "width=800,height=600,top=350");
         }
 
         function openPolicyWindow() {
             var termsUrl = "/PrivacyPolicy";
-            window.open(termsUrl, "_blank", "width=800,height=600");
+            window.open(termsUrl, "_blank", "width=800,height=600,top=350");
         }
 
-        function validateForm() {
-            var checkbox = document.getElementById('termsCheckbox');
-            if (!checkbox.checked) {
-                alert("Please agree to the terms and conditions.");
-                return false;
+        //Low means it contains 1 of any characters in the available set
+        var low = /(?=.*[a-zA-Z\d!#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])/;
+
+        //med needs to at least contain 1 lower and any 1 of any other character at a min length of 6 characters
+        var med = /(?=.*[a-z])(?=.*[A-Z\d!#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{6,}/;
+
+        //high needs to contain at least 1 lower, 1 upper and 1 of any other character at a min length of 8 characters
+        var high = /(?=.*[a-z])(?=.*[A-Z])(?=.*[\d!#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}/;
+
+        //highest needs to contain at least 1 lower, 1 upper, 1 number and 1 special character at a min length of 10 characters
+        var highest = /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{10,}/;
+        function passStrengthCheck() {
+            var password = document.getElementById('Password').value;
+            if (highest.test(password)) {
+                //inside these parts is where the progress bar would need to change to match the console log colour given
+                console.log("green full");
+                return;
             }
-            return true;
+            if (high.test(password)) {
+                console.log("amber high");
+                return;
+            }
+            if (med.test(password)) {
+                console.log("orange low");
+                return;
+
+            }
+            if (low.test(password)) {
+                console.log("red lowest");
+                return;
+
+            }
+            
         }
     </script>
 }

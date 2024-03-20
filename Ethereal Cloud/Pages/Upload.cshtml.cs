@@ -32,14 +32,8 @@ namespace Ethereal_Cloud.Pages
 
             //Logger.LogToConsole(ViewData, "Current Folder: " + folderId);
 
-            //create object
-            var dataObject = new Dictionary<string, object?>
-            {
-                { "authtoken", AuthTokenManagement.GetToken(HttpContext)}
-            };
-
             //Make request
-            var response = await ApiRequest.Files(ViewData, HttpContext, "v1/folder/files/" + folderId, dataObject);
+            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/folder/files/" + folderId, true, null);
 
             if (response != null)
             {
@@ -272,7 +266,45 @@ namespace Ethereal_Cloud.Pages
         }
 
 
+        public async Task OnPostDeleteAsync(string fileId, string type)
+        {
+            // Check fileId validity
+            if (fileId == null || type == null)
+            {
+                Logger.LogToConsole(ViewData, "Invalid: Model error");
+                return;
+            }
+
+            
+
+
+            Logger.LogToConsole(ViewData, "Deleted: " + fileId + type);
+
+            string uriFileType;
+            if (type.ToLower() == "folder")
+            {
+                uriFileType = "folder";
+            }
+            else
+            {
+                uriFileType = "file";
+            }
+
+            //Make request
+            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/" + uriFileType + "/remove/" + fileId, true, null);
+
+            if (response != null)
+            {
+                //Logger.LogToConsole(ViewData, "Successfull Deletion: " + fileId + " : " + type);
+                Logger.LogToConsole(ViewData, "After: " + fileId + type);
+                Response.Redirect("/Upload");
+            }
+            else
+            {
+                //Logger.LogToConsole(ViewData, "Bad delete response");
+                return;
+            }
+        }
 
     }
-
 }

@@ -8,22 +8,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="/css/Site.css" asp-append-version="true">
     <link rel="stylesheet" href="/css/Login.css" asp-append-version="true">
+    <link rel="stylesheet" href="/css/Normalise.css" asp-append-version="true">
     <title>Login</title>
     Layout = null;
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <!-- Logo on left side -->
-            <div class="navbar-brand">
-                <img src="~/images/LogoVector.svg" alt="logo" class="logo">
-            </div>
-        </div>
-    </nav>
-
     <div class="main">
-        <div class="login-container align-items-center">
-            <h2>Login</h2>
-
+        <div class="login-container">
+            <div class="logo">
+                <img src="~/images/LogoVector.svg" alt="logo">
+            </div>
+            <h2><strong>Login</strong></h2>
             <!-- Success/error messages -->
             <div class="popup-message">
                 <!-- Success/error messages -->
@@ -50,19 +44,24 @@
                 <div class="form-floating">
                     <input asp-for="loginDetails.UsernameOrEmail" class="form-control" placeholder=" ">
                     <label for="email">Email</label>
+                </div>
+                <div class="error-text">
                     <span asp-validation-for="loginDetails.UsernameOrEmail" class="text-danger"></span>
                 </div>
 
                 <!-- Password field -->
-                <div class="form-floating">
+                <div class="form-floating password-input">
                     <input type="password" id="Password" asp-for="loginDetails.Password" class="form-control" placeholder=" ">
                     <label for="password">Password</label>
                     <span class="password-toggle" onclick="togglePassword()">Show</span>
+                </div>
+                <div class="error-text">
                     <span asp-validation-for="loginDetails.Password" class="text-danger"></span>
                 </div>
 
+                <!-- Forgot password -->
                 <div class="mb-3">
-                    <a href="/Register" id="forgot-pass" class="text-muted text-end">Forgot Password?</a>
+                    <a href="/Register" id="forgot-pass" class="float-end text-end">Forgot Password?</a>
                 </div>
 
                 <!-- Submit button -->
@@ -70,9 +69,9 @@
                     <button type="submit" id="login-btn" class="btn btn-primary">Login</button>
                 </div>
 
-                <div class="mb-3">
-                    Don't have an account?
-                    <a href="/Register" class="text-primary">Register</a>
+                <div class="mb-3 links">
+                    <p>Don't have an account?</p>
+                    <a href="/Register">Register</a>
                 </div>
             </form>
         </div>
