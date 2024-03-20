@@ -1,48 +1,200 @@
-﻿.text-box {
-    text-align: center;
-    padding: 25px;
-    margin-top: 15px;
-    margin-left: 310px;
-    margin-right: 15px;
-    border-radius: 25px;
-    height: 600px;
-    background-color: #dee4ec;
+﻿#file-explorer {
+    padding: 0px;
+    justify-content: center;
 }
 
-/* Upload box */
-.upload-box {
-    text-align: center;
-    margin-top: 5px;
-    margin-left: 310px;
-    margin-right: 15px;
-    border-radius: 25px;
-    border: dashed;
-    height: fit-content;
-    background-color: #dee4ec;
+/* This is where the scrollbox is contained */
+#filebox {
+    height: 40vh;
+    background: #f2f2f2;
+    border: solid;
+    border-color: #808080;
+    border-radius: 20px;
+    padding: 0px;
+    overflow: hidden;
+}
+
+/* Directory at top of page */
+#filepath {
+    box-sizing: border-box;
+    border-bottom: solid #808080;
+    padding: 5px;
+    background-color: #cbbbe2;
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#path-root {
+    display: contents;
+}
+
+    #path-root img {
+        height: 30px;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+#filepath-button {
+    display: contents;
+}
+
+    #filepath-button img {
+        height: 30px;
+        margin-left: 8px;
+        margin-right: 8px;
+    }
+
+/* Filepath styling */
+#path-divider {
+    font-weight: bold;
+    font-size: 20px;
+    color: black;
+    margin-left: 5px;
+    margin-right: 5px
+}
+
+.file-hover {
+    display: grid;
+}
+
+    .file-hover a {
+        text-decoration: none;
+        color: black;
+    }
+
+    .file-hover:hover {
+        background-color: rgb(203 187 226 / 30%);
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.3s ease;
+    }
+
+#rotated-image {
+    transform: rotate(90deg);
+}
+
+#path-folder {
+    text-overflow: ellipsis;
+    cursor: pointer;
+}
+
+.no-files {
+    display: grid;
+    justify-content: center;
+    height: 100%;
     align-content: center;
 }
 
-.upload-btn-wrapper {
-    position: relative;
-    overflow: hidden;
-    display: inline-block;
-    margin-top: 5px;
+    .no-files img {
+        width: 150px;
+        height: auto;
+    }
+
+.col {
+    flex: none;
+}
+
+#content-container {
+    display: contents;
+    justify-content: flex-start;
+}
+
+/* This is where all the uploaded files are contained */
+#scrollbox {
+    margin: 0px;
+    width: 100%;
+    display: ruby-text;
+    height: 48vh;
+    max-height: inherit;
+    justify-content: flex-start;
+    overflow-y: scroll;
+    text-align: center;
+}
+
+/* Everything inside the containers for the files (img and file name) */
+#uploaded-files {
+    width: 120px;
+    height: fit-content;
     padding: 5px;
+    margin: 5px;
 }
 
-.btn {
-    background-color: mediumpurple;
-    padding: 8px 20px;
-    border-radius: 8px;
-    font-size: 20px;
-    cursor: pointer;
-    font-weight: bold;
+    #uploaded-files img {
+        width: 100%;
+        height: auto;
+        margin-bottom: 5px;
+    }
+
+    #uploaded-files p {
+        text-align: center;
+        text-decoration: none;
+        color: black;
+        margin: 0px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-decoration: none;
+    }
+
+/* Upload box (at bottom of page) */
+#upload-box {
+    text-align: center;
+    padding: 5px;
+    justify-content: center;
+    border: dashed;
+    border-color: #808080;
+    height: min-content;
+    background-color: #f2f2f2;
+    border-radius: 20px
 }
 
-.upload-btn-wrapper input[type=file] {
-    font-size: 100px;
+/* Input box for choosing a file */
+#file-input-box input {
+    overflow: auto;
+    width: fit-content;
+    max-width: 100%;
+    display: inline-block;
+}
+
+.popup-input {
+    position: fixed;
+    top: 40%;
+    left: 53%;
+    transform: translate(-50%, -50%);
+    padding: 15px;
+    background-color: #f1f1f1;
+    border: 5px solid #ccc;
+    width: 50%;
+    z-index: 1;
+}
+
+.popup-input-btn {
+    margin-top: 10px;
+}
+
+.mt-3 {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+/* Drop down menu when selecting files/folders: */
+.dropdown {
     position: absolute;
-    left: 0;
-    top: 0;
-    opacity: 0;
+    display: none;
+    background-color: #f9f9f9;
+    min-width: 120px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    z-index: 1;
 }
+
+.dropdown-item {
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    cursor: pointer;
+}
+
+    .dropdown-item:hover {
+        background-color: #f1f1f1;
+    }

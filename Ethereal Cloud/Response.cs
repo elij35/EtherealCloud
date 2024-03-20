@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace Ethereal_Cloud.Pages
+namespace Ethereal_Cloud
 {
     public class Response<T>
     {
