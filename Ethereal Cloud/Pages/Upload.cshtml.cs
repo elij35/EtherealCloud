@@ -275,7 +275,7 @@ namespace Ethereal_Cloud.Pages
                 return;
             }
 
-            
+
 
 
             Logger.LogToConsole(ViewData, "Deleted: " + fileId + type);
