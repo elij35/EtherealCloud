@@ -11,12 +11,12 @@ namespace Ethereal_Cloud.Pages
         public SignupDetails signupDetails { get; set; }
 
 
-        public async Task OnPostSignupAsync()
+        public async Task<IActionResult> OnPostSignupAsync()
         {
             if (!ModelState.IsValid)
             {
                 Logger.LogToConsole(ViewData, "Invalid: Model error");
-                return;
+                return Page();
             }
 
             //create body object
@@ -33,14 +33,17 @@ namespace Ethereal_Cloud.Pages
             if (response != null)
             {
                 //Valid Signup
-                Logger.LogToConsole(ViewData, "Successfull signup of user " + signupDetails.Username);
+                Logger.LogToConsole(ViewData, "Successful signup of user " + signupDetails.Username);
 
                 ViewData["SuccessMessage"] = "You have successfully registered.";
+
+                return RedirectToPage("/Login"); // Redirects to Login page after successfully registering
             }
             else
             {
                 Logger.LogToConsole(ViewData, "Invalid: Couldn't signup");
                 ViewData["FailureMessage"] = "Signup failed.";
+                return Page();
             }
         }
     }
