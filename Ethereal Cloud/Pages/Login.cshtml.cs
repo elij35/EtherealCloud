@@ -42,7 +42,7 @@ namespace Ethereal_Cloud.Pages
                 PathManagement.Remove(HttpContext);
 
                 //goto the my files page
-                Response.Redirect("/Upload");
+                Response.Redirect("/Auth");
             }
             else
             {
