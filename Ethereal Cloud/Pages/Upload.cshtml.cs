@@ -176,55 +176,61 @@ namespace Ethereal_Cloud.Pages
 
 
 
-        public async Task OnPostUploadAsync(IFormFile uploadedFile)
+        public async Task OnPostUploadAsync(List<IFormFile> uploadedFiles)
         {
-            if (uploadedFile != null && uploadedFile.Length > 0)
+            foreach (IFormFile singleFile in uploadedFiles)
             {
-                using (var stream = new MemoryStream())
+                if (singleFile != null && singleFile.Length > 0)
                 {
-                    //Where folder the user is in
-                    int? currentFolder = PathManagement.GetCurrentFolderId(HttpContext);
-
-                    //Hold the file contents in the stream
-                    await uploadedFile.CopyToAsync(stream);
-
-                    byte[] bytes = stream.ToArray();
-                    string hexBytes = Convert.ToHexString(bytes);
-
-                    //create file object
-                    var dataObject = new Dictionary<string, object?>
+                    using (var stream = new MemoryStream())
                     {
-                        { "AuthToken", AuthTokenManagement.GetToken(HttpContext) },
-                        { "Filename", uploadedFile.FileName },
-                        { "Filetype", MimeType.GetMimeType(uploadedFile.FileName) },
-                        { "Content", hexBytes }
-                    };
-                    //If the user isnt in the root
-                    if (currentFolder != null)
-                    {
-                        dataObject.Add("FolderId", currentFolder);
+                        //Where folder the user is in
+                        int? currentFolder = PathManagement.GetCurrentFolderId(HttpContext);
+
+                        //Hold the file contents in the stream
+                        await singleFile.CopyToAsync(stream);
+
+                        byte[] bytes = stream.ToArray();
+                        string hexBytes = Convert.ToHexString(bytes);
+
+                        //create file object
+                        var dataObject = new Dictionary<string, object?>
+                        {
+                            { "AuthToken", AuthTokenManagement.GetToken(HttpContext) },
+                            { "Filename", singleFile.FileName },
+                            { "Filetype", MimeType.GetMimeType(singleFile.FileName) },
+                            { "Content", hexBytes }
+                        };
+                        //If the user isnt in the root
+                        if (currentFolder != null)
+                        {
+                            dataObject.Add("FolderId", currentFolder);
+                        }
+
+
+                        //Make request
+                        var response = await ApiRequest.Files(ViewData, HttpContext, "v1/file", dataObject);
+
+                        if (response != null)
+                        {
+                            Logger.LogToConsole(ViewData, "Successfull file upload: " + response);
+                        }
+                        else
+                        {
+                            //Logger.LogToConsole(ViewData, "Bad upload response");
+                        }
                     }
 
-
-                    //Make request
-                    var response = await ApiRequest.Files(ViewData, HttpContext, "v1/file", dataObject);
-
-                    if (response != null)
-                    {
-                        Logger.LogToConsole(ViewData, "Successfull file upload: " + response);
-                        Response.Redirect("/Upload");
-                    }
-                    else
-                    {
-                        //Logger.LogToConsole(ViewData, "Bad upload response");
-                    }
                 }
+                else
+                {
+                    Logger.LogToConsole(ViewData, "Invalid file upload");
+                }
+            }
 
-            }
-            else
-            {
-                Logger.LogToConsole(ViewData, "Invalid file upload");
-            }
+
+
+            Response.Redirect("/Upload");
 
         }
 
