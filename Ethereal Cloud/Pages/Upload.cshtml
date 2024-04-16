@@ -116,13 +116,15 @@
     <div id="upload-box" class="row mt-3">
         <h3>Upload your files</h3>
         <form id="uploadForm" method="post" enctype="multipart/form-data" asp-page-handler="Upload">
-            <div class="mb-3" id="file-input-box">
-                <!-- File input with drag and drop -->
-                <label for="fileInput" id="dragDropArea" class="drag-drop-area">
-                    Drag & drop files here or click to select
-                </label>
-                <input class="form-control" type="file" name="uploadedFile" id="fileInput" multiple style="display: none;">
-                <input type="submit" class="btn btn-success" value="Upload" />
+            <!-- Bottom upload dotted box -->
+            <div id="upload-box" class="row mt-3">
+                <h3>Upload your files</h3>
+                <form method="post" enctype="multipart/form-data" asp-page-handler="Upload">
+                    <div class="mb-3" id="file-input-box">
+                        <input class="form-control" type="file" name="uploadedFile" id="fileInput" multiple>
+                        <input type="submit" class="btn btn-success" value="Upload" />
+                    </div>
+                </form>
             </div>
         </form>
     </div>
