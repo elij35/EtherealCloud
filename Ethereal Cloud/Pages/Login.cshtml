@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/css/Site.css" asp-append-version="true">
     <link rel="stylesheet" href="/css/Login.css" asp-append-version="true">
     <link rel="stylesheet" href="/css/Normalise.css" asp-append-version="true">
+    <link rel="icon" type="image/x-icon" href="~/images/Logo.png" />
     <title>Login</title>
     Layout = null;
 
@@ -43,7 +44,7 @@
                 <!-- Username field -->
                 <div class="form-floating">
                     <input asp-for="loginDetails.UsernameOrEmail" class="form-control" placeholder=" ">
-                    <label for="email">Email</label>
+                    <label for="email">Username or Email</label>
                 </div>
                 <div class="error-text">
                     <span asp-validation-for="loginDetails.UsernameOrEmail" class="text-danger"></span>

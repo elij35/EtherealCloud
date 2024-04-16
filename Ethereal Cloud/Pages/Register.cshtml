@@ -6,9 +6,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="/css/Site.css" asp-append-version="true">
     <link rel="stylesheet" href="/css/Login.css" asp-append-version="true">
     <link rel="stylesheet" href="/css/Normalise.css" asp-append-version="true">
+    <link rel="icon" type="image/x-icon" href="~/images/Logo.png" />
     <title>Register</title>
     Layout = null;
 
@@ -28,6 +30,7 @@
                         <strong>Success!</strong> @ViewData["SuccessMessage"]
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
+
                 }
                 @if (ViewData["FailureMessage"] != null)
                 {
@@ -62,9 +65,12 @@
 
                     <!-- Password field -->
                     <div class="form-floating">
-                        <input type="password" oninput="passStrengthCheck()" id="Password" asp-for="signupDetails.Password" class="form-control" placeholder=" ">
+                        <input type="password" id="Password" asp-for="signupDetails.Password" class="form-control" placeholder=" ">
                         <label for="password">Password</label>
                         <span class="password-toggle" onclick="togglePassword()">Show</span>
+                    </div>
+                    <div class="password-strength-indicator">
+                        <div></div>
                     </div>
                     <div class="error-text">
                         <span asp-validation-for="signupDetails.Password" class="text-danger"></span>
@@ -107,7 +113,6 @@
     </div>
 
     <script>
-        // Toggle button to show passwords
         function togglePassword() {
             const passwordInput1 = document.getElementById('Password');
             passwordInput1.type = (passwordInput1.type === 'password') ? 'text' : 'password';
@@ -134,39 +139,44 @@
             window.open(termsUrl, "_blank", "width=800,height=600,top=350");
         }
 
-        //Low means it contains 1 of any characters in the available set
-        var low = /(?=.*[a-zA-Z\d!#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])/;
+        // Password strength checker
+        $('#Password').on('input', function () {
+            var password = $(this).val();
+            var strength = 0;
 
-        //med needs to at least contain 1 lower and any 1 of any other character at a min length of 6 characters
-        var med = /(?=.*[a-z])(?=.*[A-Z\d!#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{6,}/;
-
-        //high needs to contain at least 1 lower, 1 upper and 1 of any other character at a min length of 8 characters
-        var high = /(?=.*[a-z])(?=.*[A-Z])(?=.*[\d!#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}/;
-
-        //highest needs to contain at least 1 lower, 1 upper, 1 number and 1 special character at a min length of 10 characters
-        var highest = /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{10,}/;
-        function passStrengthCheck() {
-            var password = document.getElementById('Password').value;
-            if (highest.test(password)) {
-                //inside these parts is where the progress bar would need to change to match the console log colour given
-                console.log("green full");
-                return;
+            if (password.length >= 10) {
+                strength += 1;
             }
-            if (high.test(password)) {
-                console.log("amber high");
-                return;
-            }
-            if (med.test(password)) {
-                console.log("orange low");
-                return;
 
+            if (password.match(/[a-z]/)) {
+                strength += 1;
             }
-            if (low.test(password)) {
-                console.log("red lowest");
-                return;
 
+            if (password.match(/[A-Z]/)) {
+                strength += 1;
             }
-            
-        }
+
+            if (password.match(/[0-9]/)) {
+                strength += 1;
+            }
+
+            if (password.match(/[!#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/)) {
+                strength += 1;
+            }
+
+            var indicator = $('.password-strength-indicator div');
+
+            if (strength <= 1) {
+                indicator.removeClass().addClass('strength-weak');
+            } else if (strength === 2) {
+                indicator.removeClass().addClass('strength-weak');
+            } else if (strength === 3) {
+                indicator.removeClass().addClass('strength-moderate');
+            } else if (strength === 4) {
+                indicator.removeClass().addClass('strength-strong');
+            } else if (strength === 5) {
+                indicator.removeClass().addClass('strength-very-strong');
+            }
+        });
     </script>
 }

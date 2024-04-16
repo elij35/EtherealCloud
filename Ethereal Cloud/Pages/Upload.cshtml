@@ -18,14 +18,14 @@
             <!-- Sort button -->
             <div id="filepath-button" class="col">
                 <a href="#" onclick="toggleImage()">
-                    <img id="toggleImage" class="row" src="~/images/tools/sort-alpha-down.svg" alt="path">
+                    <img title="Sort" id="toggleImage" class="row" src="~/images/tools/sort-alpha-down.svg" alt="path">
                 </a>
             </div>
 
             <!-- New folder button -->
             <div id="filepath-button" class="col">
                 <a href="#" onclick="showInputBox()">
-                    <img class="row" src="~/images/tools/folder-plus.svg" alt="path">
+                    <img title="Create New Folder" class="row" src="~/images/tools/folder-plus.svg" alt="path">
                 </a>
             </div>
 
@@ -39,14 +39,14 @@
             <!-- Path Back button-->
             <div id="filepath-button" class="col">
                 <a asp-page-handler="GoToFolderInPath" asp-route-Id="-1">
-                    <img src="~/images/file-path/path-back.svg" alt="path">
+                    <img title="Back" src="~/images/file-path/path-back.svg" alt="path">
                 </a>
             </div>
 
             <!-- Root Image -->
             <div class="col" id="path-root">
                 <a asp-page-handler="GoToFolderInPath" asp-route-Id="-2">
-                    <img src="~/images/file-path/path-root.svg" alt="path">
+                    <img title="Home" src="~/images/file-path/path-root.svg" alt="path">
                 </a>
             </div>
 
@@ -115,9 +115,13 @@
     <!-- Bottom upload dotted box -->
     <div id="upload-box" class="row mt-3">
         <h3>Upload your files</h3>
-        <form method="post" enctype="multipart/form-data" asp-page-handler="Upload">
+        <form id="uploadForm" method="post" enctype="multipart/form-data" asp-page-handler="Upload">
             <div class="mb-3" id="file-input-box">
-                <input class="form-control" type="file" name="uploadedFile" id="fileInput" multiple>
+                <!-- File input with drag and drop -->
+                <label for="fileInput" id="dragDropArea" class="drag-drop-area">
+                    Drag & drop files here or click to select
+                </label>
+                <input class="form-control" type="file" name="uploadedFile" id="fileInput" multiple style="display: none;">
                 <input type="submit" class="btn btn-success" value="Upload" />
             </div>
         </form>
@@ -203,7 +207,6 @@
     <!-- RIGHT CLICK MENU -->
     <div id="contextMenu" class="dropdown">
         <a class="dropdown-item" id="downloadItem" href="#">Download</a>
-        <a class="dropdown-item" id="moveItem" href="#">Move</a>
         <a class="dropdown-item" id="moveItem" href="#">Rename</a>
         <a class="dropdown-item" id="moveItem" href="#">Share</a>
         <a class="dropdown-item" id="deleteItem" href="#">Delete</a>
