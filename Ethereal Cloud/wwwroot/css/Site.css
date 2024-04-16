@@ -71,24 +71,24 @@ header::after {
     font-size: 16px;
 }
 
-.nav-link:hover {
-    color: whitesmoke;
-}
+    .nav-link:hover {
+        color: whitesmoke;
+    }
 
-.nav-link::before {
-    content: '';
-    display: block;
-    height: 5px;
-    background-color: #444;
-    position: absolute;
-    top: 0;
-    width: 0%;
-    transition: all ease-in-out 250ms;
-}
+    .nav-link::before {
+        content: '';
+        display: block;
+        height: 5px;
+        background-color: #444;
+        position: absolute;
+        top: 0;
+        width: 0%;
+        transition: all ease-in-out 250ms;
+    }
 
-.nav-link:hover::before {
-    width: 100%;
-}
+    .nav-link:hover::before {
+        width: 100%;
+    }
 
 /* Footer */
 #footer {
@@ -99,6 +99,7 @@ header::after {
     right: 0px;
     margin-bottom: 0px;
 }
+
 /* Error message popups */
 .popup-message {
     text-align: center;
@@ -115,3 +116,7 @@ header::after {
         background-color: #705892;
         border-color: black;
     }
+
+.active-link {
+    color: white; /* Change text color to white */
+}
