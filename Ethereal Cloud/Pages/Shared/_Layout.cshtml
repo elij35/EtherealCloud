@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="/css/Site.css" asp-append-version="true">
     <link rel="stylesheet" href="/css/Normalise.css" asp-append-version="true">
-    <link rel="icon" type="image/x-icon" href="~/images/Logo.png" />
+    <link rel="icon" type="image/x-icon" href="~/images/TabLogo.png" />
     <title>@ViewBag.Title</title>
 </head>
 
@@ -63,3 +63,15 @@
     </footer>
 </body>
 </html>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.nav-link').forEach(link => {
+            if (link.getAttribute('href').toLowerCase() === location.pathname.toLowerCase()) {
+                link.classList.add('active-link'); // Add active-link class if it matches the current URL
+            } else {
+                link.classList.remove('active-link'); // Remove active-link class otherwise
+            }
+        });
+    });
+</script>
