@@ -4,7 +4,7 @@
 @{
     ViewBag.Title = "Upload";
     Layout = "Shared/_Layout.cshtml";
-            <link rel="stylesheet" href="/css/Upload.css" asp-append-version="true">
+    <link rel="stylesheet" href="/css/Upload.css" asp-append-version="true">
 }
 
 <!-- File explorer -->
@@ -124,7 +124,7 @@
 </div>
 
 @{
-<!-- Scripts -->
+    <!-- Scripts -->
     <script>
         // Console logger
         var logger = '@ViewData["logger"]';
@@ -187,21 +187,21 @@
         }
     }
 
-<!-- RIGHT CLICK MENU -->
-        <div id="contextMenu" class="dropdown">
-            <a class="dropdown-item" id="downloadItem" href="#">Download</a>
-            <a class="dropdown-item" id="moveItem" href="#">Rename</a>
-            <a class="dropdown-item" id="moveItem" href="#">Share</a>
-            <a class="dropdown-item" id="deleteItem" href="#">Delete</a>
-        </div>
+    <!-- RIGHT CLICK MENU -->
+    <div id="contextMenu" class="dropdown">
+        <a class="dropdown-item" id="downloadItem" href="#">Download</a>
+        <a class="dropdown-item" id="moveItem" href="#">Rename</a>
+        <a class="dropdown-item" id="moveItem" href="#">Share</a>
+        <a class="dropdown-item" id="deleteItem" href="#">Delete</a>
+    </div>
 
-<!-- Hidden form for delete action -->
-        <form id="deleteForm" method="post" asp-page-handler="Delete">
-            <input name="fileId" type="hidden" id="fileIdInput">
-            <input name="type" type="hidden" id="typeInput">
-        </form>
+    <!-- Hidden form for delete action -->
+    <form id="deleteForm" method="post" asp-page-handler="Delete">
+        <input name="fileId" type="hidden" id="fileIdInput">
+        <input name="type" type="hidden" id="typeInput">
+    </form>
 
-<!-- Hidden form for download action -->
+    <!-- Hidden form for download action -->
     <form id="downloadForm" method="post" asp-page-handler="Download">
         <input name="fileId" type="hidden" id="fileIdDownloadInput">
     </form>
@@ -215,7 +215,7 @@
     <script>
         function showContextMenu(event, id, name, type) {
             event.preventDefault();
-               
+
             var contextMenu = document.getElementById('contextMenu');
 
             // Store the file info in context menu for later use
@@ -224,23 +224,21 @@
             contextMenu.dataset.fileType = type;
 
             if (type == "Folder") {
-
                 navIntoFolder();
-
-            } 
+            }
             else {
-            contextMenu.style.display = 'block';
-            contextMenu.style.left = event.clientX + 'px';
-            contextMenu.style.top = event.clientY + 'px';
+                contextMenu.style.display = 'block';
+                contextMenu.style.left = event.clientX + 'px';
+                contextMenu.style.top = event.clientY + 'px';
 
-            // Add event listeners for context menu items
-            document.getElementById('downloadItem').addEventListener('click', downloadFile);
-            document.getElementById('deleteItem').addEventListener('click', deleteFile);
+                // Add event listeners for context menu items
+                document.getElementById('downloadItem').addEventListener('click', downloadFile);
+                document.getElementById('deleteItem').addEventListener('click', deleteFile);
 
-            event.stopPropagation();
+                event.stopPropagation();
 
-            // Hide the context menu when clicking elsewhere
-            document.addEventListener('click', hideContextMenu);
+                // Hide the context menu when clicking elsewhere
+                document.addEventListener('click', hideContextMenu);
             }
         }
 
@@ -248,7 +246,6 @@
             var contextMenu = document.getElementById('contextMenu');
             contextMenu.style.display = 'none';
             document.removeEventListener('click', hideContextMenu);
-                    
         }
 
         function navIntoFolder() {
@@ -290,7 +287,6 @@
 
             // Submit the form
             document.getElementById('deleteForm').submit();
-
         }
     </script>
 }

@@ -6,7 +6,6 @@ using Ethereal_Cloud.Models.Upload.Get.File;
 using Ethereal_Cloud.Models.Upload.Get.Folder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.ComponentModel.DataAnnotations;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Ethereal_Cloud.Pages
@@ -250,12 +249,12 @@ namespace Ethereal_Cloud.Pages
             if (response != null)
             {
                 Logger.LogToConsole(ViewData, "Successfull folder creation: " + response);
-                
+
             }
             else
             {
                 Logger.LogToConsole(ViewData, "Bad folder response");
-                
+
             }
 
             Response.Redirect("/Upload");
