@@ -3,7 +3,8 @@
 @{
     ViewBag.Title = "Bin";
     Layout = "Shared/_Layout.cshtml";
-    <link rel="stylesheet" href="/css/Bin.css" asp-append-version="true">
+    <link rel="stylesheet" href="/css/Upload.css" asp-append-version="true">
+
 }
 
 <!-- File explorer -->
@@ -11,7 +12,19 @@
 
     <!-- Files Box -->
     <div id="filebox" class="col-lg-12 col-md-12 col-sm-12 h-100">
-        <div id="scrollbox" class="row">
+        <!-- FilePath -->
+        <div id="filepath" class="row">
+
+            <!-- Sort button -->
+            <div id="filepath-button" class="col">
+                <a href="#" onclick="toggleImage()">
+                    <img title="Sort" id="toggleImage" class="row" src="~/images/tools/sort-alpha-down.svg" alt="path">
+                </a>
+            </div>
+        </div>
+
+        <!-- Appears when the files are loaded -->
+        <div id="scrollbox" class="row d-flex">
             @if (Model.DisplayList.Count > 0)
             {
                 <div class="row d-flex">
@@ -27,7 +40,7 @@
             else
             {
                 <div class="no-files text-center">
-                    <img class="row" src="~/images/tools/search.svg" alt="search" style="width: -webkit-fill-available; opacity: 50%;">
+                    <img class="row" src="~/images/tools/search.svg" alt="search" ; opacity: 50%;">
                     <h3 class="row">No files here</h3>
                 </div>
             }
@@ -82,6 +95,27 @@
             var contextMenu = document.getElementById('contextMenu');
             contextMenu.style.display = 'none';
             document.removeEventListener('click', hideContextMenu);
+        }
+
+        //Changes the sort image when pressed
+        function toggleImage() {
+            var imageElement = document.getElementById('toggleImage');
+            if (imageElement.src.endsWith('sort-alpha-down.svg')) {
+                imageElement.src = 'images/tools/sort-alpha-up.svg';
+            } else {
+                imageElement.src = 'images/tools/sort-alpha-down.svg';
+            }
+        }
+
+        //Loads naming folder popup
+        function showInputBox() {
+            document.getElementById('input-box').style.display = 'block';
+            document.querySelector('#input-box input[name="foldername"]').focus();
+        }
+
+        //Cancels the folder creation
+        function cancelFolderCreation() {
+            document.getElementById('input-box').style.display = 'none';
         }
     </script>
 }
