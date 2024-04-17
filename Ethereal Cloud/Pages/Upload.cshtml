@@ -60,7 +60,7 @@
 
                         <div class="file-hover">
                             <a asp-page-handler="GoToFolderInPath" asp-route-Id="@display.FolderID">
-                                <p id="path-folder" style="margin:0px;">@display.Foldername</p>
+                                <p id="path-folder" style="margin:3px;">@display.Foldername</p>
                             </a>
                         </div>
                     }
@@ -72,7 +72,7 @@
         <div id="scrollbox" class="row d-flex">
             @if (Model.DisplayList.Count > 0)
             {
-                <div class="row d-flex">
+                <div class="row" id="scrollbox-contents">
                     @foreach (var display in Model.DisplayList)
                     {
                         <div id="uploaded-files" class="file-hover" onclick="showContextMenu(event, '@display.Id', '@display.Name', '@display.Type')">
