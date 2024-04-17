@@ -31,10 +31,9 @@ header::after {
 }
 
 .navbar-brand {
-    height: 100px;
-    width: 100px;
+    height: 85px;
+    width: auto;
     border-radius: 50%;
-    background-color: white;
     display: flex;
     align-items: center;
 }
