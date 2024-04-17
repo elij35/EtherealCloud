@@ -104,12 +104,15 @@
 #scrollbox {
     margin: 0px;
     width: 100%;
-    display: ruby-text;
-    height: 48vh;
+    height: 49vh;
     max-height: inherit;
     justify-content: flex-start;
     overflow-y: scroll;
     text-align: center;
+}
+
+.d-flex {
+    display: -webkit-inline-box !important;
 }
 
 /* Everything inside the containers for the files (img and file name) */
