@@ -6,6 +6,7 @@ using Ethereal_Cloud.Models.Upload.Get.File;
 using Ethereal_Cloud.Models.Upload.Get.Folder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.ComponentModel.DataAnnotations;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Ethereal_Cloud.Pages
@@ -81,15 +82,8 @@ namespace Ethereal_Cloud.Pages
         }
 
 
-        public async Task<IActionResult> OnGetDownload(DownNavDetails details)
+        public async Task<IActionResult> OnPostDownload(int fileId)
         {
-            if (!ModelState.IsValid)
-            {
-                Logger.LogToConsole(ViewData, "Invalid: Model error");
-                return RedirectToPage("/Upload");
-            }
-
-
             //create object
             var dataObject = new Dictionary<string, object?>
             {
@@ -97,7 +91,7 @@ namespace Ethereal_Cloud.Pages
             };
 
             //Make request
-            var response = await ApiRequest.Files(ViewData, HttpContext, "v1/file/" + details.Id, dataObject);
+            var response = await ApiRequest.Files(ViewData, HttpContext, "v1/file/" + fileId, dataObject);
 
             if (response != null)
             {
@@ -114,7 +108,7 @@ namespace Ethereal_Cloud.Pages
             }
             else
             {
-                Logger.LogToConsole(ViewData, "Fail: " + details.Id);
+                Logger.LogToConsole(ViewData, "Fail: " + fileId);
 
                 return RedirectToPage("/Upload");
             }
@@ -122,14 +116,8 @@ namespace Ethereal_Cloud.Pages
 
         }
 
-        public async Task OnGetNavigate(DownNavDetails details)
+        public async Task OnPostNavigate(int Id, string Name)
         {
-            if (!ModelState.IsValid)
-            {
-                Logger.LogToConsole(ViewData, "Invalid: Model error");
-                return;
-            }
-
             var path = PathManagement.Get(HttpContext);
 
             List<FolderDataRecieve> folderPath = new List<FolderDataRecieve>();
@@ -141,8 +129,8 @@ namespace Ethereal_Cloud.Pages
 
             FolderDataRecieve navigateTo = new()
             {
-                FolderID = details.Id,
-                Foldername = details.Name
+                FolderID = Id,
+                Foldername = Name
             };
 
             folderPath.Add(navigateTo);
@@ -244,6 +232,7 @@ namespace Ethereal_Cloud.Pages
             if (!ModelState.IsValid)
             {
                 Logger.LogToConsole(ViewData, "Invalid: Model error");
+                Response.Redirect("/Upload");
                 return;
             }
 
@@ -261,13 +250,15 @@ namespace Ethereal_Cloud.Pages
             if (response != null)
             {
                 Logger.LogToConsole(ViewData, "Successfull folder creation: " + response);
-                Response.Redirect("/Upload");
+                
             }
             else
             {
                 Logger.LogToConsole(ViewData, "Bad folder response");
-                return;
+                
             }
+
+            Response.Redirect("/Upload");
 
         }
 

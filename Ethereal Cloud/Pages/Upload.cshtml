@@ -4,7 +4,7 @@
 @{
     ViewBag.Title = "Upload";
     Layout = "Shared/_Layout.cshtml";
-    <link rel="stylesheet" href="/css/Upload.css" asp-append-version="true">
+            <link rel="stylesheet" href="/css/Upload.css" asp-append-version="true">
 }
 
 <!-- File explorer -->
@@ -75,8 +75,8 @@
                 <div class="row d-flex">
                     @foreach (var display in Model.DisplayList)
                     {
-                        <div id="uploaded-files" class="file-hover" oncontextmenu="showContextMenu(event, '@display.Id', '@display.Name', '@display.Type')">
-                            <a id="fileLink" asp-page-handler="@GetFileItemHandler(display.Type)" asp-route-id="@display.Id" asp-route-name="@display.Name">
+                        <div id="uploaded-files" class="file-hover" onclick="showContextMenu(event, '@display.Id', '@display.Name', '@display.Type')">
+                            <a id="fileLink">
                                 <img src="~/images/file-icons/@GetImageForFileType(@display.Type)" alt="logo" class="logo">
                             </a>
                             <p>@display.Name</p>
@@ -124,7 +124,7 @@
 </div>
 
 @{
-    <!-- Scripts -->
+<!-- Scripts -->
     <script>
         // Console logger
         var logger = '@ViewData["logger"]';
@@ -162,18 +162,6 @@
 
     </script>
 
-    string GetFileItemHandler(string fileHandler)
-    {
-        if (fileHandler == "Folder")
-        {
-            return "Navigate";
-        }
-        else
-        {
-            return "Download";
-        }
-    }
-
     string GetImageForFileType(string fileType)
     {
         //looks at files Mime type and gets appropriate image
@@ -199,59 +187,102 @@
         }
     }
 
-    <!-- RIGHT CLICK MENU -->
-    <div id="contextMenu" class="dropdown">
-        <a class="dropdown-item" id="downloadItem" href="#">Download</a>
-        <a class="dropdown-item" id="moveItem" href="#">Rename</a>
-        <a class="dropdown-item" id="moveItem" href="#">Share</a>
-        <a class="dropdown-item" id="deleteItem" href="#">Delete</a>
-    </div>
+<!-- RIGHT CLICK MENU -->
+        <div id="contextMenu" class="dropdown">
+            <a class="dropdown-item" id="downloadItem" href="#">Download</a>
+            <a class="dropdown-item" id="moveItem" href="#">Rename</a>
+            <a class="dropdown-item" id="moveItem" href="#">Share</a>
+            <a class="dropdown-item" id="deleteItem" href="#">Delete</a>
+        </div>
 
-    <!-- Hidden form for delete action -->
-    <form id="deleteForm" method="post" asp-page-handler="Delete">
-        <input name="fileId" type="hidden" id="fileIdInput">
-        <input name="type" type="hidden" id="typeInput">
+<!-- Hidden form for delete action -->
+        <form id="deleteForm" method="post" asp-page-handler="Delete">
+            <input name="fileId" type="hidden" id="fileIdInput">
+            <input name="type" type="hidden" id="typeInput">
+        </form>
+
+<!-- Hidden form for download action -->
+    <form id="downloadForm" method="post" asp-page-handler="Download">
+        <input name="fileId" type="hidden" id="fileIdDownloadInput">
+    </form>
+
+    <!-- Hidden form for nav action -->
+    <form id="navForm" method="post" asp-page-handler="Navigate">
+        <input name="Id" type="hidden" id="idNavInput">
+        <input name="Name" type="hidden" id="nameNavInput">
     </form>
 
     <script>
         function showContextMenu(event, id, name, type) {
             event.preventDefault();
+               
             var contextMenu = document.getElementById('contextMenu');
-            contextMenu.style.display = 'block';
-            contextMenu.style.left = event.clientX + 'px';
-            contextMenu.style.top = event.clientY + 'px';
 
             // Store the file info in context menu for later use
             contextMenu.dataset.fileId = id;
             contextMenu.dataset.fileName = name;
             contextMenu.dataset.fileType = type;
 
-            console.log("Id: " + id + "  Name: " + name + "   Type: " + type);
+            if (type == "Folder") {
+
+                navIntoFolder();
+
+            } 
+            else {
+            contextMenu.style.display = 'block';
+            contextMenu.style.left = event.clientX + 'px';
+            contextMenu.style.top = event.clientY + 'px';
 
             // Add event listeners for context menu items
             document.getElementById('downloadItem').addEventListener('click', downloadFile);
             document.getElementById('deleteItem').addEventListener('click', deleteFile);
 
+            event.stopPropagation();
+
             // Hide the context menu when clicking elsewhere
             document.addEventListener('click', hideContextMenu);
+            }
         }
 
         function hideContextMenu() {
             var contextMenu = document.getElementById('contextMenu');
             contextMenu.style.display = 'none';
             document.removeEventListener('click', hideContextMenu);
+                    
+        }
+
+        function navIntoFolder() {
+            var contextMenu = document.getElementById('contextMenu');
+            // Implement download functionality using fileId
+
+            var Id = contextMenu.dataset.fileId;
+            var Name = contextMenu.dataset.fileName;
+
+            console.log("Id: " + Id + " Name: " + Name);
+
+            document.getElementById('idNavInput').value = Id;
+            document.getElementById('nameNavInput').value = Name;
+
+            // Submit the form
+            document.getElementById('navForm').submit();
         }
 
         function downloadFile() {
-            var fileId = document.getElementById('contextMenu').dataset.fileId;
+            var contextMenu = document.getElementById('contextMenu');
             // Implement download functionality using fileId
+
+            var fileId = contextMenu.dataset.fileId;
+
+            document.getElementById('fileIdDownloadInput').value = fileId;
+
+            // Submit the form
+            document.getElementById('downloadForm').submit();
         }
 
         function deleteFile() {
             var contextMenu = document.getElementById('contextMenu');
             var fileId = contextMenu.dataset.fileId;
             var fileType = contextMenu.dataset.fileType;
-            console.log("Deleting  -  Id: " + fileId + "   Type: " + fileType);
 
             // Fill the hidden form inputs with fileId and fileType
             document.getElementById('fileIdInput').value = fileId;
