@@ -4,7 +4,7 @@
 @{
     ViewBag.Title = "Upload";
     Layout = "Shared/_Layout.cshtml";
-    <link rel="stylesheet" href="/css/Upload.css" asp-append-version="true">
+                <link rel="stylesheet" href="/css/Upload.css" asp-append-version="true">
 
 }
 
@@ -76,7 +76,7 @@
                 <div class="row" id="scrollbox-contents">
                     @foreach (var display in Model.DisplayList)
                     {
-                        <div id="uploaded-files" class="file-hover" ondblclick="navIntoFolder('@display.Id','@display.Type','@display.Name')" onmouseover="showButton('fileButtonHolder-@display.Id')" onmouseout="hideButton('fileButtonHolder-@display.Id', 'file-info-@display.Id')">
+                        <div id="uploaded-files" class="file-hover" ontouchstart="tap('@display.Id','@display.Type','@display.Name')" ontouchend="tapCancel()" ondblclick="navIntoFolderOrDownload('@display.Id','@display.Type','@display.Name')" onmouseover="showButton('fileButtonHolder-@display.Id')" onmouseout="hideButton('fileButtonHolder-@display.Id', 'file-info-@display.Id')">
                             <a id="fileLink">
                                 <img id="uploaded-files-img" src="~/images/file-icons/@GetImageForFileType(@display.Type)" alt="logo" class="logo">
                             </a>
@@ -244,7 +244,7 @@
         }
 
 
-        function navIntoFolder(id, fileType, name) {
+        function navIntoFolderOrDownload(id, fileType, name) {
             if (fileType === "Folder") {
 
                 document.getElementById('idNavInput').value = id;
@@ -286,6 +286,25 @@
         //Cancels the folder creation
         function cancelFolderCreation() {
             document.getElementById('input-box').style.display = 'none';
+        }
+
+
+        // Mobile double tap function
+        var holdtapTimer = null;
+
+        function tap(id, fileType, name) {
+            holdtapTimer = setTimeout(function () {
+                tapHoldTimer(id, fileType, name);
+            }, 500); //500ms time hold
+
+        }
+
+        function tapCancel() {
+            clearTimeout(holdtapTimer);
+        }
+
+        function tapHoldTimer(id, fileType, name) {
+            navIntoFolderOrDownload(id, fileType, name);
         }
 
     </script>
@@ -393,5 +412,7 @@
     <!-- Hidden form for sorting -->
     <form id="sortForm" method="post" asp-page-handler="Sort">
     </form>
+
+
 
 }
