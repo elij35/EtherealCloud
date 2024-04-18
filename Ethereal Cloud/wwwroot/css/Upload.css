@@ -5,11 +5,10 @@
 
 /* This is where the scrollbox is contained */
 #filebox {
-    height: 40vh;
     background: #f2f2f2;
     border: solid;
     border-color: #808080;
-    border-radius: 20px;
+    border-radius: 10px;
     padding: 0px;
     overflow: hidden;
 }
@@ -97,7 +96,6 @@
 
 #content-container {
     display: contents;
-    justify-content: flex-start;
 }
 
 /* This is where all the uploaded files are contained */
@@ -111,8 +109,8 @@
     text-align: center;
 }
 
-.d-flex {
-    display: -webkit-inline-box !important;
+#scrollbox-contents {
+    justify-content: center;
 }
 
 
