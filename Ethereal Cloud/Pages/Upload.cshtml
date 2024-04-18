@@ -169,16 +169,13 @@
             button.style.display = 'inline';
         }
 
-        function hideButton(id) {
-            var button = document.getElementById(id);
-            button.style.display = 'none';
-        }
-
         function hideButton(holderId, menuId) {
-            var holder = document.getElementById(holderId);
-            var menu = document.getElementById(menuId);
-            if (menu.style.display !== "block") {
-                holder.style.display = "none";
+            if (matchMedia('(hover: hover)').matches){
+                var holder = document.getElementById(holderId);
+                var menu = document.getElementById(menuId);
+                if (menu.style.display !== "block") {
+                    holder.style.display = "none";
+                }
             }
         }
 
@@ -196,19 +193,6 @@
             } else {
                 fileInfo.style.display = 'block';
             }
-        }
-
-        function showMenu(id) {
-            if (matchMedia('(hover: hover)').matches) {
-                var menu = document.getElementById(id + "-menu");
-
-                menu.style.display = "block";
-            }
-        }
-
-        function hideMenu(id) {
-            var menu = document.getElementById(id + "-menu");
-            menu.style.display = "none";
         }
 
         document.body.addEventListener('click', function (event) {
@@ -303,9 +287,6 @@
         function cancelFolderCreation() {
             document.getElementById('input-box').style.display = 'none';
         }
-
-
-        console.log("sort: " + @Model.sortDisplay)
 
     </script>
 
