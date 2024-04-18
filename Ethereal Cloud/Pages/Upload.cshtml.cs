@@ -18,7 +18,7 @@ namespace Ethereal_Cloud.Pages
 
         public List<FolderDataRecieve> FolderPath = new List<FolderDataRecieve>();
 
-        public bool sortDisplay = true;
+        public bool sortDisplay = false;
 
         public void FolderPathForDisplay()
         {
@@ -28,11 +28,13 @@ namespace Ethereal_Cloud.Pages
 
         public async Task OnGet()
         {
+
+            sortDisplay = SortManagement.GetSorting(HttpContext);
+
             FolderPathForDisplay();
 
             int? folderId = PathManagement.GetCurrentFolderId(HttpContext);
 
-            //Logger.LogToConsole(ViewData, "Current Folder: " + folderId);
 
             //Make request
             var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/folder/files/" + folderId, true, null);

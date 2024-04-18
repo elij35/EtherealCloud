@@ -330,13 +330,14 @@
                 }
 
 
+        console.log("sort: "+ @Model.sortDisplay)
 
-
-            </script>
+    </script>
+   
 
     string SetSort()
     {
-        if (Model.sortDisplay)
+        if (@Model.sortDisplay)
         {
             // Alphabetical
             return "images/tools/sort-alpha-up.svg";
