@@ -115,19 +115,23 @@
     display: -webkit-inline-box !important;
 }
 
+
+
+
 /* Everything inside the containers for the files (img and file name) */
 #uploaded-files {
-    width: 120px;
+    width: 140px;
     height: fit-content;
     padding: 5px;
     margin: 5px;
+    position: relative;
 }
 
-    #uploaded-files img {
-        width: 100%;
-        height: auto;
-        margin-bottom: 5px;
-    }
+#uploaded-files-img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 5px;
+}
 
     #uploaded-files p {
         text-align: center;
@@ -139,6 +143,31 @@
         text-overflow: ellipsis;
         text-decoration: none;
     }
+
+
+.fileButtonHolder {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#fileSettingsButton {
+    display: contents;
+}
+
+#fileSettingsImage {
+    background-color: #9265cc;
+    border-radius: 5px;
+    width: 40px;
+    border: 2px solid #000000;
+}
+
+
+
+
+
+
+
 
 /* Upload box (at bottom of page) */
 #upload-box {
