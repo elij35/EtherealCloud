@@ -1,9 +1,20 @@
+/* This is where all the files are contained */
+
 #file-explorer {
     padding: 0px;
     justify-content: center;
 }
 
-/* This is where all the uploaded files are contained */
+#filebox {
+    height: 40vh;
+    background: #f2f2f2;
+    border: solid;
+    border-color: #808080;
+    border-radius: 20px;
+    padding: 0px;
+    overflow: hidden;
+}
+
 #scrollbox {
     margin: 0px;
     width: 100%;
@@ -15,13 +26,78 @@
     text-align: center;
 }
 
-/* This is where the scrollbox is contained */
-#filebox {
-    height: 50vh;
-    background: #f2f2f2;
-    border: solid;
-    border-color: #808080;
-    border-radius: 20px;
-    padding: 0px;
-    overflow: hidden;
+
+/* Everything inside the containers for the files (img and file name) */
+#uploaded-files {
+    width: 120px;
+    height: fit-content;
+    padding: 5px;
+    margin: 5px;
 }
+
+    #uploaded-files img {
+        width: 100%;
+        height: auto;
+        margin-bottom: 5px;
+    }
+
+    #uploaded-files p {
+        text-align: center;
+        text-decoration: none;
+        color: black;
+        margin: 0px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-decoration: none;
+    }
+
+.file-hover {
+    display: grid;
+}
+
+    .file-hover a {
+        text-decoration: none;
+        color: black;
+    }
+
+    .file-hover:hover {
+        background-color: rgb(203 187 226 / 30%);
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.3s ease;
+    }
+
+/* Displays if there are no files */
+.no-files {
+    display: grid;
+    justify-content: center;
+    height: 100%;
+    align-content: center;
+}
+
+    .no-files img {
+        width: 150px;
+        height: auto;
+    }
+
+/* Drop down menu when selecting files/folders: */
+.dropdown {
+    position: absolute;
+    display: none;
+    background-color: #f9f9f9;
+    min-width: 120px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-item {
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    cursor: pointer;
+}
+
+    .dropdown-item:hover {
+        background-color: #f1f1f1;
+    }

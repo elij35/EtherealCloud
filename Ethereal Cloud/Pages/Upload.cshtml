@@ -5,28 +5,6 @@
     ViewBag.Title = "Upload";
     Layout = "Shared/_Layout.cshtml";
     <link rel="stylesheet" href="/css/Upload.css" asp-append-version="true">
-
-    <style>
-        .dropdown {
-            position: absolute;
-            display: none;
-            background-color: #f9f9f9;
-            min-width: 120px;
-            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-            z-index: 1;
-        }
-
-        .dropdown-item {
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            cursor: pointer;
-        }
-
-            .dropdown-item:hover {
-                background-color: #f1f1f1;
-            }
-    </style>
 }
 
 <!-- File explorer -->
@@ -181,8 +159,8 @@
         //Cancels the folder creation
         function cancelFolderCreation() {
             document.getElementById('input-box').style.display = 'none';
-        }    
-                
+        }
+
     </script>
 
     string GetFileItemHandler(string fileHandler)
@@ -222,16 +200,16 @@
         }
     }
 
-
-
-
-    <!--RIGHT CLICK MENU-->
+    <!-- RIGHT CLICK MENU -->
     <div id="contextMenu" class="dropdown">
         <a class="dropdown-item" id="downloadItem" href="#">Download</a>
+        <a class="dropdown-item" id="moveItem" href="#">Move</a>
+        <a class="dropdown-item" id="moveItem" href="#">Rename</a>
+        <a class="dropdown-item" id="moveItem" href="#">Share</a>
         <a class="dropdown-item" id="deleteItem" href="#">Delete</a>
     </div>
 
-        <!-- Hidden form for delete action -->
+    <!-- Hidden form for delete action -->
     <form id="deleteForm" method="post" asp-page-handler="Delete">
         <input name="fileId" type="hidden" id="fileIdInput">
         <input name="type" type="hidden" id="typeInput">
@@ -249,6 +227,8 @@
             contextMenu.dataset.fileId = id;
             contextMenu.dataset.fileName = name;
             contextMenu.dataset.fileType = type;
+
+            console.log("Id: " + id + "  Name: " + name + "   Type: " + type);
 
             // Add event listeners for context menu items
             document.getElementById('downloadItem').addEventListener('click', downloadFile);
@@ -270,16 +250,18 @@
         }
 
         function deleteFile() {
-            var menu = document.getElementById('contextMenu').dataset;
+            var contextMenu = document.getElementById('contextMenu');
+            var fileId = contextMenu.dataset.fileId;
+            var fileType = contextMenu.dataset.fileType;
+            console.log("Deleting  -  Id: " + fileId + "   Type: " + fileType);
 
-            // Set fileIdInput value
-            document.getElementById('fileIdInput').value = menu.fileId;
-            document.getElementById('typeInput').value = menu.fileType;
+            // Fill the hidden form inputs with fileId and fileType
+            document.getElementById('fileIdInput').value = fileId;
+            document.getElementById('typeInput').value = fileType;
+
             // Submit the form
             document.getElementById('deleteForm').submit();
 
         }
     </script>
-
-
 }

@@ -1,13 +1,11 @@
 using Ethereal_Cloud.Helpers;
 using Ethereal_Cloud.Models;
-using Ethereal_Cloud.Models.Delete;
 using Ethereal_Cloud.Models.Upload.CreateFolder;
 using Ethereal_Cloud.Models.Upload.Get;
 using Ethereal_Cloud.Models.Upload.Get.File;
 using Ethereal_Cloud.Models.Upload.Get.Folder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Configuration;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Ethereal_Cloud.Pages
@@ -34,14 +32,8 @@ namespace Ethereal_Cloud.Pages
 
             //Logger.LogToConsole(ViewData, "Current Folder: " + folderId);
 
-            //create object
-            var dataObject = new Dictionary<string, object?>
-            {
-                { "authtoken", AuthTokenManagement.GetToken(HttpContext)}
-            };
-
             //Make request
-            var response = await ApiRequest.Files(ViewData, HttpContext, "v1/folder/files/" + folderId, dataObject);
+            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/folder/files/" + folderId, true, null);
 
             if (response != null)
             {
@@ -283,16 +275,28 @@ namespace Ethereal_Cloud.Pages
                 return;
             }
 
+            
+
+
             Logger.LogToConsole(ViewData, "Deleted: " + fileId + type);
 
-            int Id = int.Parse(fileId);
+            string uriFileType;
+            if (type.ToLower() == "folder")
+            {
+                uriFileType = "folder";
+            }
+            else
+            {
+                uriFileType = "file";
+            }
 
             //Make request
-            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/file/remove/" + Id, true, null);
+            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/" + uriFileType + "/remove/" + fileId, true, null);
 
             if (response != null)
             {
                 //Logger.LogToConsole(ViewData, "Successfull Deletion: " + fileId + " : " + type);
+                Logger.LogToConsole(ViewData, "After: " + fileId + type);
                 Response.Redirect("/Upload");
             }
             else

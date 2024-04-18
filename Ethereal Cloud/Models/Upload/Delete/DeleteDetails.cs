@@ -1,5 +1,4 @@
-﻿
-namespace Ethereal_Cloud.Models.Delete
+﻿namespace Ethereal_Cloud.Models.Upload.Delete
 {
     public class DeleteDetails
     {
