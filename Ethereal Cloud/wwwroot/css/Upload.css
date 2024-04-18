@@ -111,6 +111,7 @@
 
 #scrollbox-contents {
     justify-content: center;
+    height: fit-content;
 }
 
 
