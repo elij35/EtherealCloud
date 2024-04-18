@@ -18,6 +18,8 @@ namespace Ethereal_Cloud.Pages
 
         public List<FolderDataRecieve> FolderPath = new List<FolderDataRecieve>();
 
+        public bool sortDisplay = true;
+
         public void FolderPathForDisplay()
         {
             //Sets the filepath list to be displayed on the interface
@@ -70,7 +72,27 @@ namespace Ethereal_Cloud.Pages
                     DisplayList.Add(newFile);
                 }
 
-                //Logger.LogToConsole(ViewData, "Successful get of files: " + JsonSerializer.Serialize(DisplayList) + " FolderId: " + folderId);
+
+
+                bool sortAlphabeticaly = SortManagement.GetSorting(HttpContext);
+
+
+                if (sortAlphabeticaly)
+                {
+                    // Alphabetical sorting
+                    DisplayList = DisplayList.OrderBy(item => item.Type == "Folder" ? 0 : 1)
+                                                    .ThenBy(item => item.Name)
+                                                    .ToList();
+                }
+                else
+                {
+                    // Backwards alphabetical
+                    DisplayList = DisplayList.OrderByDescending(item => item.Type == "Folder" ? 0 : 1)
+                                    .ThenByDescending(item => item.Name)
+                                    .ToList();
+                }
+
+
             }
             else
             {
@@ -78,6 +100,17 @@ namespace Ethereal_Cloud.Pages
 
                 ViewData["FailureMessage"] = "Failed to get files & folders. Please try again.";
             }
+        }
+
+        public async Task OnPostSort()
+        {
+            bool sortAlpha = SortManagement.GetSorting(HttpContext);
+
+            SortManagement.SetSorting(HttpContext, !sortAlpha);
+
+            sortDisplay = !sortAlpha;
+
+            Response.Redirect("/Upload");
         }
 
 
