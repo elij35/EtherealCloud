@@ -1,11 +1,103 @@
+using Ethereal_Cloud.Helpers;
+using Ethereal_Cloud.Models.Upload.Get.Folder;
+using Ethereal_Cloud.Models.Upload.Get;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Ethereal_Cloud.Pages
 {
     public class SharedModel : PageModel
     {
-        public void OnGet()
+        //list of files to be shown to user
+        public List<FolderContentDisplay> DisplayList = new List<FolderContentDisplay>();
+
+        public List<FolderDataRecieve> FolderPath = new List<FolderDataRecieve>();
+
+        public bool sortDisplay = false;
+
+        public void FolderPathForDisplay()
         {
+            //Sets the filepath list to be displayed on the interface
+            FolderPath = PathManagement.Get(HttpContext);
         }
+
+        public async Task OnGet()
+        {
+            sortDisplay = SortManagement.GetSorting(HttpContext);
+
+            FolderPathForDisplay();
+
+            int? folderId = PathManagement.GetCurrentFolderId(HttpContext);
+
+
+            //Make request
+            var response = await ApiRequestV2.Files(ViewData, HttpContext, "/v2/file/share", true, null);
+
+            if (response != null)
+            {
+                //Put response in form of FolderContentRecieve
+                string jsonString = response.ToString();
+                FolderContentRecieve folderContent = JsonSerializer.Deserialize<FolderContentRecieve>(jsonString);
+
+                DisplayList = new List<FolderContentDisplay>();
+
+                //Add folders to display list
+                foreach (FolderDataRecieve folder in folderContent.Folders)
+                {
+                    FolderContentDisplay newFolder = new()
+                    {
+                        Id = folder.FolderID,
+                        Name = folder.Foldername,
+                        Type = "Folder"
+                    };
+
+                    DisplayList.Add(newFolder);
+                }
+
+                //Add files to display list
+                foreach (FileMetaRecieve file in folderContent.Files)
+                {
+
+                    FolderContentDisplay newFile = new()
+                    {
+                        Id = file.FileID,
+                        Name = file.Filename,
+                        Type = file.Filetype
+                    };
+
+                    DisplayList.Add(newFile);
+                }
+
+
+                //Sort list
+                DisplayList = SortHelper.SortDisplay(HttpContext, DisplayList);
+
+            }
+            else
+            {
+                Logger.LogToConsole(ViewData, "Failed Get");
+
+                ViewData["FailureMessage"] = "Failed to get files & folders. Please try again.";
+            }
+        }
+
+        public async Task OnPostSort()
+        {
+            bool sortAlpha = SortManagement.GetSorting(HttpContext);
+
+            SortManagement.SetSorting(HttpContext, !sortAlpha);
+
+            sortDisplay = !sortAlpha;
+
+            Response.Redirect("/Upload");
+        }
+
+
+
+
+
+
+
+
     }
 }
