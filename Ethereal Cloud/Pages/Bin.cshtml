@@ -3,7 +3,7 @@
 @{
     ViewBag.Title = "Bin";
     Layout = "Shared/_Layout.cshtml";
-    <link rel="stylesheet" href="/css/Upload.css" asp-append-version="true">
+            <link rel="stylesheet" href="/css/Upload.css" asp-append-version="true">
 }
 
 <!-- File explorer -->
@@ -16,8 +16,8 @@
 
             <!-- Sort button -->
             <div id="filepath-button" class="col">
-                <a href="#" onclick="toggleImage()">
-                    <img title="Sort" id="toggleImage" class="row" src="~/images/tools/sort-alpha-down.svg" alt="path">
+                <a href="#" onclick="toggleSort()">
+                    <img title="Sort" id="toggleImage" class="row" src="@SetSort()" alt="path">
                 </a>
             </div>
         </div>
@@ -29,30 +29,25 @@
                 <div class="row" id="scrollbox-contents">
                     @foreach (var display in Model.DisplayList)
                     {
-                        <div id="uploaded-files" class="file-hover" ondblclick="navIntoFolder('@display.Id','@display.Type','@display.Name')" onmouseover="showButton('fileButtonHolder-@display.Id')" onmouseout="hideButton('fileButtonHolder-@display.Id', 'file-info-@display.Id')">
+                        <div id="uploaded-files" class="file-hover" onmouseover="showButton('fileButtonHolder-@display.Id')" onmouseout="hideButton('fileButtonHolder-@display.Id', 'file-info-@display.Id')">
                             <a id="fileLink">
                                 <img id="uploaded-files-img" src="~/images/file-icons/@GetImageForFileType(@display.Type)" alt="logo" class="logo">
                             </a>
                             <p>@display.Name</p>
 
                             <!-- Buttons for files/folders-->
-                            <div id="fileButtonHolder-@display.Id" class="fileButtonHolder" style="display:none;">
+                            <div id="fileButtonHolder-@display.Id" class="fileButtonHolder" style="">
 
-                                <button id="fileSettingsButton" onclick="downloadFile('@display.Id')">
-                                    <img id="fileSettingsImage" src="~/images/file-icons/cloud-download.svg" alt="path">
-                                </button>
                                 <button id="fileSettingsButton" aria-expanded="false" aria-controls="file-info-@display.Id" onclick="toggleFileInfo('file-info-@display.Id')">
                                     <img id="fileSettingsImage" src="~/images/file-icons/three-dots.svg" alt="path">
 
                                     <div id="file-info-@display.Id" class="file-info">
                                         <div class="menu" id="@display.Id-menu">
-                                            <div class="menu-item" onclick="downloadFile('@display.Id')">Download</div>
-                                            <div class="menu-item" onclick="deleteFile('@display.Id', '@display.Type')">Delete</div>
-                                            <div class="menu-item" onclick="renameFile('@display.Id')">Rename</div>
+                                            <div class="menu-item" onclick="restoreFileFolder('@display.Id', '@display.Type')">Restore</div>
                                         </div>
                                     </div>
                                 </button>
-                                }
+                                
                             </div>
                         </div>
                     }
@@ -138,6 +133,23 @@
     }
 
     <script>
+        function showButton(id) {
+            var button = document.getElementById(id);
+            button.style.display = 'inline';
+        }
+
+        function hideButton(holderId, menuId) {
+            if (matchMedia('(hover: hover)').matches) {
+                var holder = document.getElementById(holderId);
+                var menu = document.getElementById(menuId);
+                if (menu.style.display !== "block") {
+                    holder.style.display = "none";
+                }
+            }
+        }
+
+
+
         //Changes the sort image when pressed
         function toggleImage() {
             var imageElement = document.getElementById('toggleImage');
@@ -147,5 +159,100 @@
                 imageElement.src = 'images/tools/sort-alpha-down.svg';
             }
         }
+
+
+        function toggleFileInfo(id) {
+
+            var fileInfo = document.getElementById(id);
+            var expanded = fileInfo.getAttribute('aria-expanded') === 'true';
+
+            // Toggle the aria-expanded attribute
+            fileInfo.setAttribute('aria-expanded', !expanded);
+
+            // Toggle the visibility of the file info
+            if (expanded) {
+                fileInfo.style.display = 'none';
+            } else {
+                fileInfo.style.display = 'block';
+            }
+        }
+
+
+        //Menu buttons
+
+        function restoreFileFolder(id, fileType) {
+
+            document.getElementById('restoreIdInput').value = id;
+            document.getElementById('restoreTypeInput').value = fileType;
+
+            // Submit the form
+            document.getElementById('restoreForm').submit();
+
+                    
+        }
+
+
+        //Changes the sort image when pressed
+        function toggleSort() {
+            // Submit the form
+            document.getElementById('sortForm').submit();
+        }
+
+
+        document.body.addEventListener('click', function (event) {
+            var parent = event.target.parentNode;
+
+            if (parent.id === 'fileSettingsButton') {
+
+                return;
+            }
+
+
+            var menuOpen = document.querySelectorAll('.file-info');
+            menuOpen.forEach(function (menu) {
+                menu.setAttribute('aria-expanded', false);
+                menu.style.display = 'none';
+            });
+
+            if (matchMedia('(hover: hover)').matches) {
+                var buttonHolder = document.querySelectorAll('.fileButtonHolder');
+                buttonHolder.forEach(function (button) {
+                    button.style.display = 'none';
+                });
+            }
+        });
+
     </script>
+
+
+    <!-- Hidden form for restore folder action -->
+    <form id="restoreForm" method="post" asp-page-handler="Restore">
+        <input name="Id" type="hidden" id="restoreIdInput">
+        <input name="fileType" type="hidden" id="restoreTypeInput">
+    </form>
+
+    <!-- Hidden form for sorting -->
+    <form id="sortForm" method="post" asp-page-handler="Sort">
+    </form>
+
+
+
+
+
+    string SetSort()
+    {
+        if (@Model.sortDisplay)
+        {
+            // Alphabetical
+            return "images/tools/sort-alpha-up.svg";
+
+        }
+        else
+        {
+            // Backwards alphabetical
+            return "images/tools/sort-alpha-down.svg";
+        }
+    }
+
+
 }

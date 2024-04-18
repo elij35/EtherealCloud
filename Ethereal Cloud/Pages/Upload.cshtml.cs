@@ -75,25 +75,8 @@ namespace Ethereal_Cloud.Pages
                 }
 
 
-
-                bool sortAlphabeticaly = SortManagement.GetSorting(HttpContext);
-
-
-                if (sortAlphabeticaly)
-                {
-                    // Alphabetical sorting
-                    DisplayList = DisplayList.OrderBy(item => item.Type == "Folder" ? 0 : 1)
-                                                    .ThenBy(item => item.Name)
-                                                    .ToList();
-                }
-                else
-                {
-                    // Backwards alphabetical
-                    DisplayList = DisplayList.OrderByDescending(item => item.Type == "Folder" ? 0 : 1)
-                                    .ThenByDescending(item => item.Name)
-                                    .ToList();
-                }
-
+                //Sort list
+                DisplayList = SortHelper.SortDisplay(HttpContext, DisplayList);
 
             }
             else
@@ -333,6 +316,7 @@ namespace Ethereal_Cloud.Pages
             else
             {
                 //Logger.LogToConsole(ViewData, "Bad delete response");
+                Response.Redirect("/Upload");
                 return;
             }
         }

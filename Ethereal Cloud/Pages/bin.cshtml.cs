@@ -11,8 +11,12 @@ namespace Ethereal_Cloud.Pages
         //list of files to be shown to user
         public List<FolderContentDisplay> DisplayList = new List<FolderContentDisplay>();
 
+        public bool sortDisplay = false;
+
         public async Task OnGet()
         {
+            sortDisplay = SortManagement.GetSorting(HttpContext);
+
             //Make request
             var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/bin", true, null);
 
@@ -51,7 +55,10 @@ namespace Ethereal_Cloud.Pages
                     DisplayList.Add(newFile);
                 }
 
-                Logger.LogToConsole(ViewData, "Successful get of files: " + JsonSerializer.Serialize(DisplayList));
+
+                //Sort list
+                DisplayList = SortHelper.SortDisplay(HttpContext, DisplayList);
+
             }
             else
             {
@@ -60,5 +67,57 @@ namespace Ethereal_Cloud.Pages
                 ViewData["FailureMessage"] = "Failed to get files & folders. Please try again.";
             }
         }
+
+        public async Task OnPostSort()
+        {
+            bool sortAlpha = SortManagement.GetSorting(HttpContext);
+
+            SortManagement.SetSorting(HttpContext, !sortAlpha);
+
+            sortDisplay = !sortAlpha;
+
+            Response.Redirect("/Bin");
+        }
+
+
+        public async Task OnPostRestoreAsync(string Id, string fileType)
+        {
+            // Check fileId validity
+            if (Id == null || fileType == null)
+            {
+                Logger.LogToConsole(ViewData, "Invalid: Model error");
+                return;
+            }
+
+
+
+            string uriFileType;
+            if (fileType.ToLower() == "folder")
+            {
+                uriFileType = "folder";
+            }
+            else
+            {
+                uriFileType = "file";
+            }
+
+            //Make request
+            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/" + uriFileType + "/restore/" + Id, true, null);
+
+            if (response != null)
+            {
+                //Logger.LogToConsole(ViewData, "Successfull Deletion: " + fileId + " : " + type);
+                Logger.LogToConsole(ViewData, "After: " + Id + fileType);
+                Response.Redirect("/Upload");
+            }
+            else
+            {
+                //Logger.LogToConsole(ViewData, "Bad delete response");
+                Response.Redirect("/Bin");
+                return;
+            }
+        }
+
+
     }
 }
