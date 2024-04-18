@@ -26,12 +26,34 @@
         <div id="scrollbox" class="row d-flex">
             @if (Model.DisplayList.Count > 0)
             {
-                <div class="row d-flex">
+                <div class="row" id="scrollbox-contents">
                     @foreach (var display in Model.DisplayList)
                     {
-                        <div id="uploaded-files" class="file-hover" oncontextmenu="showContextMenu(event, '@display.Id', '@display.Name', '@display.Type')">
-                            <img src="~/images/file-icons/@GetImageForFileType(@display.Type)" alt="logo" class="logo">
+                        <div id="uploaded-files" class="file-hover" ondblclick="navIntoFolder('@display.Id','@display.Type','@display.Name')" onmouseover="showButton('fileButtonHolder-@display.Id')" onmouseout="hideButton('fileButtonHolder-@display.Id', 'file-info-@display.Id')">
+                            <a id="fileLink">
+                                <img id="uploaded-files-img" src="~/images/file-icons/@GetImageForFileType(@display.Type)" alt="logo" class="logo">
+                            </a>
                             <p>@display.Name</p>
+
+                            <!-- Buttons for files/folders-->
+                            <div id="fileButtonHolder-@display.Id" class="fileButtonHolder" style="display:none;">
+
+                                <button id="fileSettingsButton" onclick="downloadFile('@display.Id')">
+                                    <img id="fileSettingsImage" src="~/images/file-icons/cloud-download.svg" alt="path">
+                                </button>
+                                <button id="fileSettingsButton" aria-expanded="false" aria-controls="file-info-@display.Id" onclick="toggleFileInfo('file-info-@display.Id')">
+                                    <img id="fileSettingsImage" src="~/images/file-icons/three-dots.svg" alt="path">
+
+                                    <div id="file-info-@display.Id" class="file-info">
+                                        <div class="menu" id="@display.Id-menu">
+                                            <div class="menu-item" onclick="downloadFile('@display.Id')">Download</div>
+                                            <div class="menu-item" onclick="deleteFile('@display.Id', '@display.Type')">Delete</div>
+                                            <div class="menu-item" onclick="renameFile('@display.Id')">Rename</div>
+                                        </div>
+                                    </div>
+                                </button>
+                                }
+                            </div>
                         </div>
                     }
                 </div>
@@ -39,7 +61,7 @@
             else
             {
                 <div class="no-files text-center">
-                    <img class="row" src="~/images/tools/search.svg" alt="search" ; opacity: 50%;">
+                    <img class="row" src="~/images/tools/search.svg" alt="search" style="width: -webkit-fill-available; opacity: 50%;">
                     <h3 class="row">No files here</h3>
                 </div>
             }
@@ -48,54 +70,74 @@
 </div>
 
 @{
+
     string GetImageForFileType(string fileType)
     {
         //looks at files Mime type and gets appropriate image
         switch (fileType.ToLower())
         {
+            // Folder
             case "folder":
                 return "folder.svg";
+
+            // Images
             case "image/png":
             case "image/jpeg":
             case "image/gif":
-                return "file-image.svg";
+                return "gen-image.svg";
+
+            // Audio
             case "audio/mpeg":
-                return "file-music.svg";
+                return "gen-music.svg";
+
+            // Video
             case "video/mp4":
-                return "file-video.svg";
+                return "gen-video.svg";
+
+            // PDF
             case "application/pdf":
                 return "file-pdf.svg";
+
+            // Office products
+            case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
             case "application/msword":
+                return "file-word.svg"; // Word Document (.docx)
+
+            case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+            case "application/vnd.ms-excel":
+                return "file-excel.svg"; // Excel Spreadsheet (.xlsx)
+
+            case "application/vnd.openxmlformats-officedocument.presentationml.presentation":
+            case "application/vnd.ms-powerpoint":
+                return "file-powerpoint.svg"; // PowerPoint Presentation (.pptx)
+
+            case "application/x-mspublisher":
+                return "file-publisher.svg"; // Publisher (.pub)
+
+            case "application/msaccess":
+                return "file-access.svg"; // Access Database (.accdb)
+
+            // Executable
+            case "application/x-msdownload":
+            case "application/octet-stream":
+            case "application/vnd.microsoft.portable-executable":
+                return "file-executable.svg"; // Executable (.exe)
+
+            //JSON
+            case "application/json":
+                return "file-json.svg";
+
+            //Plain text
             case "text/plain":
-                return "file-doc.svg";
+                return "file-text.svg";
+
+            // Anything else
             default:
-                return "unknown.svg"; //Unknown type
+                return "gen-unknown.svg"; // Unknown type
         }
     }
 
-    <!-- RIGHT CLICK MENU -->
-    <div id="contextMenu" class="dropdown">
-        <a class="dropdown-item" id="restoreItem" href="#">Restore</a>
-    </div>
-
     <script>
-        function showContextMenu(event, id, name, type) {
-            event.preventDefault();
-            var contextMenu = document.getElementById('contextMenu');
-            contextMenu.style.display = 'block';
-            contextMenu.style.left = event.clientX + 'px';
-            contextMenu.style.top = event.clientY + 'px';
-
-            // Hide the context menu when clicking elsewhere
-            document.addEventListener('click', hideContextMenu);
-        }
-
-        function hideContextMenu() {
-            var contextMenu = document.getElementById('contextMenu');
-            contextMenu.style.display = 'none';
-            document.removeEventListener('click', hideContextMenu);
-        }
-
         //Changes the sort image when pressed
         function toggleImage() {
             var imageElement = document.getElementById('toggleImage');
@@ -104,17 +146,6 @@
             } else {
                 imageElement.src = 'images/tools/sort-alpha-down.svg';
             }
-        }
-
-        //Loads naming folder popup
-        function showInputBox() {
-            document.getElementById('input-box').style.display = 'block';
-            document.querySelector('#input-box input[name="foldername"]').focus();
-        }
-
-        //Cancels the folder creation
-        function cancelFolderCreation() {
-            document.getElementById('input-box').style.display = 'none';
         }
     </script>
 }
