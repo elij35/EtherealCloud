@@ -151,6 +151,19 @@
 
 
 
+@media (hover: hover){
+    .fileButtonHolder {
+        display: none;
+    }
+}
+
+@media(hover: none){
+    .fileButtonHolder{
+        display: inline;
+    }
+}
+
+
 
 
 
@@ -177,7 +190,6 @@
 }
 
 .menu {
-    //display: none; /* Initially hide the menu */
     position: absolute;
     background-color: #f9f9f9;
     border: 1px solid #ccc;
