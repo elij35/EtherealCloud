@@ -6,125 +6,6 @@
     Layout = "Shared/_Layout.cshtml";
     <link rel="stylesheet" href="/css/Upload.css" asp-append-version="true">
 
-
-<script>
-    function showButton(id) {
-        var button = document.getElementById(id);
-        button.style.display = 'inline';
-    }
-
-    function hideButton(id) {
-        var button = document.getElementById(id);
-        button.style.display = 'none';
-    }
-
-    function hideButton(holderId, menuId) {
-        var holder = document.getElementById(holderId);
-        var menu = document.getElementById(menuId);
-        if (menu.style.display !== "block") {
-            holder.style.display = "none";
-        }
-    }
-
-
-    function toggleFileInfo(id) {
-                    
-        var fileInfo = document.getElementById(id);
-        var expanded = fileInfo.getAttribute('aria-expanded') === 'true';
-
-        // Toggle the aria-expanded attribute
-        fileInfo.setAttribute('aria-expanded', !expanded);
-
-        // Toggle the visibility of the file info
-        if (expanded) {
-            fileInfo.style.display = 'none';
-        } else {
-            fileInfo.style.display = 'block';
-        }
-    }
-
-
-
-    function showMenu(id) {
-        var menu = document.getElementById(id + "-menu");
-        menu.style.display = "block";
-    }
-
-    function hideMenu(id) {
-        var menu = document.getElementById(id + "-menu");
-        menu.style.display = "none";
-    }
-
-    function downloadFile(id) {
-        // Implement download logic here
-        console.log("Downloading file " + id);
-    }
-
-    function deleteFile(id) {
-        // Implement delete logic here
-        console.log("Deleting file " + id);
-    }
-
-    function renameFile(id) {
-        // Implement rename logic here
-        console.log("Renaming file " + id);
-    }
-
-
-                                
-    document.body.addEventListener('click', function (event) {
-
-                    
-        var parent = event.target.parentNode;
-
-        if (parent.id === 'fileSettingsButton') {
-            
-            return;
-        }
-                    
-
-        var menuOpen = document.querySelectorAll('.file-info');
-        menuOpen.forEach(function (menu) {
-            menu.setAttribute('aria-expanded', false);
-            menu.style.display = 'none';
-        });
-
-        var buttonHolder = document.querySelectorAll('.fileButtonHolder');
-        buttonHolder.forEach(function (button) {
-            button.style.display = 'none';
-        });
-
-    });
-                                
-</script>
-
-
-<style>
-    .file-info {
-        display: none; /* Initially hide additional file info */
-    }
-
-    .menu {
-        //display: none; /* Initially hide the menu */
-        position: absolute;
-        background-color: #f9f9f9;
-        border: 1px solid #ccc;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        z-index: 1;
-    }
-
-    .menu-item {
-        padding: 8px 12px;
-        cursor: pointer;
-    }
-
-        .menu-item:hover {
-            background-color: #e9e9e9;
-        }
-</style>
-
-
-
 }
 
 <!-- File explorer -->
@@ -195,27 +76,49 @@
                 <div class="row" id="scrollbox-contents">
                     @foreach (var display in Model.DisplayList)
                     {
-                        <div id="uploaded-files" class="file-hover" oncontextmenu="showContextMenu(event, '@display.Id', '@display.Name', '@display.Type')" onmouseover="showButton('fileButtonHolder-@display.Id')" onmouseout="hideButton('fileButtonHolder-@display.Id', 'file-info-@display.Id')">
+                        <div id="uploaded-files" class="file-hover" onmouseover="showButton('fileButtonHolder-@display.Id')" onmouseout="hideButton('fileButtonHolder-@display.Id', 'file-info-@display.Id')">
                             <a id="fileLink">
                                 <img id="uploaded-files-img"src="~/images/file-icons/@GetImageForFileType(@display.Type)" alt="logo" class="logo">
                             </a>
                             <p>@display.Name</p>
 
+                            <!-- Buttons for files/folders-->
                             <div id="fileButtonHolder-@display.Id" class="fileButtonHolder" style="display:none;">
-                                <button id="fileSettingsButton" onclick="showContextMenu(event, '@display.Id', '@display.Name', '@display.Type')">
-                                    <img id="fileSettingsImage" src="~/images/file-icons/cloud-download.svg" alt="path">
-                                </button>
-                                <button id="fileSettingsButton" aria-expanded="false" aria-controls="file-info-@display.Id" onclick="toggleFileInfo('file-info-@display.Id')">
-                                    <img id="fileSettingsImage" src="~/images/file-icons/three-dots.svg" alt="path">
 
-                                    <div id="file-info-@display.Id" class="file-info">
-                                        <div class="menu" id="@display.Id-menu">
-                                            <div class="menu-item" onclick="downloadFile('file1')">Download</div>
-                                            <div class="menu-item" onclick="deleteFile('file1')">Delete</div>
-                                            <div class="menu-item" onclick="renameFile('file1')">Rename</div>
+
+                                @if (@display.Type == "Folder"){
+
+                                    <button id="fileSettingsButton" aria-expanded="false" aria-controls="file-info-@display.Id" onclick="toggleFileInfo('file-info-@display.Id')">
+                                        <img id="fileSettingsImage" src="~/images/file-icons/three-dots.svg" alt="path">
+
+                                        <div id="file-info-@display.Id" class="file-info">
+                                            <div class="menu" id="@display.Id-menu">
+                                                <div class="menu-item" onclick="deleteFile('@display.Id', '@display.Type')">Delete</div>
+                                                <div class="menu-item" onclick="renameFile('@display.Id')">Rename</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </button>
+                                    </button>
+
+
+                                }else{
+                                    <button id="fileSettingsButton" onclick="downloadFile('@display.Id')">
+                                        <img id="fileSettingsImage" src="~/images/file-icons/cloud-download.svg" alt="path">
+                                    </button>
+                                    <button id="fileSettingsButton" aria-expanded="false" aria-controls="file-info-@display.Id" onclick="toggleFileInfo('file-info-@display.Id')">
+                                        <img id="fileSettingsImage" src="~/images/file-icons/three-dots.svg" alt="path">
+
+                                        <div id="file-info-@display.Id" class="file-info">
+                                            <div class="menu" id="@display.Id-menu">
+                                                <div class="menu-item" onclick="downloadFile('@display.Id')">Download</div>
+                                                <div class="menu-item" onclick="deleteFile('@display.Id', '@display.Type')">Delete</div>
+                                                <div class="menu-item" onclick="renameFile('@display.Id')">Rename</div>
+                                            </div>
+                                        </div>
+                                    </button>
+
+
+
+                                }
                             </div>
                         </div>
                     }
@@ -261,43 +164,180 @@
 </div>
 
 @{
+
+
+<script>
+    function showButton(id) {
+        var button = document.getElementById(id);
+        button.style.display = 'inline';
+    }
+
+    function hideButton(id) {
+        var button = document.getElementById(id);
+        button.style.display = 'none';
+    }
+
+    function hideButton(holderId, menuId) {
+        var holder = document.getElementById(holderId);
+        var menu = document.getElementById(menuId);
+        if (menu.style.display !== "block") {
+            holder.style.display = "none";
+        }
+    }
+
+    function toggleFileInfo(id) {
+
+        var fileInfo = document.getElementById(id);
+        var expanded = fileInfo.getAttribute('aria-expanded') === 'true';
+
+        // Toggle the aria-expanded attribute
+        fileInfo.setAttribute('aria-expanded', !expanded);
+
+        // Toggle the visibility of the file info
+        if (expanded) {
+            fileInfo.style.display = 'none';
+        } else {
+            fileInfo.style.display = 'block';
+        }
+    }
+
+    function showMenu(id) {
+        var menu = document.getElementById(id + "-menu");
+        menu.style.display = "block";
+    }
+
+    function hideMenu(id) {
+        var menu = document.getElementById(id + "-menu");
+        menu.style.display = "none";
+    }
+
+    document.body.addEventListener('click', function (event) {
+
+
+        var parent = event.target.parentNode;
+
+        if (parent.id === 'fileSettingsButton'){
+
+            return;
+        }
+
+        var menuOpen = document.querySelectorAll('.file-info');
+        menuOpen.forEach(function (menu) {
+            menu.setAttribute('aria-expanded', false);
+            menu.style.display = 'none';
+        });
+
+        var buttonHolder = document.querySelectorAll('.fileButtonHolder');
+        buttonHolder.forEach(function (button) {
+            button.style.display = 'none';
+        });
+
+    });
+
+
+
+    //Menu functions
+
+    function downloadFile(id) {
+
+        document.getElementById('fileIdDownloadInput').value = id;
+
+        // Submit the form
+        document.getElementById('downloadForm').submit();
+    }
+
+    function deleteFile(id, fileType) {
+        document.getElementById('fileIdInput').value = id;
+        document.getElementById('typeInput').value = fileType;
+
+        // Submit the form
+        document.getElementById('deleteForm').submit();
+    }
+
+    function renameFile(id) {
+        // Implement rename logic here
+        console.log("Renaming file: " + id);
+    }
+
+
+
+
+
+        /*
+        function navIntoFolder() {
+            var contextMenu = document.getElementById('contextMenu');
+            // Implement download functionality using fileId
+
+            var Id = contextMenu.dataset.fileId;
+            var Name = contextMenu.dataset.fileName;
+
+            console.log("Id: " + Id + " Name: " + Name);
+
+            document.getElementById('idNavInput').value = Id;
+            document.getElementById('nameNavInput').value = Name;
+
+            // Submit the form
+            document.getElementById('navForm').submit();
+        }
+        */
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <!-- Scripts -->
-                                <script>
-                                    // Console logger
-                                    var logger = '@ViewData["logger"]';
-                                    if (logger !== null) {
-                                        console.log(decodeHtml(logger));
-                                    }
+    <script>
+        // Console logger
+        var logger = '@ViewData["logger"]';
+        if (logger !== null) {
+            console.log(decodeHtml(logger));
+        }
 
-                                    //Decodes html text
-                                    function decodeHtml(html) {
-                                        var txt = document.createElement("textarea");
-                                        txt.innerHTML = html;
-                                        return txt.value;
-                                    }
+        //Decodes html text
+        function decodeHtml(html) {
+            var txt = document.createElement("textarea");
+            txt.innerHTML = html;
+            return txt.value;
+        }
 
-                                    //Changes the sort image when pressed
-                                    function toggleImage() {
-                                        var imageElement = document.getElementById('toggleImage');
-                                        if (imageElement.src.endsWith('sort-alpha-down.svg')) {
-                                            imageElement.src = 'images/tools/sort-alpha-up.svg';
-                                        } else {
-                                            imageElement.src = 'images/tools/sort-alpha-down.svg';
-                                        }
-                                    }
+        //Changes the sort image when pressed
+        function toggleImage() {
+            var imageElement = document.getElementById('toggleImage');
+            if (imageElement.src.endsWith('sort-alpha-down.svg')) {
+                imageElement.src = 'images/tools/sort-alpha-up.svg';
+            } else {
+                imageElement.src = 'images/tools/sort-alpha-down.svg';
+            }
+        }
 
-                                    //Loads naming folder popup
-                                    function showInputBox() {
-                                        document.getElementById('input-box').style.display = 'block';
-                                        document.querySelector('#input-box input[name="foldername"]').focus();
-                                    }
+        //Loads naming folder popup
+        function showInputBox() {
+            document.getElementById('input-box').style.display = 'block';
+            document.querySelector('#input-box input[name="foldername"]').focus();
+        }
 
-                                    //Cancels the folder creation
-                                    function cancelFolderCreation() {
-                                        document.getElementById('input-box').style.display = 'none';
-                                    }
+        //Cancels the folder creation
+        function cancelFolderCreation() {
+            document.getElementById('input-box').style.display = 'none';
+        }
 
-                                </script>
+    </script>
 
     string GetImageForFileType(string fileType)
     {
@@ -365,106 +405,23 @@
         }
     }
 
-    <!-- RIGHT CLICK MENU -->
-                                <div id="contextMenu" class="dropdown">
-                                    <a class="dropdown-item" id="downloadItem" href="#">Download</a>
-                                    <a class="dropdown-item" id="moveItem" href="#">Rename</a>
-                                    <a class="dropdown-item" id="moveItem" href="#">Share</a>
-                                    <a class="dropdown-item" id="deleteItem" href="#">Delete</a>
-                                </div>
+    
+<!-- Hidden form for delete action -->
+    <form id="deleteForm" method="post" asp-page-handler="Delete">
+        <input name="fileId" type="hidden" id="fileIdInput">
+        <input name="type" type="hidden" id="typeInput">
+    </form>
 
-    <!-- Hidden form for delete action -->
-                                <form id="deleteForm" method="post" asp-page-handler="Delete">
-                                    <input name="fileId" type="hidden" id="fileIdInput">
-                                    <input name="type" type="hidden" id="typeInput">
-                                </form>
+<!-- Hidden form for download action -->
+    <form id="downloadForm" method="post" asp-page-handler="Download">
+        <input name="fileId" type="hidden" id="fileIdDownloadInput">
+    </form>
 
-    <!-- Hidden form for download action -->
-                                <form id="downloadForm" method="post" asp-page-handler="Download">
-                                    <input name="fileId" type="hidden" id="fileIdDownloadInput">
-                                </form>
+<!-- Hidden form for nav action -->
+    <form id="navForm" method="post" asp-page-handler="Navigate">
+        <input name="Id" type="hidden" id="idNavInput">
+        <input name="Name" type="hidden" id="nameNavInput">
+    </form>
 
-    <!-- Hidden form for nav action -->
-                                <form id="navForm" method="post" asp-page-handler="Navigate">
-                                    <input name="Id" type="hidden" id="idNavInput">
-                                    <input name="Name" type="hidden" id="nameNavInput">
-                                </form>
-
-                                <script>
-                                    function showContextMenu(event, id, name, type) {
-                                        event.preventDefault();
-
-                                        var contextMenu = document.getElementById('contextMenu');
-
-                                        // Store the file info in context menu for later use
-                                        contextMenu.dataset.fileId = id;
-                                        contextMenu.dataset.fileName = name;
-                                        contextMenu.dataset.fileType = type;
-
-                                        if (type == "Folder") {
-                                            navIntoFolder();
-                                        }
-                                        else {
-                                            contextMenu.style.display = 'block';
-                                            contextMenu.style.left = event.clientX + 'px';
-                                            contextMenu.style.top = event.clientY + 'px';
-
-                                            // Add event listeners for context menu items
-                                            document.getElementById('downloadItem').addEventListener('click', downloadFile);
-                                            document.getElementById('deleteItem').addEventListener('click', deleteFile);
-
-                                            event.stopPropagation();
-
-                                            // Hide the context menu when clicking elsewhere
-                                            document.addEventListener('click', hideContextMenu);
-                                        }
-                                    }
-
-                                    function hideContextMenu() {
-                                        var contextMenu = document.getElementById('contextMenu');
-                                        contextMenu.style.display = 'none';
-                                        document.removeEventListener('click', hideContextMenu);
-                                    }
-
-                                    function navIntoFolder() {
-                                        var contextMenu = document.getElementById('contextMenu');
-                                        // Implement download functionality using fileId
-
-                                        var Id = contextMenu.dataset.fileId;
-                                        var Name = contextMenu.dataset.fileName;
-
-                                        console.log("Id: " + Id + " Name: " + Name);
-
-                                        document.getElementById('idNavInput').value = Id;
-                                        document.getElementById('nameNavInput').value = Name;
-
-                                        // Submit the form
-                                        document.getElementById('navForm').submit();
-                                    }
-
-                                    function downloadFile() {
-                                        var contextMenu = document.getElementById('contextMenu');
-                                        // Implement download functionality using fileId
-
-                                        var fileId = contextMenu.dataset.fileId;
-
-                                        document.getElementById('fileIdDownloadInput').value = fileId;
-
-                                        // Submit the form
-                                        document.getElementById('downloadForm').submit();
-                                    }
-
-                                    function deleteFile() {
-                                        var contextMenu = document.getElementById('contextMenu');
-                                        var fileId = contextMenu.dataset.fileId;
-                                        var fileType = contextMenu.dataset.fileType;
-
-                                        // Fill the hidden form inputs with fileId and fileType
-                                        document.getElementById('fileIdInput').value = fileId;
-                                        document.getElementById('typeInput').value = fileType;
-
-                                        // Submit the form
-                                        document.getElementById('deleteForm').submit();
-                                    }
-                                </script>
+                                
 }
