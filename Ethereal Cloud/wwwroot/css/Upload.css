@@ -112,11 +112,8 @@
 #scrollbox-contents {
     justify-content: center;
     height: fit-content;
-    margin:0;
+    margin: 0;
 }
-
-
-
 
 /* Everything inside the containers for the files (img and file name) */
 #uploaded-files {
@@ -133,45 +130,34 @@
     margin-bottom: 5px;
 }
 
-    #uploaded-files p {
-        text-align: center;
-        text-decoration: none;
-        color: black;
-        margin: 0px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        text-decoration: none;
-    }
-
-
-
-
-
-
-
-
-@media (hover: hover){
-    .fileButtonHolder {
-        display: none;
-    }
+#uploaded-files p {
+    text-align: center;
+    text-decoration: none;
+    color: black;
+    margin: 0px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-decoration: none;
 }
-
-@media(hover: none){
-    .fileButtonHolder{
-        display: inline;
-    }
-}
-
-
-
-
 
 /*New stuff in need of organising */
 .fileButtonHolder {
     position: absolute;
     top: 0;
     right: 0;
+}
+
+@media (hover: hover) {
+    .fileButtonHolder {
+        display: none;
+    }
+}
+
+@media(hover: none) {
+    .fileButtonHolder {
+        display: inline;
+    }
 }
 
 #fileSettingsButton {
@@ -205,15 +191,6 @@
     .menu-item:hover {
         background-color: #e9e9e9;
     }
-
-
-
-
-
-
-
-
-
 
 
 /* Upload box (at bottom of page) */

@@ -4,7 +4,7 @@
 @{
     ViewBag.Title = "Upload";
     Layout = "Shared/_Layout.cshtml";
-                                <link rel="stylesheet" href="/css/Upload.css" asp-append-version="true">
+    <link rel="stylesheet" href="/css/Upload.css" asp-append-version="true">
 
 }
 
@@ -78,7 +78,7 @@
                     {
                         <div id="uploaded-files" class="file-hover" ondblclick="navIntoFolder('@display.Id','@display.Type','@display.Name')" onmouseover="showButton('fileButtonHolder-@display.Id')" onmouseout="hideButton('fileButtonHolder-@display.Id', 'file-info-@display.Id')">
                             <a id="fileLink">
-                                <img id="uploaded-files-img"src="~/images/file-icons/@GetImageForFileType(@display.Type)" alt="logo" class="logo">
+                                <img id="uploaded-files-img" src="~/images/file-icons/@GetImageForFileType(@display.Type)" alt="logo" class="logo">
                             </a>
                             <p>@display.Name</p>
 
@@ -86,7 +86,8 @@
                             <div id="fileButtonHolder-@display.Id" class="fileButtonHolder" style="">
 
 
-                                @if (@display.Type == "Folder"){
+                                @if (@display.Type == "Folder")
+                                {
 
                                     <button id="fileSettingsButton" aria-expanded="false" aria-controls="file-info-@display.Id" onclick="toggleFileInfo('file-info-@display.Id')">
                                         <img id="fileSettingsImage" src="~/images/file-icons/three-dots.svg" alt="path">
@@ -98,9 +99,9 @@
                                             </div>
                                         </div>
                                     </button>
-
-
-                                }else{
+                                }
+                                else
+                                {
                                     <button id="fileSettingsButton" onclick="downloadFile('@display.Id')">
                                         <img id="fileSettingsImage" src="~/images/file-icons/cloud-download.svg" alt="path">
                                     </button>
@@ -115,9 +116,6 @@
                                             </div>
                                         </div>
                                     </button>
-
-
-
                                 }
                             </div>
                         </div>
@@ -164,176 +162,153 @@
 </div>
 
 @{
-
-
-            <script>
-                function showButton(id) {
-                    var button = document.getElementById(id);
-                    button.style.display = 'inline';
-                }
-
-                function hideButton(id) {
-                    var button = document.getElementById(id);
-                    button.style.display = 'none';
-                }
-
-                function hideButton(holderId, menuId) {
-                    var holder = document.getElementById(holderId);
-                    var menu = document.getElementById(menuId);
-                    if (menu.style.display !== "block") {
-                        holder.style.display = "none";
-                    }
-                }
-
-                function toggleFileInfo(id) {
-
-                    var fileInfo = document.getElementById(id);
-                    var expanded = fileInfo.getAttribute('aria-expanded') === 'true';
-
-                    // Toggle the aria-expanded attribute
-                    fileInfo.setAttribute('aria-expanded', !expanded);
-
-                    // Toggle the visibility of the file info
-                    if (expanded) {
-                        fileInfo.style.display = 'none';
-                    } else {
-                        fileInfo.style.display = 'block';
-                    }
-                }
-
-                function showMenu(id) {
-                    if (matchMedia('(hover: hover)').matches) {
-                        var menu = document.getElementById(id + "-menu");
-
-                        menu.style.display = "block";
-                    }
-                    
-                }
-
-                function hideMenu(id) {
-                    var menu = document.getElementById(id + "-menu");
-                    menu.style.display = "none";
-                }
-
-                document.body.addEventListener('click', function (event) {
-
-
-                    var parent = event.target.parentNode;
-
-                    if (parent.id === 'fileSettingsButton'){
-
-                        return;
-                    }
-
-
-                    var menuOpen = document.querySelectorAll('.file-info');
-                    menuOpen.forEach(function (menu) {
-                        menu.setAttribute('aria-expanded', false);
-                        menu.style.display = 'none';
-                    });
-                    
-                    if (matchMedia('(hover: hover)').matches) {
-                        var buttonHolder = document.querySelectorAll('.fileButtonHolder');
-                        buttonHolder.forEach(function (button) {
-                            button.style.display = 'none';
-                        });
-                    }
-                });
-
-
-
-                //Menu functions
-
-                function downloadFile(id) {
-
-                    document.getElementById('fileIdDownloadInput').value = id;
-
-                    // Submit the form
-                    document.getElementById('downloadForm').submit();
-                }
-
-                function deleteFile(id, fileType) {
-                    document.getElementById('fileIdInput').value = id;
-                    document.getElementById('typeInput').value = fileType;
-
-                    // Submit the form
-                    document.getElementById('deleteForm').submit();
-                }
-
-                function renameFile(id) {
-                    // Implement rename logic here
-                    console.log("Renaming file: " + id);
-                }
-
-
-                function navIntoFolder(id, fileType, name) {
-                    if (fileType === "Folder") {
-
-                        document.getElementById('idNavInput').value = id;
-                        document.getElementById('nameNavInput').value = name;
-
-                        // Submit the form
-                        document.getElementById('navForm').submit();
-                    } else {
-
-                        downloadFile(id);
-                    }
-                }
-
-            </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <!-- Scripts -->
-            <script>
-                // Console logger
-                var logger = '@ViewData["logger"]';
-                if (logger !== null) {
-                    console.log(decodeHtml(logger));
-                }
+    <script>
+        function showButton(id) {
+            var button = document.getElementById(id);
+            button.style.display = 'inline';
+        }
 
-                //Decodes html text
-                function decodeHtml(html) {
-                    var txt = document.createElement("textarea");
-                    txt.innerHTML = html;
-                    return txt.value;
-                }
+        function hideButton(id) {
+            var button = document.getElementById(id);
+            button.style.display = 'none';
+        }
 
-                //Changes the sort image when pressed
-                function toggleSort() {
-                    // Submit the form
-                    document.getElementById('sortForm').submit();
-                }
+        function hideButton(holderId, menuId) {
+            var holder = document.getElementById(holderId);
+            var menu = document.getElementById(menuId);
+            if (menu.style.display !== "block") {
+                holder.style.display = "none";
+            }
+        }
 
-                //Loads naming folder popup
-                function showInputBox() {
-                    document.getElementById('input-box').style.display = 'block';
-                    document.querySelector('#input-box input[name="foldername"]').focus();
-                }
+        function toggleFileInfo(id) {
 
-                //Cancels the folder creation
-                function cancelFolderCreation() {
-                    document.getElementById('input-box').style.display = 'none';
-                }
+            var fileInfo = document.getElementById(id);
+            var expanded = fileInfo.getAttribute('aria-expanded') === 'true';
+
+            // Toggle the aria-expanded attribute
+            fileInfo.setAttribute('aria-expanded', !expanded);
+
+            // Toggle the visibility of the file info
+            if (expanded) {
+                fileInfo.style.display = 'none';
+            } else {
+                fileInfo.style.display = 'block';
+            }
+        }
+
+        function showMenu(id) {
+            if (matchMedia('(hover: hover)').matches) {
+                var menu = document.getElementById(id + "-menu");
+
+                menu.style.display = "block";
+            }
+        }
+
+        function hideMenu(id) {
+            var menu = document.getElementById(id + "-menu");
+            menu.style.display = "none";
+        }
+
+        document.body.addEventListener('click', function (event) {
+            var parent = event.target.parentNode;
+
+            if (parent.id === 'fileSettingsButton') {
+
+                return;
+            }
 
 
-        console.log("sort: "+ @Model.sortDisplay)
+            var menuOpen = document.querySelectorAll('.file-info');
+            menuOpen.forEach(function (menu) {
+                menu.setAttribute('aria-expanded', false);
+                menu.style.display = 'none';
+            });
+
+            if (matchMedia('(hover: hover)').matches) {
+                var buttonHolder = document.querySelectorAll('.fileButtonHolder');
+                buttonHolder.forEach(function (button) {
+                    button.style.display = 'none';
+                });
+            }
+        });
+
+
+
+        //Menu functions
+
+        function downloadFile(id) {
+
+            document.getElementById('fileIdDownloadInput').value = id;
+
+            // Submit the form
+            document.getElementById('downloadForm').submit();
+        }
+
+        function deleteFile(id, fileType) {
+            document.getElementById('fileIdInput').value = id;
+            document.getElementById('typeInput').value = fileType;
+
+            // Submit the form
+            document.getElementById('deleteForm').submit();
+        }
+
+        function renameFile(id) {
+            // Implement rename logic here
+            console.log("Renaming file: " + id);
+        }
+
+
+        function navIntoFolder(id, fileType, name) {
+            if (fileType === "Folder") {
+
+                document.getElementById('idNavInput').value = id;
+                document.getElementById('nameNavInput').value = name;
+
+                // Submit the form
+                document.getElementById('navForm').submit();
+            } else {
+
+                downloadFile(id);
+            }
+        }
+
+        // Console logger
+        var logger = '@ViewData["logger"]';
+        if (logger !== null) {
+            console.log(decodeHtml(logger));
+        }
+
+        //Decodes html text
+        function decodeHtml(html) {
+            var txt = document.createElement("textarea");
+            txt.innerHTML = html;
+            return txt.value;
+        }
+
+        //Changes the sort image when pressed
+        function toggleSort() {
+            // Submit the form
+            document.getElementById('sortForm').submit();
+        }
+
+        //Loads naming folder popup
+        function showInputBox() {
+            document.getElementById('input-box').style.display = 'block';
+            document.querySelector('#input-box input[name="foldername"]').focus();
+        }
+
+        //Cancels the folder creation
+        function cancelFolderCreation() {
+            document.getElementById('input-box').style.display = 'none';
+        }
+
+
+        console.log("sort: " + @Model.sortDisplay)
 
     </script>
-   
+
 
     string SetSort()
     {
@@ -349,8 +324,6 @@
             return "images/tools/sort-alpha-down.svg";
         }
     }
-
-
 
     string GetImageForFileType(string fileType)
     {
@@ -418,30 +391,26 @@
         }
     }
 
-    
+
     <!-- Hidden form for delete action -->
-                    <form id="deleteForm" method="post" asp-page-handler="Delete">
-                        <input name="fileId" type="hidden" id="fileIdInput">
-                        <input name="type" type="hidden" id="typeInput">
-                    </form>
+    <form id="deleteForm" method="post" asp-page-handler="Delete">
+        <input name="fileId" type="hidden" id="fileIdInput">
+        <input name="type" type="hidden" id="typeInput">
+    </form>
 
     <!-- Hidden form for download action -->
-                    <form id="downloadForm" method="post" asp-page-handler="Download">
-                        <input name="fileId" type="hidden" id="fileIdDownloadInput">
-                    </form>
+    <form id="downloadForm" method="post" asp-page-handler="Download">
+        <input name="fileId" type="hidden" id="fileIdDownloadInput">
+    </form>
 
     <!-- Hidden form for nav action -->
-                    <form id="navForm" method="post" asp-page-handler="Navigate">
-                        <input name="Id" type="hidden" id="idNavInput">
-                        <input name="Name" type="hidden" id="nameNavInput">
-                    </form>
-
-
-
+    <form id="navForm" method="post" asp-page-handler="Navigate">
+        <input name="Id" type="hidden" id="idNavInput">
+        <input name="Name" type="hidden" id="nameNavInput">
+    </form>
 
     <!-- Hidden form for sorting -->
-                <form id="sortForm" method="post" asp-page-handler="Sort">
-                </form>
-
+    <form id="sortForm" method="post" asp-page-handler="Sort">
+    </form>
 
 }
