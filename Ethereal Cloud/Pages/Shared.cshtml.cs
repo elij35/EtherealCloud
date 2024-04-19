@@ -11,23 +11,13 @@ namespace Ethereal_Cloud.Pages
         //list of files to be shown to user
         public List<FolderContentDisplay> DisplayList = new List<FolderContentDisplay>();
 
-        public List<FolderDataRecieve> FolderPath = new List<FolderDataRecieve>();
-
         public bool sortDisplay = false;
 
-        public void FolderPathForDisplay()
-        {
-            //Sets the filepath list to be displayed on the interface
-            FolderPath = PathManagement.Get(HttpContext);
-        }
 
         public async Task OnGet()
         {
             sortDisplay = SortManagement.GetSorting(HttpContext);
 
-            FolderPathForDisplay();
-
-            int? folderId = PathManagement.GetCurrentFolderId(HttpContext);
 
 
             //Make request
@@ -89,7 +79,7 @@ namespace Ethereal_Cloud.Pages
 
             sortDisplay = !sortAlpha;
 
-            Response.Redirect("/Upload");
+            Response.Redirect("/Shared");
         }
 
 
