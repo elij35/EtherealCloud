@@ -27,23 +27,23 @@ namespace StorageController.Controllers.v2
 
             DataHandler db = new();
 
-            IQueryable<UserFile> sharedFiles = db.UserFiles.Where(link => link.UserID == userID && link.Privilege != "Owner");
-            FileData[] files = await db.Files.Where(file => sharedFiles.Where(link => link.FileID == file.FileID) != null).ToArrayAsync();
+            IEnumerable<UserFile> sharedFiles = db.UserFiles.Where(link => link.UserID == userID && link.Privilege == "Viewer");
 
-            FileMetaReturn[] fileData = new FileMetaReturn[files.Length];
-            for (int i = 0; i < files.Length; i++)
+            List<FileMetaReturn> fileData = new List<FileMetaReturn>();
+            foreach (UserFile fileLink in sharedFiles)
             {
 
+                FileData file = fileLink.File;
+
                 FileMetaReturn data = new();
-                data.Filetype = files[i].FileType;
-                data.FileID = files[i].FileID;
-                data.Filename = files[i].FileName;
+                data.Filetype = file.FileType;
+                data.FileID = file.FileID;
+                data.Filename = file.FileName;
 
-                fileData[i] = data;
-
+                fileData.Add(data);
             }
 
-            return await new Response<FileMetaReturn[]>(true, fileData).Serialize();
+            return await new Response<List<FileMetaReturn>>(true, fileData).Serialize();
 
         }
 
