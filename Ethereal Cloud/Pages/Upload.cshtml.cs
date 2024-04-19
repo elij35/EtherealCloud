@@ -320,6 +320,7 @@ namespace Ethereal_Cloud.Pages
                 return;
             }
         }
+        
 
         public async Task OnPostShare(int fileId)
         {
@@ -339,7 +340,7 @@ namespace Ethereal_Cloud.Pages
 
 
             //Make request
-            var response = await ApiRequestV2.Files(ViewData, HttpContext, "/v2/file/share/" + fileId, true, dataObject);
+            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/file/share/" + fileId, true, dataObject);
 
             if (response != null)
             {
@@ -353,7 +354,7 @@ namespace Ethereal_Cloud.Pages
                 return;
             }
         }
-
+        
 
 
 

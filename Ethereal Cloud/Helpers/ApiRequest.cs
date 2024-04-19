@@ -92,7 +92,7 @@ namespace Ethereal_Cloud.Helpers
                 else
                 {
                     //Couldn't connect to endpoint
-                    Logger.LogToConsole(viewData, "Invalid Connect: " + responseEndpoint.RequestMessage);
+                    Logger.LogToConsole(viewData, "Invalid Connect: " + responseEndpoint.RequestMessage + "    IsSuccessStatusCode: " + responseEndpoint.IsSuccessStatusCode + "    Status code: " + responseEndpoint.StatusCode + "    Content: " + responseEndpoint.Content + "    ReasonPhrase: " + responseEndpoint.ReasonPhrase + "    Headers: " + responseEndpoint.Headers);
                     return null;
                 }
 

@@ -23,7 +23,7 @@ namespace Ethereal_Cloud.Pages
             bool sharedWithMe = ShareManagement.GetActiveShare(HttpContext);
 
             // Shared with me request
-            string endpointShare = "v2/file/share";
+            string endpointShare = "v2/file/sharing";
 
             if (!sharedWithMe)
             {
@@ -32,9 +32,9 @@ namespace Ethereal_Cloud.Pages
             }
 
             Logger.LogToConsole(ViewData, "Endpoint: " + endpointShare);
-
+            
             //Make request
-            var response = await ApiRequestV2.Files(ViewData, HttpContext, endpointShare, true, null);
+            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/file/sharing", true, null);
 
 
             if (response != null)
@@ -83,6 +83,7 @@ namespace Ethereal_Cloud.Pages
 
                 ViewData["FailureMessage"] = "Failed to get files & folders. Please try again.";
             }
+            
         }
 
         public async Task OnPostSort()

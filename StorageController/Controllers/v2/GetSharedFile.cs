@@ -14,7 +14,7 @@ namespace StorageController.Controllers.v2
         [HttpPost]
         [Produces("application/json")]
         [Consumes("application/json")]
-        [Route("/v2/file/share")]
+        [Route("/v2/file/sharing")]
         public async Task<string> GetSharedFiles()
         {
 
