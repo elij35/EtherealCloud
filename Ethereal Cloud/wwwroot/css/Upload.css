@@ -1,6 +1,7 @@
 ﻿#file-explorer {
     padding: 0px;
     justify-content: center;
+    position: relative;
 }
 
 /* This is where the scrollbox is contained */
