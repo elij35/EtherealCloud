@@ -67,14 +67,14 @@
         </div>
 
 
-        <!-- Shared With Me -->
-        <div id="scrollbox" class="row" style="display: none;">
+        <!-- Shared With Me / Sharing -->
+        <div id="scrollbox" class="row">
             @if (Model.DisplayList.Count > 0)
             {
                 <div class="row" id="scrollbox-contents">
                     @foreach (var display in Model.DisplayList)
                     {
-                        <div id="uploaded-files" class="file-hover" onmouseover="showButton('fileButtonHolder-@display.Id-@display.Type')" onmouseout="hideButton('fileButtonHolder-@display.Id-@display.Type', 'file-info-@display.Id-@display.Type')">
+                        <div id="uploaded-files" class="file-hover" ontouchstart="tap('@display.Id','@display.Type','@display.Name')" ontouchend="tapCancel()" ondblclick="navIntoFolderOrDownload('@display.Id','@display.Type','@display.Name')" onmouseover="showButton('fileButtonHolder-@display.Id-@display.Type')" onmouseout="hideButton('fileButtonHolder-@display.Id-@display.Type', 'file-info-@display.Id-@display.Type')">
                             <a id="fileLink">
                                 <img id="uploaded-files-img" src="~/images/file-icons/@GetImageForFileType(@display.Type)" alt="logo" class="logo">
                             </a>
@@ -83,16 +83,42 @@
                             <!-- Buttons for files/folders-->
                             <div id="fileButtonHolder-@display.Id-@display.Type" class="fileButtonHolder" style="">
 
-                                <button id="fileSettingsButton" aria-expanded="false" aria-controls="file-info-@display.Id-@display.Type" onclick="toggleFileInfo('file-info-@display.Id-@display.Type')">
-                                    <img id="fileSettingsImage" src="~/images/menu-icons/three-dots.svg" alt="path">
 
-                                    <div id="file-info-@display.Id-@display.Type" class="file-info">
-                                        <div class="menu" id="@display.Id-menu">
-                                            <div class="menu-item" onclick="restoreFileFolder('@display.Id', '@display.Type')">Restore</div>
+                                @if (@display.Type == "Folder")
+                                {
+                                // Folders
+                                    <button id="fileSettingsButton" aria-expanded="false" aria-controls="file-info-@display.Id-@display.Type" onclick="toggleFileInfo('file-info-@display.Id-@display.Type')">
+                                        <img id="fileSettingsImage" src="~/images/menu-icons/three-dots.svg" alt="path">
+
+                                        <div id="file-info-@display.Id-@display.Type" class="file-info">
+                                            <div class="menu" id="@display.Id-menu">
+                                                <div class="menu-item">TO BE DECIDED</div>
+                                                <div class="menu-item" onclick="renameFile('@display.Id')">Rename</div>
+                                                <div class="menu-item" onclick="deleteFile('@display.Id', '@display.Type')">Delete</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </button>
+                                    </button>
+                                }
+                                else
+                                {
+                                    // Files
+                                    <button id="fileSettingsButton" onclick="downloadFile('@display.Id')">
+                                        <img id="fileSettingsImage" src="~/images/menu-icons/cloud-download.svg" alt="path">
+                                    </button>
+                                    <button id="fileSettingsButton" aria-expanded="false" aria-controls="file-info-@display.Id-@display.Type" onclick="toggleFileInfo('file-info-@display.Id-@display.Type')">
+                                        <img id="fileSettingsImage" src="~/images/menu-icons/three-dots.svg" alt="path">
 
+                                        <div id="file-info-@display.Id-@display.Type" class="file-info">
+                                            <div class="menu" id="@display.Id-menu">
+                                                <div class="menu-item" >TO BE DECIDED</div>
+                                                <div class="menu-item" onclick="downloadFile('@display.Id')">Download</div>
+                                                <div class="menu-item" onclick="renameFile('@display.Id')">Rename</div>
+                                                <div class="menu-item" onclick="renameFile('@display.Id')">Share</div>
+                                                <div class="menu-item" onclick="deleteFile('@display.Id', '@display.Type')">Delete</div>
+                                            </div>
+                                        </div>
+                                    </button>
+                                }
                             </div>
                         </div>
                     }
@@ -106,66 +132,6 @@
                 </div>
             }
         </div>
-
-
-
-
-
-
-
-
-
-        <!-- Sharinng With Me -->
-        <div id="scrollbox" class="row" style="display: flex;">
-            @if (Model.DisplayList.Count > 0)
-            {
-                <div class="row" id="scrollbox-contents">
-                    @foreach (var display in Model.DisplayList)
-                    {
-                        <div id="uploaded-files" class="file-hover" onmouseover="showButton('fileButtonHolder-@display.Id-@display.Type')" onmouseout="hideButton('fileButtonHolder-@display.Id-@display.Type', 'file-info-@display.Id-@display.Type')">
-                            <a id="fileLink">
-                                <img id="uploaded-files-img" src="~/images/file-icons/@GetImageForFileType(@display.Type)" alt="logo" class="logo">
-                            </a>
-                            <p>@display.Name</p>
-
-                            <!-- Buttons for files/folders-->
-                            <div id="fileButtonHolder-@display.Id-@display.Type" class="fileButtonHolder" style="">
-
-                                <button id="fileSettingsButton" aria-expanded="false" aria-controls="file-info-@display.Id-@display.Type" onclick="toggleFileInfo('file-info-@display.Id-@display.Type')">
-                                    <img id="fileSettingsImage" src="~/images/menu-icons/three-dots.svg" alt="path">
-
-                                    <div id="file-info-@display.Id-@display.Type" class="file-info">
-                                        <div class="menu" id="@display.Id-menu">
-                                            <div class="menu-item" onclick="restoreFileFolder('@display.Id', '@display.Type')">Restore</div>
-                                        </div>
-                                    </div>
-                                </button>
-
-                            </div>
-                        </div>
-                    }
-                </div>
-            }
-            else
-            {
-                <div class="no-files text-center">
-                    <img class="row" src="~/images/tools/search.svg" alt="search" style="width: -webkit-fill-available; opacity: 50%;">
-                    <h3 class="row">No files here</h3>
-                </div>
-            }
-        </div>
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -238,6 +204,32 @@
             }
         });
 
+
+
+        //Menu functions
+
+        function downloadFile(id) {
+
+            document.getElementById('fileIdDownloadInput').value = id;
+
+            // Submit the form
+            document.getElementById('downloadForm').submit();
+        }
+
+        function deleteFile(id, fileType) {
+            document.getElementById('fileIdInput').value = id;
+            document.getElementById('typeInput').value = fileType;
+
+            // Submit the form
+            document.getElementById('deleteForm').submit();
+        }
+
+        function renameFile(id) {
+            // Implement rename logic here
+            console.log("Renaming file: " + id);
+        }
+
+
         function navIntoFolderOrDownload(id, fileType, name) {
             if (fileType === "Folder") {
 
@@ -265,6 +257,22 @@
             return txt.value;
         }
 
+        //Changes the sort image when pressed
+        function toggleSort() {
+            // Submit the form
+            document.getElementById('sortForm').submit();
+        }
+
+        //Loads naming folder popup
+        function showInputBox() {
+            document.getElementById('input-box').style.display = 'block';
+            document.querySelector('#input-box input[name="foldername"]').focus();
+        }
+
+        //Cancels the folder creation
+        function cancelFolderCreation() {
+            document.getElementById('input-box').style.display = 'none';
+        }
 
 
         // Mobile hold tap function
@@ -285,10 +293,23 @@
             navIntoFolderOrDownload(id, fileType, name);
         }
 
-
     </script>
 
 
+    string SetSort()
+    {
+        if (@Model.sortDisplay)
+        {
+            // Alphabetical
+            return "images/tools/sort-alpha-up.svg";
+
+        }
+        else
+        {
+            // Backwards alphabetical
+            return "images/tools/sort-alpha-down.svg";
+        }
+    }
 
     string GetImageForFileType(string fileType)
     {
@@ -357,18 +378,27 @@
     }
 
 
-    string SetSort()
-    {
-        if (@Model.sortDisplay)
-        {
-            // Alphabetical
-            return "images/tools/sort-alpha-up.svg";
+    <!-- Hidden form for delete action -->
+    <form id="deleteForm" method="post" asp-page-handler="Delete">
+        <input name="fileId" type="hidden" id="fileIdInput">
+        <input name="type" type="hidden" id="typeInput">
+    </form>
 
-        }
-        else
-        {
-            // Backwards alphabetical
-            return "images/tools/sort-alpha-down.svg";
-        }
-    }
+    <!-- Hidden form for download action -->
+    <form id="downloadForm" method="post" asp-page-handler="Download">
+        <input name="fileId" type="hidden" id="fileIdDownloadInput">
+    </form>
+
+    <!-- Hidden form for nav action -->
+    <form id="navForm" method="post" asp-page-handler="Navigate">
+        <input name="Id" type="hidden" id="idNavInput">
+        <input name="Name" type="hidden" id="nameNavInput">
+    </form>
+
+    <!-- Hidden form for sorting -->
+    <form id="sortForm" method="post" asp-page-handler="Sort">
+    </form>
+
+
+
 }
