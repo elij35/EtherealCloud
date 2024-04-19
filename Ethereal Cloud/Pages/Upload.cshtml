@@ -113,7 +113,7 @@
                                             <div class="menu" id="@display.Id-menu">
                                                 <div class="menu-item" onclick="downloadFile('@display.Id')">Download</div>
                                                 <div class="menu-item" onclick="renameFile('@display.Id')">Rename</div>
-                                                <div class="menu-item" onclick="renameFile('@display.Id')">Share</div>
+                                                <div class="menu-item" onclick="shareFile('@display.Id')">Share</div>
                                                 <div class="menu-item" onclick="deleteFile('@display.Id', '@display.Type')">Delete</div>
                                             </div>
                                         </div>
@@ -238,6 +238,14 @@
 
             // Submit the form
             document.getElementById('deleteForm').submit();
+        }
+
+
+        function shareFile(id) {
+            document.getElementById('fileIdShareInput').value = id;
+
+            // Submit the form
+            document.getElementById('shareForm').submit();
         }
 
         function renameFile(id) {
@@ -403,6 +411,11 @@
     <!-- Hidden form for download action -->
     <form id="downloadForm" method="post" asp-page-handler="Download">
         <input name="fileId" type="hidden" id="fileIdDownloadInput">
+    </form>
+
+    <!-- Hidden form for share action -->
+    <form id="shareForm" method="post" asp-page-handler="Share">
+        <input name="fileId" type="hidden" id="fileIdShareInput">
     </form>
 
     <!-- Hidden form for nav action -->

@@ -13,15 +13,29 @@ namespace Ethereal_Cloud.Pages
 
         public bool sortDisplay = false;
 
+        public bool sharedTab = true;
+
 
         public async Task OnGet()
         {
             sortDisplay = SortManagement.GetSorting(HttpContext);
 
+            bool sharedWithMe = ShareManagement.GetActiveShare(HttpContext);
 
+            // Shared with me request
+            string endpointShare = "v2/file/share";
+
+            if (!sharedWithMe)
+            {
+                // Sharing with request
+                endpointShare = "temp";
+            }
+
+            Logger.LogToConsole(ViewData, "Endpoint: " + endpointShare);
 
             //Make request
-            var response = await ApiRequestV2.Files(ViewData, HttpContext, "/v2/file/share", true, null);
+            var response = await ApiRequestV2.Files(ViewData, HttpContext, endpointShare, true, null);
+
 
             if (response != null)
             {
@@ -65,7 +79,7 @@ namespace Ethereal_Cloud.Pages
             }
             else
             {
-                Logger.LogToConsole(ViewData, "Failed Get");
+                //Logger.LogToConsole(ViewData, "Failed Get");
 
                 ViewData["FailureMessage"] = "Failed to get files & folders. Please try again.";
             }

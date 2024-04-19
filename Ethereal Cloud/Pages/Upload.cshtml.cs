@@ -98,7 +98,7 @@ namespace Ethereal_Cloud.Pages
             Response.Redirect("/Upload");
         }
 
-
+        
         public async Task<IActionResult> OnPostDownload(int fileId)
         {
             //create object
@@ -320,6 +320,44 @@ namespace Ethereal_Cloud.Pages
                 return;
             }
         }
+
+        public async Task OnPostShare(int fileId)
+        {
+            // Check fileId validity
+            if (fileId == null)
+            {
+                Logger.LogToConsole(ViewData, "Invalid: Model error");
+                return;
+            }
+
+            //create file object
+            var dataObject = new Dictionary<string, object?>
+            {
+                { "ShareUsername", "test2" }
+            };
+
+
+
+            //Make request
+            var response = await ApiRequestV2.Files(ViewData, HttpContext, "/v2/file/share/" + fileId, true, dataObject);
+
+            if (response != null)
+            {
+                Logger.LogToConsole(ViewData, "Successfull Share: " + fileId);
+                Response.Redirect("/Upload");
+            }
+            else
+            {
+                Logger.LogToConsole(ViewData, "Bad share response");
+                Response.Redirect("/Upload");
+                return;
+            }
+        }
+
+
+
+
+
 
     }
 }
