@@ -16,6 +16,8 @@ namespace Ethereal_Cloud.Pages
         public bool sharedTab = true;
 
 
+        //FileMetaRecieve[]?
+
         public async Task OnGet()
         {
             sortDisplay = SortManagement.GetSorting(HttpContext);
@@ -39,27 +41,14 @@ namespace Ethereal_Cloud.Pages
 
             if (response != null)
             {
-                //Put response in form of FolderContentRecieve
+                //Put response in form of ShareContentRecieve
                 string jsonString = response.ToString();
-                FolderContentRecieve folderContent = JsonSerializer.Deserialize<FolderContentRecieve>(jsonString);
+                List<FileMetaRecieve>? folderContent = JsonSerializer.Deserialize<List<FileMetaRecieve>>(jsonString);
 
                 DisplayList = new List<FolderContentDisplay>();
 
-                //Add folders to display list
-                foreach (FolderDataRecieve folder in folderContent.Folders)
-                {
-                    FolderContentDisplay newFolder = new()
-                    {
-                        Id = folder.FolderID,
-                        Name = folder.Foldername,
-                        Type = "Folder"
-                    };
-
-                    DisplayList.Add(newFolder);
-                }
-
                 //Add files to display list
-                foreach (FileMetaRecieve file in folderContent.Files)
+                foreach (FileMetaRecieve file in folderContent)
                 {
 
                     FolderContentDisplay newFile = new()
