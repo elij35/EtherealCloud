@@ -76,43 +76,45 @@
                 <div class="row" id="scrollbox-contents">
                     @foreach (var display in Model.DisplayList)
                     {
-                        <div id="uploaded-files" class="file-hover" ontouchstart="tap('@display.Id','@display.Type','@display.Name')" ontouchend="tapCancel()" ondblclick="navIntoFolderOrDownload('@display.Id','@display.Type','@display.Name')" onmouseover="showButton('fileButtonHolder-@display.Id')" onmouseout="hideButton('fileButtonHolder-@display.Id', 'file-info-@display.Id')">
+                        <div id="uploaded-files" class="file-hover" ontouchstart="tap('@display.Id','@display.Type','@display.Name')" ontouchend="tapCancel()" ondblclick="navIntoFolderOrDownload('@display.Id','@display.Type','@display.Name')" onmouseover="showButton('fileButtonHolder-@display.Id-@display.Type')" onmouseout="hideButton('fileButtonHolder-@display.Id-@display.Type', 'file-info-@display.Id-@display.Type')">
                             <a id="fileLink">
                                 <img id="uploaded-files-img" src="~/images/file-icons/@GetImageForFileType(@display.Type)" alt="logo" class="logo">
                             </a>
                             <p>@display.Name</p>
 
                             <!-- Buttons for files/folders-->
-                            <div id="fileButtonHolder-@display.Id" class="fileButtonHolder" style="">
+                            <div id="fileButtonHolder-@display.Id-@display.Type" class="fileButtonHolder" style="">
 
 
                                 @if (@display.Type == "Folder")
                                 {
-
-                                    <button id="fileSettingsButton" aria-expanded="false" aria-controls="file-info-@display.Id" onclick="toggleFileInfo('file-info-@display.Id')">
+                                    // Folders
+                                    <button id="fileSettingsButton" aria-expanded="false" aria-controls="file-info-@display.Id" onclick="toggleFileInfo('file-info-@display.Id-@display.Type')">
                                         <img id="fileSettingsImage" src="~/images/file-icons/three-dots.svg" alt="path">
 
-                                        <div id="file-info-@display.Id" class="file-info">
+                                        <div id="file-info-@display.Id-@display.Type" class="file-info">
                                             <div class="menu" id="@display.Id-menu">
-                                                <div class="menu-item" onclick="deleteFile('@display.Id', '@display.Type')">Delete</div>
                                                 <div class="menu-item" onclick="renameFile('@display.Id')">Rename</div>
+                                                <div class="menu-item" onclick="deleteFile('@display.Id', '@display.Type')">Delete</div>
                                             </div>
                                         </div>
                                     </button>
                                 }
                                 else
                                 {
+                                    // Files
                                     <button id="fileSettingsButton" onclick="downloadFile('@display.Id')">
                                         <img id="fileSettingsImage" src="~/images/file-icons/cloud-download.svg" alt="path">
                                     </button>
-                                    <button id="fileSettingsButton" aria-expanded="false" aria-controls="file-info-@display.Id" onclick="toggleFileInfo('file-info-@display.Id')">
+                                    <button id="fileSettingsButton" aria-expanded="false" aria-controls="file-info-@display.Id-@display.Type" onclick="toggleFileInfo('file-info-@display.Id-@display.Type')">
                                         <img id="fileSettingsImage" src="~/images/file-icons/three-dots.svg" alt="path">
 
-                                        <div id="file-info-@display.Id" class="file-info">
+                                        <div id="file-info-@display.Id-@display.Type" class="file-info">
                                             <div class="menu" id="@display.Id-menu">
                                                 <div class="menu-item" onclick="downloadFile('@display.Id')">Download</div>
-                                                <div class="menu-item" onclick="deleteFile('@display.Id', '@display.Type')">Delete</div>
                                                 <div class="menu-item" onclick="renameFile('@display.Id')">Rename</div>
+                                                <div class="menu-item" onclick="renameFile('@display.Id')">Share</div>
+                                                <div class="menu-item" onclick="deleteFile('@display.Id', '@display.Type')">Delete</div>
                                             </div>
                                         </div>
                                     </button>
