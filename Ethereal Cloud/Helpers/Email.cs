@@ -5,7 +5,7 @@ namespace Ethereal_Cloud.Helpers
 {
 	public class Email
 	{
-		public static int sending()
+		public static string sending()
 		{
 			string email = "EtherealCloudTesting@outlook.com";
 			string pass = "=pew9V_s";
@@ -31,7 +31,7 @@ namespace Ethereal_Cloud.Helpers
 				throw;
 			}
 			
-			return genCode;
+			return $"{genCode}";
 		}
 	}
 }
