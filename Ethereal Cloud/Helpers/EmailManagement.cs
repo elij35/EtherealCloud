@@ -3,12 +3,12 @@ using System.Net;
 
 namespace Ethereal_Cloud.Helpers
 {
-	public class Email
+	public class EmailManagement
 	{
 		public static string sending()
 		{
-			string email = "EtherealCloudTesting@outlook.com";
-			string pass = "=pew9V_s";
+			string email = "EtherealCloudGroup@outlook.com";
+			string pass = "Phew0=che=lZiyo&rLSwl9rimud7yo6E@r1phutRuc5lxeWri2otr2n7z+zotO3i";
 			string userEmail = "rileycoulstock@gmail.com"; // Figure out receive of email and code placement
 
 			SmtpClient client = new SmtpClient("smtp-mail.outlook.com");
