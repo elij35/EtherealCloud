@@ -42,12 +42,6 @@ function toggleSort() {
     document.getElementById('sortForm').submit();
 }
 
-//Loads naming folder popup
-function showInputBox() {
-    document.getElementById('input-box').style.display = 'block';
-    document.querySelector('#input-box input[name="foldername"]').focus();
-}
-
 //Cancels the folder creation
 function cancelFolderCreation() {
     document.getElementById('input-box').style.display = 'none';
