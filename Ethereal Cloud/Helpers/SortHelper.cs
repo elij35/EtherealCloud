@@ -1,14 +1,10 @@
 ﻿using Ethereal_Cloud.Models.Upload.Get.Folder;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Newtonsoft.Json;
-using System.Net.Http.Headers;
-using System.Text;
 
 namespace Ethereal_Cloud.Helpers
 {
     public class SortHelper
     {
-        public static List<FolderContentDisplay> SortDisplay(HttpContext context,List<FolderContentDisplay> displayList)
+        public static List<FolderContentDisplay> SortDisplay(HttpContext context, List<FolderContentDisplay> displayList)
         {
             bool sortAlphabeticaly = SortManagement.GetSorting(context);
 

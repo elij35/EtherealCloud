@@ -98,7 +98,7 @@ namespace Ethereal_Cloud.Pages
             Response.Redirect("/Upload");
         }
 
-        
+
         public async Task<IActionResult> OnPostDownload(int fileId)
         {
             //create object
@@ -320,7 +320,7 @@ namespace Ethereal_Cloud.Pages
                 return;
             }
         }
-        
+
 
         public async Task OnPostShare(int fileId)
         {
@@ -354,7 +354,7 @@ namespace Ethereal_Cloud.Pages
                 return;
             }
         }
-        
+
 
 
 

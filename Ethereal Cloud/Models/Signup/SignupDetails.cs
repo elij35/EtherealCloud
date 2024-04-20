@@ -2,7 +2,7 @@
 
 namespace Ethereal_Cloud.Models.Signup
 {
-// lengths
+    // lengths
     public class SignupDetails
     {
         [Required(ErrorMessage = "Username is required.")]

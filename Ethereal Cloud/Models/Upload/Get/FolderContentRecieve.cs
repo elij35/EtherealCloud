@@ -7,15 +7,15 @@ namespace Ethereal_Cloud.Models.Upload.Get
         public FileMetaRecieve[]? Files { get; set; }
         public FolderDataRecieve[]? Folders { get; set; }
     }
-// required lengths
+    // required lengths
     public class FileMetaRecieve
     {
         public int FileID { get; set; }
-        
+
         [Required]
         [StringLength(64)]
         public string Filename { get; set; }
-        
+
         [Required]
         [StringLength(64)]
         public string Filetype { get; set; }

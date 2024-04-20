@@ -1,6 +1,6 @@
 using Ethereal_Cloud.Helpers;
-using Ethereal_Cloud.Models.Upload.Get.Folder;
 using Ethereal_Cloud.Models.Upload.Get;
+using Ethereal_Cloud.Models.Upload.Get.Folder;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
@@ -34,7 +34,7 @@ namespace Ethereal_Cloud.Pages
             }
 
             Logger.LogToConsole(ViewData, "Endpoint: " + endpointShare);
-            
+
             //Make request
             var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/file/sharing", true, null);
 
@@ -72,7 +72,7 @@ namespace Ethereal_Cloud.Pages
 
                 ViewData["FailureMessage"] = "Failed to get files & folders. Please try again.";
             }
-            
+
         }
 
         public async Task OnPostSort()
