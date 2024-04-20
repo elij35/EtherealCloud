@@ -180,7 +180,7 @@
                 }
             }
         }
-        
+
         //Loads naming folder popup
         function showInputBox() {
             document.getElementById('input-box').style.display = 'block';
@@ -211,7 +211,6 @@
                 return;
             }
 
-
             var menuOpen = document.querySelectorAll('.file-info');
             menuOpen.forEach(function (menu) {
                 menu.setAttribute('aria-expanded', false);
@@ -230,6 +229,12 @@
         var logger = '@ViewData["logger"]';
         if (logger !== null) {
             console.log(decodeHtml(logger));
+        }
+
+        function decodeHtml(html) {
+            var txt = document.createElement("textarea");
+            txt.innerHTML = html;
+            return txt.value;
         }
     </script>
 

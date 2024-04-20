@@ -126,6 +126,7 @@
         }
     }
 
+    <!--Scripts -->
     <script>
         document.body.addEventListener('click', function (event) {
             var parent = event.target.parentNode;
@@ -143,8 +144,19 @@
                 });
             }
         });
-    </script>
 
+        function decodeHtml(html) {
+            var txt = document.createElement("textarea");
+            txt.innerHTML = html;
+            return txt.value;
+        }
+
+        // Console logger
+        var logger = '@ViewData["logger"]';
+        if (logger !== null) {
+            console.log(decodeHtml(logger));
+        }
+    </script>
 
     <!-- Hidden form for restore folder action -->
     <form id="restoreForm" method="post" asp-page-handler="Restore">

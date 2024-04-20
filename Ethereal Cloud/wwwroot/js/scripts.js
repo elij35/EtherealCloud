@@ -79,13 +79,6 @@ function hideButton(holderId) {
     }
 }
 
-//************************* Decodes html text: ************************
-function decodeHtml(html) {
-    var txt = document.createElement("textarea");
-    txt.innerHTML = html;
-    return txt.value;
-}
-
 //************************* Changing sort image orientation: ************************
 function toggleImage() {
     var imageElement = document.getElementById('toggleImage');
@@ -98,7 +91,6 @@ function toggleImage() {
 
 //************************* Bin page functionality: ************************
 function restoreFileFolder(id, fileType) {
-
     document.getElementById('restoreIdInput').value = id;
     document.getElementById('restoreTypeInput').value = fileType;
     document.getElementById('restoreForm').submit();
