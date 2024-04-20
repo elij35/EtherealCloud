@@ -1,0 +1,3 @@
+EtherealDatabaseStorage!!
+
+openssl pkcs12 -export -out cert.pfx -inkey key.key -in cert.crt -password pass:EtherealDatabaseStorage!!
