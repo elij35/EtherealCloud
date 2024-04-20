@@ -144,7 +144,6 @@
                 return;
             }
 
-
             var menuOpen = document.querySelectorAll('.file-info');
             menuOpen.forEach(function (menu) {
                 menu.setAttribute('aria-expanded', false);
@@ -159,95 +158,11 @@
             }
         });
 
-
-
-        //Menu functions
-
-        function downloadFile(id) {
-
-            document.getElementById('fileIdDownloadInput').value = id;
-
-            // Submit the form
-            document.getElementById('downloadForm').submit();
-        }
-
-        function deleteFile(id, fileType) {
-            document.getElementById('fileIdInput').value = id;
-            document.getElementById('typeInput').value = fileType;
-
-            // Submit the form
-            document.getElementById('deleteForm').submit();
-        }
-
-        function renameFile(id) {
-            // Implement rename logic here
-            console.log("Renaming file: " + id);
-        }
-
-
-        function navIntoFolderOrDownload(id, fileType, name) {
-            if (fileType === "Folder") {
-
-                document.getElementById('idNavInput').value = id;
-                document.getElementById('nameNavInput').value = name;
-
-                // Submit the form
-                document.getElementById('navForm').submit();
-            } else {
-
-                downloadFile(id);
-            }
-        }
-
         // Console logger
         var logger = '@ViewData["logger"]';
         if (logger !== null) {
             console.log(decodeHtml(logger));
         }
-
-        //Decodes html text
-        function decodeHtml(html) {
-            var txt = document.createElement("textarea");
-            txt.innerHTML = html;
-            return txt.value;
-        }
-
-        //Changes the sort image when pressed
-        function toggleSort() {
-            // Submit the form
-            document.getElementById('sortForm').submit();
-        }
-
-        //Loads naming folder popup
-        function showInputBox() {
-            document.getElementById('input-box').style.display = 'block';
-            document.querySelector('#input-box input[name="foldername"]').focus();
-        }
-
-        //Cancels the folder creation
-        function cancelFolderCreation() {
-            document.getElementById('input-box').style.display = 'none';
-        }
-
-
-        // Mobile hold tap function
-        var holdtapTimer = null;
-
-        function tap(id, fileType, name) {
-            holdtapTimer = setTimeout(function () {
-                tapHoldTimer(id, fileType, name);
-            }, 500); //500ms time hold
-
-        }
-
-        function tapCancel() {
-            clearTimeout(holdtapTimer);
-        }
-
-        function tapHoldTimer(id, fileType, name) {
-            navIntoFolderOrDownload(id, fileType, name);
-        }
-
     </script>
 
 

@@ -3,7 +3,8 @@
 @{
     ViewBag.Title = "Bin";
     Layout = "Shared/_Layout.cshtml";
-            <link rel="stylesheet" href="/css/Upload.css" asp-append-version="true">
+    <link rel="stylesheet" href="/css/Upload.css" asp-append-version="true">
+    <script src="/js/scripts.js"></script>
 }
 
 <!-- File explorer -->
@@ -126,55 +127,6 @@
     }
 
     <script>
-        function showButton(id) {
-            var button = document.getElementById(id);
-            button.style.display = 'inline';
-        }
-
-        function hideButton(holderId) {
-            if (matchMedia('(hover: hover)').matches) {
-                var holder = document.getElementById(holderId);
-                    holder.style.display = "none";
-                
-            }
-        }
-
-
-
-        //Changes the sort image when pressed
-        function toggleImage() {
-            var imageElement = document.getElementById('toggleImage');
-            if (imageElement.src.endsWith('sort-alpha-down.svg')) {
-                imageElement.src = 'images/tools/sort-alpha-up.svg';
-            } else {
-                imageElement.src = 'images/tools/sort-alpha-down.svg';
-            }
-        }
-
-
-
-
-        //Menu buttons
-
-        function restoreFileFolder(id, fileType) {
-
-            document.getElementById('restoreIdInput').value = id;
-            document.getElementById('restoreTypeInput').value = fileType;
-
-            // Submit the form
-            document.getElementById('restoreForm').submit();
-
-                    
-        }
-
-
-        //Changes the sort image when pressed
-        function toggleSort() {
-            // Submit the form
-            document.getElementById('sortForm').submit();
-        }
-
-
         document.body.addEventListener('click', function (event) {
             var parent = event.target.parentNode;
 
@@ -191,7 +143,6 @@
                 });
             }
         });
-
     </script>
 
 
@@ -204,10 +155,6 @@
     <!-- Hidden form for sorting -->
     <form id="sortForm" method="post" asp-page-handler="Sort">
     </form>
-
-
-
-
 
     string SetSort()
     {
@@ -223,6 +170,4 @@
             return "images/tools/sort-alpha-down.svg";
         }
     }
-
-
 }
