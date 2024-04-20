@@ -20,31 +20,7 @@ namespace Ethereal_Cloud.Pages
             string authCode = digit1 + digit2 + digit3 + digit4 + digit5 + digit6;
 
             // Replace this with your actual authentication logic
-            string email = "EtherealCloudTesting@outlook.com";
-            string pass = "=pew9V_s";
-            string userEmail = "rileycoulstock@gmail.com";
             
-            SmtpClient client = new SmtpClient("smtp-mail.outlook.com");
-            client.Port = 587;
-            client.EnableSsl = true;
-
-            client.Credentials = new NetworkCredential(email, pass);
-
-            MailMessage message = new MailMessage(email, userEmail);
-            message.Subject = "Test";
-            message.Body = "Put the code here";
-            try
-            {
-                client.Send(message);
-
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            Random random = new Random();
-            int genCode = random.Next(100000, 1000000);
-            string expectedCode = $"{genCode}";
 
             if (authCode == "123456")
             {
