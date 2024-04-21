@@ -31,12 +31,6 @@ docker run -e "DB_IP=%db_ip%" -e "DB_PASS=EtherealDatabaseStorage!!" -e "BUCK_IP
 
 for /f %%i in ('docker inspect -f {{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}} storage-controller') do set sc_ip=%%i
 
-cd %base_dir%
-
-cd ./"Ethereal Cloud"/certs
-
-docker volume create certificate
-docker run --rm -v certificate:/certs -v "%CD%":/local busybox cp /local/cert.pfx /certs/
 
 cd %base_dir%
 
@@ -45,7 +39,7 @@ docker image rm ethereal-storage
 docker build -t ethereal-storage .
 docker stop ethereal-storage
 docker rm ethereal-storage
-docker run -e "SC_IP=%sc_ip%" -p 8080:8080 -p 8081:8081 -v certificate:/home/app/certs/ --name ethereal-storage --hostname ethereal-storage -d ethereal-storage
+docker run -e "SC_IP=%sc_ip%" -p 8080:8080 -p 8081:8081 -v "%CD%"/certs/cert.pfx:/home/app/certs/cert.pfx --name ethereal-storage --hostname ethereal-storage -d ethereal-storage
 
 cd %base_dir%
 

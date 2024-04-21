@@ -26,5 +26,9 @@ RUN dotnet publish "./Ethereal Cloud.csproj" -c $BUILD_CONFIGURATION -o /app/pub
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+COPY ["certs/cert.pfx", "/app/cert.pfx"]
 COPY certs/ /app/certs/
+ENV ASPNETCORE_URLS=https://+:8081;http://+:8080
+ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/app/cert.pfx
+ENV ASPNETCORE_Kestrel__Certificates__Default__Password=EtherealDatabaseStorage!!
 ENTRYPOINT ["dotnet", "Ethereal Cloud.dll"]
