@@ -13,7 +13,5 @@ Put together to get pfx file:
 openssl pkcs12 -export -out cert.pfx -inkey server.key -in .crt -password pass:EtherealDatabaseStorage!!
 
 
-
-
 CertPassword is::
 EtherealDatabaseStorage!!
