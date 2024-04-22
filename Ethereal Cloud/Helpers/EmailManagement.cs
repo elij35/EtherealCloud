@@ -5,11 +5,10 @@ namespace Ethereal_Cloud.Helpers
 {
 	public class EmailManagement
 	{
-		public static string sending()
+		public static string Send2FAEmail(string userEmail)
 		{
 			string email = "EtherealCloudGroup@outlook.com";
 			string pass = "Phew0=che=lZiyo&rLSwl9rimud7yo6E@r1phutRuc5lxeWri2otr2n7z+zotO3i";
-			string userEmail = "rileycoulstock@gmail.com"; // Figure out receive of email and code placement
 
 			SmtpClient client = new SmtpClient("smtp-mail.outlook.com");
 			client.Port = 587;

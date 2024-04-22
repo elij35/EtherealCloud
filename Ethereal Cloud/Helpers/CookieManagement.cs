@@ -26,6 +26,7 @@ namespace Ethereal_Cloud.Helpers
             }
             else
             {
+                context.Session.Clear();
                 context.Response.Redirect("/Index");
                 return null;
             }
