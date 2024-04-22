@@ -85,13 +85,5 @@ namespace Ethereal_Cloud.Pages
 
             Response.Redirect("/Shared");
         }
-
-
-
-
-
-
-
-
     }
 }
