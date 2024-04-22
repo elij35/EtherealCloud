@@ -102,6 +102,12 @@
 </div>
 
 @{
+
+    string GetImageForFileType(string fileType)
+    {
+        return FileFolderIcon.GetIcon(fileType);
+    }
+
     <!-- Scripts -->
     <script>
         function switchPage(page) {
@@ -109,37 +115,6 @@
                 window.location.href = '/SharedWithMe';
             } else if (page === 'shared-with-others') {
                 window.location.href = '/SharedWithOthers';
-            }
-        }
-
-        function showButton(id) {
-            var button = document.getElementById(id);
-            button.style.display = 'inline';
-        }
-
-        function hideButton(holderId, menuId) {
-            if (matchMedia('(hover: hover)').matches) {
-                var holder = document.getElementById(holderId);
-                var menu = document.getElementById(menuId);
-                if (menu.style.display !== "block") {
-                    holder.style.display = "none";
-                }
-            }
-        }
-
-        function toggleFileInfo(id) {
-
-            var fileInfo = document.getElementById(id);
-            var expanded = fileInfo.getAttribute('aria-expanded') === 'true';
-
-            // Toggle the aria-expanded attribute
-            fileInfo.setAttribute('aria-expanded', !expanded);
-
-            // Toggle the visibility of the file info
-            if (expanded) {
-                fileInfo.style.display = 'none';
-            } else {
-                fileInfo.style.display = 'block';
             }
         }
 
@@ -151,11 +126,6 @@
                 return;
             }
 
-            var menuOpen = document.querySelectorAll('.file-info');
-            menuOpen.forEach(function (menu) {
-                menu.setAttribute('aria-expanded', false);
-                menu.style.display = 'none';
-            });
 
             if (matchMedia('(hover: hover)').matches) {
                 var buttonHolder = document.querySelectorAll('.fileButtonHolder');
@@ -178,6 +148,31 @@
         }
     </script>
 
+    <!-- Hidden form for delete action -->
+    <form id="deleteForm" method="post" asp-page-handler="Delete">
+        <input name="fileId" type="hidden" id="fileIdInput">
+        <input name="type" type="hidden" id="typeInput">
+    </form>
+
+    <!-- Hidden form for download action -->
+    <form id="downloadForm" method="post" asp-page-handler="Download">
+        <input name="fileId" type="hidden" id="fileIdDownloadInput">
+    </form>
+
+    <!-- Hidden form for share action -->
+    <form id="shareForm" method="post" asp-page-handler="Share">
+        <input name="fileId" type="hidden" id="fileIdShareInput">
+    </form>
+
+    <!-- Hidden form for nav action -->
+    <form id="navForm" method="post" asp-page-handler="Navigate">
+        <input name="Id" type="hidden" id="idNavInput">
+        <input name="Name" type="hidden" id="nameNavInput">
+    </form>
+
+    <!-- Hidden form for sorting -->
+    <form id="sortForm" method="post" asp-page-handler="Sort">
+    </form>
 
     string SetSort()
     {
@@ -193,31 +188,4 @@
             return "images/tools/sort-alpha-down.svg";
         }
     }
-
-    string GetImageForFileType(string fileType)
-    {
-        return FileFolderIcon.GetIcon(fileType);
-    }
-
-
-    <!-- Hidden form for delete action -->
-    <form id="deleteForm" method="post" asp-page-handler="Delete">
-        <input name="fileId" type="hidden" id="fileIdInput">
-        <input name="type" type="hidden" id="typeInput">
-    </form>
-
-    <!-- Hidden form for download action -->
-    <form id="downloadForm" method="post" asp-page-handler="Download">
-        <input name="fileId" type="hidden" id="fileIdDownloadInput">
-    </form>
-
-    <!-- Hidden form for nav action -->
-    <form id="navForm" method="post" asp-page-handler="Navigate">
-        <input name="Id" type="hidden" id="idNavInput">
-        <input name="Name" type="hidden" id="nameNavInput">
-    </form>
-
-    <!-- Hidden form for sorting -->
-    <form id="sortForm" method="post" asp-page-handler="Sort">
-    </form>
 }
