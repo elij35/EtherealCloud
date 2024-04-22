@@ -1,7 +1,10 @@
 using Ethereal_Cloud.Helpers;
 using Ethereal_Cloud.Models.Login;
+using Ethereal_Cloud.Models.Upload.Get;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using StorageController.Data.Models;
+using System.Text.Json;
 
 namespace Ethereal_Cloud.Pages
 {
@@ -35,8 +38,16 @@ namespace Ethereal_Cloud.Pages
                 //Valid login
                 Logger.LogToConsole(ViewData, "Successfull login of user " + loginDetails.UsernameOrEmail);
 
+                //Put response in form of FolderContentRecieve
+                string jsonString = response.ToString();
+                AuthDetails authDetails = JsonSerializer.Deserialize<AuthDetails>(jsonString);
+
+
                 //Save authtoken as a cookie
-                CookieManagement.SetCookie(HttpContext, "AuthToken", response.ToString());
+                CookieManagement.SetCookie(HttpContext, "AuthToken", authDetails.Token);
+
+                //Save email
+                CookieManagement.SetCookie(HttpContext, "Email", authDetails.Email);
 
                 //reset the folderpath cookie
                 CookieManagement.RemoveCookie(HttpContext, "FolderPath");
