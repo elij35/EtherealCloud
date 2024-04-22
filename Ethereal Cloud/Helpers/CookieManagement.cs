@@ -24,8 +24,9 @@ namespace Ethereal_Cloud.Helpers
         public static string? GetAuthToken(HttpContext context)
         {
             var cookie = context.Session.GetString("AuthToken");
+            var code = context.Session.GetString("Code");
 
-            if (cookie != null)
+            if (cookie != null && code != null)
             {
                 return cookie;
             }

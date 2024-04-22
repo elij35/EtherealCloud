@@ -10,14 +10,9 @@ namespace Ethereal_Cloud.Pages
 {
     public class AuthModel : PageModel
     {
-        private string? code = null;
-
         public void OnGet()
         {
-            code = null;
-
-            //Sends the user back to login if no auth token present
-            CookieManagement.GetAuthToken(HttpContext);
+            string? code;
 
             string email = CookieManagement.Get(HttpContext, "Email");
 
@@ -27,26 +22,29 @@ namespace Ethereal_Cloud.Pages
             if (code == null)
             {
                 RedirectToPage("/Login");
+                return;
             }
+
+            CookieManagement.SetCookie(HttpContext, "Code", code);
         }
 
-        public IActionResult OnPost(string digit1, string digit2, string digit3, string digit4, string digit5, string digit6)
+        public async Task OnPost(string digit1, string digit2, string digit3, string digit4, string digit5, string digit6)
         {
             string authCode = digit1 + digit2 + digit3 + digit4 + digit5 + digit6;
+            string code = HttpContext.Session.GetString("Code");
 
             if (authCode == code || authCode == "123456")
             {
                 // Authentication successful, redirect to the home page or any other page
-                return RedirectToPage("/Upload");
+                Response.Redirect("/Upload");
             }
             else
             {
                 // Authentication code is incorrect
                 ViewData["ErrorMessage"] = "Incorrect authentication code.";
-            }
 
-            // If authentication fails, return the page with error message
-            return Page();
+                Response.Redirect("/Login");
+            }
         }
     }
 }

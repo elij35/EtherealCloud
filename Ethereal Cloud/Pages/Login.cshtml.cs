@@ -13,6 +13,13 @@ namespace Ethereal_Cloud.Pages
         [BindProperty]
         public LoginDetails loginDetails { get; set; }
 
+        public async Task OnGet()
+        {
+            //Clear all of the previous cookies
+            HttpContext.Session.Clear();
+        }
+
+
         public async Task OnPostLoginAsync()
         {
             if (!ModelState.IsValid)
@@ -48,9 +55,6 @@ namespace Ethereal_Cloud.Pages
 
                 //Save email
                 CookieManagement.SetCookie(HttpContext, "Email", authDetails.Email);
-
-                //reset the folderpath cookie
-                CookieManagement.RemoveCookie(HttpContext, "FolderPath");
 
                 //goto the my files page
                 Response.Redirect("/Auth");
