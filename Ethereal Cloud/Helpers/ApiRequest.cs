@@ -61,7 +61,7 @@ namespace Ethereal_Cloud.Helpers
                 // Add AuthToken to header if required
                 if (AuthTokenRequired)
                 {
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthTokenManagement.GetToken(context));
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", CookieManagement.GetAuthToken(context));
                 }
 
 

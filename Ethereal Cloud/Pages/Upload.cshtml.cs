@@ -23,13 +23,13 @@ namespace Ethereal_Cloud.Pages
         public void FolderPathForDisplay()
         {
             //Sets the filepath list to be displayed on the interface
-            FolderPath = PathManagement.Get(HttpContext);
+            FolderPath = CookieManagement.GetFolderPath(HttpContext);
         }
 
         public async Task OnGet()
         {
 
-            sortDisplay = SortManagement.GetSorting(HttpContext);
+            sortDisplay = CookieManagement.GetSorting(HttpContext);
 
             FolderPathForDisplay();
 
@@ -89,9 +89,9 @@ namespace Ethereal_Cloud.Pages
 
         public async Task OnPostSort()
         {
-            bool sortAlpha = SortManagement.GetSorting(HttpContext);
+            bool sortAlpha = CookieManagement.GetSorting(HttpContext);
 
-            SortManagement.SetSorting(HttpContext, !sortAlpha);
+            CookieManagement.SetCookie(HttpContext, "Sort", (!sortAlpha).ToString());
 
             sortDisplay = !sortAlpha;
 
@@ -104,7 +104,7 @@ namespace Ethereal_Cloud.Pages
             //create object
             var dataObject = new Dictionary<string, object?>
             {
-                { "authtoken", AuthTokenManagement.GetToken(HttpContext)}
+                { "authtoken", CookieManagement.GetAuthToken(HttpContext)}
             };
 
             //Make request
@@ -135,7 +135,7 @@ namespace Ethereal_Cloud.Pages
 
         public async Task OnPostNavigate(int Id, string Name)
         {
-            var path = PathManagement.Get(HttpContext);
+            var path = CookieManagement.GetFolderPath(HttpContext);
 
             List<FolderDataRecieve> folderPath = new List<FolderDataRecieve>();
 
@@ -154,7 +154,7 @@ namespace Ethereal_Cloud.Pages
 
             var serializedFolderPath = JsonSerializer.Serialize(folderPath);
 
-            PathManagement.Set(HttpContext, serializedFolderPath);
+            CookieManagement.SetCookie(HttpContext, "FolderPath", serializedFolderPath);
 
             Response.Redirect("/Upload");
 
@@ -201,7 +201,7 @@ namespace Ethereal_Cloud.Pages
                         //create file object
                         var dataObject = new Dictionary<string, object?>
                         {
-                            { "AuthToken", AuthTokenManagement.GetToken(HttpContext) },
+                            { "AuthToken", CookieManagement.GetAuthToken(HttpContext) },
                             { "Filename", singleFile.FileName },
                             { "Filetype", MimeType.GetMimeType(singleFile.FileName) },
                             { "Content", hexBytes }
@@ -256,7 +256,7 @@ namespace Ethereal_Cloud.Pages
             //create file object
             var dataObject = new Dictionary<string, object?>
             {
-                { "AuthToken", AuthTokenManagement.GetToken(HttpContext) },
+                { "AuthToken", CookieManagement.GetAuthToken(HttpContext) },
                 { "FolderName", createFolderDetails.FolderName },
                 { "ParentFolder", PathManagement.GetCurrentFolderId(HttpContext) }
             };

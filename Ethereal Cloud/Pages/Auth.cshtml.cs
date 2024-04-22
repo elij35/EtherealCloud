@@ -1,3 +1,4 @@
+using Ethereal_Cloud.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using NuGet.Configuration;
@@ -9,10 +10,16 @@ namespace Ethereal_Cloud.Pages
 {
     public class AuthModel : PageModel
     {
+        private string? code = null;
+
         public void OnGet()
         {
-            // Handle GET request
-            
+            code = null;
+
+            //Sends the user back to login if no auth token present
+            CookieManagement.GetAuthToken(HttpContext);
+
+            code = EmailManagement.Send2FAEmail();
         }
 
         public IActionResult OnPost(string digit1, string digit2, string digit3, string digit4, string digit5, string digit6)
@@ -22,7 +29,7 @@ namespace Ethereal_Cloud.Pages
             // Replace this with your actual authentication logic
             
 
-            if (authCode == "123456")
+            if (authCode == code)
             {
                 // Authentication successful, redirect to the home page or any other page
                 return RedirectToPage("/Upload");

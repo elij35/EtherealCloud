@@ -15,7 +15,7 @@ namespace Ethereal_Cloud.Pages
 
         public async Task OnGet()
         {
-            sortDisplay = SortManagement.GetSorting(HttpContext);
+            sortDisplay = CookieManagement.GetSorting(HttpContext);
 
             //Make request
             var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/bin", true, null);
@@ -70,9 +70,9 @@ namespace Ethereal_Cloud.Pages
 
         public async Task OnPostSort()
         {
-            bool sortAlpha = SortManagement.GetSorting(HttpContext);
+            bool sortAlpha = CookieManagement.GetSorting(HttpContext);
 
-            SortManagement.SetSorting(HttpContext, !sortAlpha);
+            CookieManagement.SetCookie(HttpContext, "Sort", (!sortAlpha).ToString());
 
             sortDisplay = !sortAlpha;
 

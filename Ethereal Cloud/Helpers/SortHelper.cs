@@ -6,7 +6,7 @@ namespace Ethereal_Cloud.Helpers
     {
         public static List<FolderContentDisplay> SortDisplay(HttpContext context, List<FolderContentDisplay> displayList)
         {
-            bool sortAlphabeticaly = SortManagement.GetSorting(context);
+            bool sortAlphabeticaly = CookieManagement.GetSorting(context);
 
 
             if (sortAlphabeticaly)
