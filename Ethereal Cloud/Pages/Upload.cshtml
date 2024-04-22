@@ -158,7 +158,7 @@
         <form method="post" enctype="multipart/form-data" asp-page-handler="Upload">
             <div class="mb-3" id="file-input-box">
                 <input class="form-control" type="file" name="uploadedFiles" id="fileInput" multiple>
-                <input type="submit" class="btn btn-success" value="Upload" />
+                <input type="submit" class="btn btn-success" value="Upload" disabled>
             </div>
         </form>
     </div>
@@ -167,6 +167,16 @@
 @{
     <!-- Scripts -->
     <script>
+        //Below greys out upload button until files are selected
+        document.getElementById('fileInput').addEventListener('change', function () {
+            var uploadButton = document.querySelector('.btn-success');
+            if (this.files.length > 0) {
+                uploadButton.disabled = false;
+            } else {
+                uploadButton.disabled = true;
+            }
+        });
+
         function showButton(id) {
             var button = document.getElementById(id);
             button.style.display = 'inline';
