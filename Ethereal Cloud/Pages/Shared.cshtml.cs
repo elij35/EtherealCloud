@@ -20,9 +20,9 @@ namespace Ethereal_Cloud.Pages
 
         public async Task OnGet()
         {
-            sortDisplay = SortManagement.GetSorting(HttpContext);
+            sortDisplay = CookieManagement.GetSorting(HttpContext);
 
-            bool sharedWithMe = ShareManagement.GetActiveShare(HttpContext);
+            bool sharedWithMe = CookieManagement.GetActiveShare(HttpContext);
 
             // Shared with me request
             string endpointShare = "v2/file/sharing";
@@ -77,7 +77,7 @@ namespace Ethereal_Cloud.Pages
 
         public async Task OnPostSort()
         {
-            bool sortAlpha = SortManagement.GetSorting(HttpContext);
+            bool sortAlpha = CookieManagement.GetSorting(HttpContext);
 
             CookieManagement.SetCookie(HttpContext, "Sort", (!sortAlpha).ToString());
 

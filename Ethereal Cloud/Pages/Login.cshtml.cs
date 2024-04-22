@@ -37,9 +37,9 @@ namespace Ethereal_Cloud.Pages
 
                 //Save authtoken as a cookie
                 CookieManagement.SetCookie(HttpContext, "AuthToken", response.ToString());
-                
+
                 //reset the folderpath cookie
-                PathManagement.Remove(HttpContext);
+                CookieManagement.RemoveCookie(HttpContext, "FolderPath");
 
                 //goto the my files page
                 Response.Redirect("/Auth");
