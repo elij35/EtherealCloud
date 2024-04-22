@@ -66,12 +66,27 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        const path = window.location.pathname.toLowerCase();
+
+        // Mark the current page as active in the navbar
         document.querySelectorAll('.nav-link').forEach(link => {
-            if (link.getAttribute('href').toLowerCase() === location.pathname.toLowerCase()) {
-                link.classList.add('active-link'); // Add active-link class if it matches the current URL
+            if (link.getAttribute('href').toLowerCase() === path) {
+                link.classList.add('active-link');
             } else {
-                link.classList.remove('active-link'); // Remove active-link class otherwise
+                link.classList.remove('active-link');
             }
         });
+
+        // Check if the path matches the shared page URL
+        if (path.includes('/sharedwithothers')) {
+            // Find the shared link in the navbar and mark it as active
+            document.querySelectorAll('.nav-link').forEach(link => {
+                if (link.getAttribute('href').toLowerCase().includes('/sharedwithme')) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        }
     });
 </script>

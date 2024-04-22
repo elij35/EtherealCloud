@@ -114,7 +114,13 @@
                                             <div class="menu" id="@display.Id-menu">
                                                 <div class="menu-item" onclick="downloadFile('@display.Id')">Download</div>
                                                 <div class="menu-item" onclick="renameFile('@display.Id')">Rename</div>
+
+                                                <div class="menu-item" onclick="showRenamePopup()">RenameToFix</div>
+
                                                 <div class="menu-item" onclick="shareFile('@display.Id')">Share</div>
+
+                                                <div class="menu-item" onclick="showSharePopup()">ShareToFix</div>
+
                                                 <div class="menu-item" onclick="deleteFile('@display.Id', '@display.Type')">Delete</div>
                                             </div>
                                         </div>
@@ -140,7 +146,7 @@
                 <!--FileName Field-->
                 <div class="form-floating">
                     <input asp-for="createFolderDetails.FolderName" class="form-control" placeholder=" ">
-                    <label for="folderName">Folder Name</label>
+                    <label for="folderName">Enter Folder Name</label>
                     <span asp-validation-for="createFolderDetails.FolderName" class="text-danger"></span>
                 </div>
 
@@ -151,7 +157,42 @@
                 </div>
             </form>
         </div>
+
+        <!-- Rename Popup -->
+        <div id="renamePopup" class="popup-input" style="display:none;">
+            <form id="rename-form" method="post" asp-page-handler="RenameFile">
+                <!-- NewFileName Field-->
+                <div class="form-floating">
+                    <input id="newFileName" class="form-control" placeholder=" " required>
+                    <label for="newFileName">Enter File Name</label>
+                </div>
+
+                <!-- Submit button -->
+                <div class="mb-3 ">
+                    <button type="submit" id="rename-file-btn" class="popup-input-btn btn btn-primary">Rename File</button>
+                    <button type="button" onclick="cancelRename()" class="popup-input-btn btn btn-secondary">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Share Popup -->
+        <div id="sharePopup" class="popup-input" style="display:none;">
+            <form id="share-form" method="post" asp-page-handler="ShareFile">
+                <!-- Email Field-->
+                <div class="form-floating">
+                    <input id="email" class="form-control" placeholder=" " required>
+                    <label for="email">Enter Email or Username</label>
+                </div>
+
+                <!-- Share button -->
+                <div class="mb-3 ">
+                    <button type="submit" id="share-file-btn" class="popup-input-btn btn btn-primary">Share</button>
+                    <button type="button" onclick="cancelShare()" class="popup-input-btn btn btn-secondary">Cancel</button>
+                </div>
+            </form>
+        </div>
     </div>
+
     <!-- Bottom upload dotted box -->
     <div id="upload-box" class="row mt-3">
         <h3>Upload your files</h3>
@@ -167,6 +208,31 @@
 @{
     <!-- Scripts -->
     <script>
+
+        // Function to show the rename popup
+        function showRenamePopup() {
+            document.getElementById("renamePopup").style.display = "block";
+        }
+
+        // Function to close the rename popup
+        function cancelRename() {
+            document.getElementById("renamePopup").style.display = "none";
+        }
+
+        // Function to show the share popup
+        function showSharePopup() {
+            document.getElementById("sharePopup").style.display = "block";
+        }
+
+        // Function to close the share popup
+        function cancelShare() {
+            document.getElementById("sharePopup").style.display = "none";
+        }
+
+
+
+
+
         //Below greys out upload button until files are selected
         document.getElementById('fileInput').addEventListener('change', function () {
             var uploadButton = document.querySelector('.btn-success');

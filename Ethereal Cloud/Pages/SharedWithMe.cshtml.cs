@@ -83,7 +83,7 @@ namespace Ethereal_Cloud.Pages
 
             sortDisplay = !sortAlpha;
 
-            Response.Redirect("/Shared");
+            Response.Redirect("/SharedWithMe");
         }
     }
 }
