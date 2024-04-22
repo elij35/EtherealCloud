@@ -36,8 +36,8 @@ namespace Ethereal_Cloud.Pages
                 Logger.LogToConsole(ViewData, "Successfull login of user " + loginDetails.UsernameOrEmail);
 
                 //Save authtoken as a cookie
-                AuthTokenManagement.SetToken(HttpContext, response.ToString());
-
+                CookieManagement.SetCookie(HttpContext, "AuthToken", response.ToString());
+                
                 //reset the folderpath cookie
                 PathManagement.Remove(HttpContext);
 

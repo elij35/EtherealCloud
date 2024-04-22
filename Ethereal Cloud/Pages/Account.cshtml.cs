@@ -44,7 +44,7 @@ namespace Ethereal_Cloud.Pages
 
         public async Task OnPostLogoutAsync()
         {
-            AuthTokenManagement.RemoveToken(HttpContext);
+            HttpContext.Session.Clear();
             Response.Redirect("/Login");
         }
     }

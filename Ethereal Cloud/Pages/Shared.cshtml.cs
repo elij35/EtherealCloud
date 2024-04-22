@@ -79,7 +79,7 @@ namespace Ethereal_Cloud.Pages
         {
             bool sortAlpha = SortManagement.GetSorting(HttpContext);
 
-            SortManagement.SetSorting(HttpContext, !sortAlpha);
+            CookieManagement.SetCookie(HttpContext, "Sort", (!sortAlpha).ToString());
 
             sortDisplay = !sortAlpha;
 

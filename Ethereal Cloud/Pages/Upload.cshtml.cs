@@ -91,7 +91,7 @@ namespace Ethereal_Cloud.Pages
         {
             bool sortAlpha = SortManagement.GetSorting(HttpContext);
 
-            SortManagement.SetSorting(HttpContext, !sortAlpha);
+            CookieManagement.SetCookie(HttpContext, "Sort", (!sortAlpha).ToString());
 
             sortDisplay = !sortAlpha;
 
@@ -104,7 +104,7 @@ namespace Ethereal_Cloud.Pages
             //create object
             var dataObject = new Dictionary<string, object?>
             {
-                { "authtoken", AuthTokenManagement.GetToken(HttpContext)}
+                { "authtoken", CookieManagement.GetAuthToken(HttpContext)}
             };
 
             //Make request
@@ -201,7 +201,7 @@ namespace Ethereal_Cloud.Pages
                         //create file object
                         var dataObject = new Dictionary<string, object?>
                         {
-                            { "AuthToken", AuthTokenManagement.GetToken(HttpContext) },
+                            { "AuthToken", CookieManagement.GetAuthToken(HttpContext) },
                             { "Filename", singleFile.FileName },
                             { "Filetype", MimeType.GetMimeType(singleFile.FileName) },
                             { "Content", hexBytes }
@@ -256,7 +256,7 @@ namespace Ethereal_Cloud.Pages
             //create file object
             var dataObject = new Dictionary<string, object?>
             {
-                { "AuthToken", AuthTokenManagement.GetToken(HttpContext) },
+                { "AuthToken", CookieManagement.GetAuthToken(HttpContext) },
                 { "FolderName", createFolderDetails.FolderName },
                 { "ParentFolder", PathManagement.GetCurrentFolderId(HttpContext) }
             };
