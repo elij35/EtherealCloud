@@ -1,20 +1,16 @@
 ﻿#share-button-holder {
-    padding: 0px;
-    position: absolute;
-    right: 20px;
-    top: 10px;
+    margin-left: auto;
 }
 
-#share-button {
-    height: 36px;
-    border-bottom: none;
-    background: #cbbbe2;
+.share-button {
+    background: #ffffff;
+    padding: 2px;
 }
 
-    #share-button.active {
-        background: #f2f2f2;
+    .share-button.active {
+        background: #947aba;
     }
 
-    #share-button:hover {
-        background: #cbbb11;
+    .share-button:hover {
+        background: #7c47c7
     }

@@ -6,7 +6,7 @@ using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Ethereal_Cloud.Pages
 {
-    public class SharedModel : PageModel
+    public class SharedWithOthersModel : PageModel
     {
         //list of files to be shown to user
         public List<FolderContentDisplay> DisplayList = new List<FolderContentDisplay>();
@@ -85,13 +85,5 @@ namespace Ethereal_Cloud.Pages
 
             Response.Redirect("/Shared");
         }
-
-
-
-
-
-
-
-
     }
 }

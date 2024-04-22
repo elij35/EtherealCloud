@@ -1,9 +1,9 @@
 ﻿@page
 @using Ethereal_Cloud.Models
 @using Ethereal_Cloud.Icons
-@model Ethereal_Cloud.Pages.SharedModel
+@model Ethereal_Cloud.Pages.SharedWithOthersModel
 @{
-    ViewBag.Title = "Shared";
+    ViewBag.Title = "Shared With Others";
     Layout = "Shared/_Layout.cshtml";
     <link rel="stylesheet" href="/css/Upload.css" asp-append-version="true">
     <link rel="stylesheet" href="/css/Shared.css" asp-append-version="true">
@@ -15,15 +15,6 @@
     <!-- Files Box -->
     <div id="filebox" class="col-lg-12 col-md-12 col-sm-12 h-100">
 
-        <!-- Shared Page Buttons -->
-        <div id="share-button-holder">
-
-            <button id="share-button" class="active">Shared With Me</button>
-
-            <button id="share-button" class="">Sharing With</button>
-
-        </div>
-
         <!-- FilePath -->
         <div id="filepath" class="row">
 
@@ -32,6 +23,12 @@
                 <a href="#" onclick="toggleSort()">
                     <img title="Sort" id="toggleImage" class="row" src="@SetSort()" alt="path">
                 </a>
+            </div>
+
+            <!-- Shared Page Buttons -->
+            <div id="share-button-holder" class="col-auto text-right">
+                <button id="shared-with-me-button" class="btn share-button" onclick="switchPage('shared-with-me')">Shared With Me</button>
+                <button id="shared-with-others-button" class="btn share-button active" onclick="switchPage('shared-with-others')">Shared With Others</button>
             </div>
         </div>
 
@@ -106,6 +103,14 @@
 @{
     <!-- Scripts -->
     <script>
+        function switchPage(page) {
+            if (page === 'shared-with-me') {
+                window.location.href = '/SharedWithMe';
+            } else if (page === 'shared-with-others') {
+                window.location.href = '/SharedWithOthers';
+            }
+        }
+
         function showButton(id) {
             var button = document.getElementById(id);
             button.style.display = 'inline';
@@ -214,7 +219,4 @@
     <!-- Hidden form for sorting -->
     <form id="sortForm" method="post" asp-page-handler="Sort">
     </form>
-
-
-
 }
