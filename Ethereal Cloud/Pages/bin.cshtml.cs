@@ -108,7 +108,7 @@ namespace Ethereal_Cloud.Pages
             {
                 //Logger.LogToConsole(ViewData, "Successfull Deletion: " + fileId + " : " + type);
                 Logger.LogToConsole(ViewData, "After: " + Id + fileType);
-                Response.Redirect("/Upload");
+                Response.Redirect("/Bin");
             }
             else
             {
