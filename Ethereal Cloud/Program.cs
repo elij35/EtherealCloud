@@ -4,7 +4,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 
-builder.Services.AddSession();
+builder.Services.AddSession(options =>
+{
+    options.Cookie.Name = ".MySession";
+    options.IdleTimeout = TimeSpan.FromSeconds(3600);
+});
 
 // Configure Kestrel to use HTTPS
 builder.WebHost.ConfigureKestrel(serverOptions =>
