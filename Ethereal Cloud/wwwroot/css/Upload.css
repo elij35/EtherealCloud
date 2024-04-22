@@ -255,3 +255,8 @@
     .dropdown-item:hover {
         background-color: #f1f1f1;
     }
+
+/* Greyed out button */
+.btn-success:disabled {
+    background-color: #808080;
+}
