@@ -356,10 +356,17 @@ namespace Ethereal_Cloud.Pages
 
         public async Task OnPostRename(RenameDetails renameDetails)
         {
+            Logger.LogToConsole(ViewData,"Hello");
+
+            //renameDetails.Type = "Folder";
+            //renameDetails.Name = "NewNameTest";
+            //renameDetails.Id = 1;
+
+
             //create file object
             var dataObject = new Dictionary<string, object?>
             {
-                { "ShareUsername", renameDetails.Name }
+                { "Name", renameDetails.Name }
             };
 
             string uriFileType;
@@ -374,7 +381,7 @@ namespace Ethereal_Cloud.Pages
 
 
             //Make request
-            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/" + uriFileType + "/share/" + renameDetails.Id, true, dataObject);
+            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/" + uriFileType + "/rename/" + renameDetails.Id, true, dataObject);
 
             if (response != null)
             {
