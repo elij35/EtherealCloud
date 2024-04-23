@@ -160,16 +160,16 @@
             <form id="rename-form" method="post" asp-page-handler="Rename">
                 <!-- NewFileName Field-->
                 <div class="form-floating">
-                    <input asp-for="renameDetails.Name" class="form-control" placeholder=" " required>
+                    <input name="renameDetails.Name" class="form-control" placeholder=" ">
                     <label for="newFileName">Enter File Name</label>
                 </div>
 
-                <div class="form-floating" style="display:none;">
-                    <input asp-for="renameDetails.Id" id="renameIdInput" class="form-control" placeholder=" " required>
+                <div class="form-floating" style="">
+                    <input name="renameDetails.Id" id="renameIdInput" class="form-control" placeholder=" ">
                 </div>
 
-                <div class="form-floating" style="display:none;">
-                    <input asp-for="renameDetails.Type" id="renameTypeInput" class="form-control" placeholder=" " required>
+                <div class="form-floating" style="">
+                    <input name="renameDetails.Type" id="renameTypeInput" class="form-control" placeholder=" ">
                 </div>
 
                 <!-- Submit button -->
@@ -185,12 +185,12 @@
             <form id="share-form" method="post" asp-page-handler="Share">
                 <!-- Email Field-->
                 <div class="form-floating">
-                    <input asp-for="shareDetails.Username" class="form-control" placeholder=" " required>
+                    <input name="Username" class="form-control" placeholder=" ">
                     <label for="email">Enter Username</label>
                 </div>
 
                 <div class="form-floating" style="display:none;">
-                    <input asp-for="shareDetails.Id" id="shareIdInput" class="form-control" placeholder=" " required>
+                    <input name="Id" id="shareIdInput" class="form-control" placeholder=" ">
                 </div>
 
                 <!-- Share button -->

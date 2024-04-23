@@ -1,10 +1,5 @@
 using Ethereal_Cloud.Helpers;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using NuGet.Configuration;
-using System;
-using System.Net;
-using System.Net.Mail;
 
 namespace Ethereal_Cloud.Pages
 {

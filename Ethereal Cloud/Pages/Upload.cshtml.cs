@@ -325,17 +325,8 @@ namespace Ethereal_Cloud.Pages
 
 
 
-        [BindProperty]
-        public ShareDetails shareDetails { get; set; }
-        public async Task OnPostShare()
+        public async Task OnPostShare(ShareDetails shareDetails)
         {
-            // Check fileId validity
-            if (!ModelState.IsValid)
-            {
-                Logger.LogToConsole(ViewData, "Invalid: Model error");
-                return;
-            }
-
             //create file object
             var dataObject = new Dictionary<string, object?>
             {
@@ -363,19 +354,8 @@ namespace Ethereal_Cloud.Pages
 
 
 
-
-        [BindProperty]
-        public RenameDetails renameDetails { get; set; }
-        public async Task OnPostRename()
+        public async Task OnPostRename(RenameDetails renameDetails)
         {
-            // Check fileId validity
-            if (!ModelState.IsValid)
-            {
-                //Logger.LogToConsole(ViewData, "Invalid: Model error");
-                Logger.LogToConsole(ViewData, "Invalid: Model error: name: " + renameDetails.Name + "  Tpe: " + renameDetails.Type + "   Id: " + renameDetails.Id);
-                return;
-            }
-
             //create file object
             var dataObject = new Dictionary<string, object?>
             {
@@ -398,7 +378,7 @@ namespace Ethereal_Cloud.Pages
 
             if (response != null)
             {
-                Logger.LogToConsole(ViewData, "Successfull Share: " + shareDetails.Id);
+                Logger.LogToConsole(ViewData, "Successfull Share: " + renameDetails.Id);
                 Response.Redirect("/Upload");
             }
             else

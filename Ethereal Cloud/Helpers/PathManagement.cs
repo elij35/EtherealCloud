@@ -1,5 +1,4 @@
-﻿using Ethereal_Cloud.Models.Upload.Get;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
+﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System.Text.Json;
 
 namespace Ethereal_Cloud.Helpers
