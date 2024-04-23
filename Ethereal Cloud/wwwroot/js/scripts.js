@@ -11,17 +11,6 @@ function deleteFile(id, fileType) {
     document.getElementById('deleteForm').submit();
 }
 
-function shareFile(id) {
-    console.log("Share activated: " + id)
-    document.getElementById('fileIdShareInput').value = id;
-    document.getElementById('shareForm').submit();
-}
-
-function renameFile(id) {
-    // Implement rename logic here
-    console.log("Renaming file: " + id);
-}
-
 function navIntoFolderOrDownload(id, fileType, name) {
     if (fileType === "Folder") {
 

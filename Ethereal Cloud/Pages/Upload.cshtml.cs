@@ -4,6 +4,8 @@ using Ethereal_Cloud.Models.Upload.CreateFolder;
 using Ethereal_Cloud.Models.Upload.Get;
 using Ethereal_Cloud.Models.Upload.Get.File;
 using Ethereal_Cloud.Models.Upload.Get.Folder;
+using Ethereal_Cloud.Models.Upload.Rename;
+using Ethereal_Cloud.Models.Upload.Share;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using JsonSerializer = System.Text.Json.JsonSerializer;
@@ -322,10 +324,13 @@ namespace Ethereal_Cloud.Pages
         }
 
 
-        public async Task OnPostShare(int fileId)
+
+        [BindProperty]
+        public ShareDetails shareDetails { get; set; }
+        public async Task OnPostShare()
         {
             // Check fileId validity
-            if (fileId == null)
+            if (!ModelState.IsValid)
             {
                 Logger.LogToConsole(ViewData, "Invalid: Model error");
                 return;
@@ -334,17 +339,17 @@ namespace Ethereal_Cloud.Pages
             //create file object
             var dataObject = new Dictionary<string, object?>
             {
-                { "ShareUsername", "test2" }
+                { "ShareUsername", shareDetails.Username }
             };
 
 
 
             //Make request
-            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/file/share/" + fileId, true, dataObject);
+            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/file/share/" + shareDetails.Id, true, dataObject);
 
             if (response != null)
             {
-                Logger.LogToConsole(ViewData, "Successfull Share: " + fileId);
+                Logger.LogToConsole(ViewData, "Successfull Share: " + shareDetails.Id);
                 Response.Redirect("/Upload");
             }
             else
@@ -356,6 +361,53 @@ namespace Ethereal_Cloud.Pages
         }
 
 
+
+
+
+        [BindProperty]
+        public RenameDetails renameDetails { get; set; }
+        public async Task OnPostRename()
+        {
+            // Check fileId validity
+            if (!ModelState.IsValid)
+            {
+                //Logger.LogToConsole(ViewData, "Invalid: Model error");
+                Logger.LogToConsole(ViewData, "Invalid: Model error: name: " + renameDetails.Name + "  Tpe: " + renameDetails.Type + "   Id: " + renameDetails.Id);
+                return;
+            }
+
+            //create file object
+            var dataObject = new Dictionary<string, object?>
+            {
+                { "ShareUsername", renameDetails.Name }
+            };
+
+            string uriFileType;
+            if (renameDetails.Type.ToLower() == "folder")
+            {
+                uriFileType = "folder";
+            }
+            else
+            {
+                uriFileType = "file";
+            }
+
+
+            //Make request
+            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/" + uriFileType + "/share/" + renameDetails.Id, true, dataObject);
+
+            if (response != null)
+            {
+                Logger.LogToConsole(ViewData, "Successfull Share: " + shareDetails.Id);
+                Response.Redirect("/Upload");
+            }
+            else
+            {
+                Logger.LogToConsole(ViewData, "Bad share response");
+                Response.Redirect("/Upload");
+                return;
+            }
+        }
 
 
 

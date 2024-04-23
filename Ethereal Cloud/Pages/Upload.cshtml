@@ -95,7 +95,7 @@
 
                                         <div id="file-info-@display.Id-@display.Type" class="file-info">
                                             <div class="menu" id="@display.Id-menu">
-                                                <div class="menu-item" onclick="renameFile('@display.Id')">Rename</div>
+                                                <div class="menu-item" onclick="showRenamePopup('@display.Id', '@display.Type')">Rename</div>
                                                 <div class="menu-item" onclick="deleteFile('@display.Id', '@display.Type')">Delete</div>
                                             </div>
                                         </div>
@@ -113,13 +113,10 @@
                                         <div id="file-info-@display.Id-@display.Type" class="file-info">
                                             <div class="menu" id="@display.Id-menu">
                                                 <div class="menu-item" onclick="downloadFile('@display.Id')">Download</div>
-                                                <div class="menu-item" onclick="renameFile('@display.Id')">Rename</div>
 
-                                                <div class="menu-item" onclick="showRenamePopup()">RenameToFix</div>
+                                                <div class="menu-item" onclick="showRenamePopup('@display.Id', '@display.Type')">Rename</div>
 
-                                                <div class="menu-item" onclick="shareFile('@display.Id')">Share</div>
-
-                                                <div class="menu-item" onclick="showSharePopup('@display.Id')">ShareToFix</div>
+                                                <div class="menu-item" onclick="showSharePopup('@display.Id')">Share</div>
 
                                                 <div class="menu-item" onclick="deleteFile('@display.Id', '@display.Type')">Delete</div>
                                             </div>
@@ -160,11 +157,19 @@
 
         <!-- Rename Popup -->
         <div id="renamePopup" class="popup-input" style="display:none;">
-            <form id="rename-form" method="post" asp-page-handler="RenameFile">
+            <form id="rename-form" method="post" asp-page-handler="Rename">
                 <!-- NewFileName Field-->
                 <div class="form-floating">
-                    <input id="newFileName" class="form-control" placeholder=" " required>
+                    <input asp-for="renameDetails.Name" class="form-control" placeholder=" " required>
                     <label for="newFileName">Enter File Name</label>
+                </div>
+
+                <div class="form-floating" style="display:none;">
+                    <input asp-for="renameDetails.Id" id="renameIdInput" class="form-control" placeholder=" " required>
+                </div>
+
+                <div class="form-floating" style="display:none;">
+                    <input asp-for="renameDetails.Type" id="renameTypeInput" class="form-control" placeholder=" " required>
                 </div>
 
                 <!-- Submit button -->
@@ -177,11 +182,15 @@
 
         <!-- Share Popup -->
         <div id="sharePopup" class="popup-input" style="display:none;">
-            <form id="share-form" method="post" asp-page-handler="ShareFile">
+            <form id="share-form" method="post" asp-page-handler="Share">
                 <!-- Email Field-->
                 <div class="form-floating">
-                    <input id="email" class="form-control" placeholder=" " required>
-                    <label for="email">Enter Email or Username</label>
+                    <input asp-for="shareDetails.Username" class="form-control" placeholder=" " required>
+                    <label for="email">Enter Username</label>
+                </div>
+
+                <div class="form-floating" style="display:none;">
+                    <input asp-for="shareDetails.Id" id="shareIdInput" class="form-control" placeholder=" " required>
                 </div>
 
                 <!-- Share button -->
@@ -210,8 +219,14 @@
     <script>
 
         // Function to show the rename popup
-        function showRenamePopup() {
+        function showRenamePopup(id, type) {
             document.getElementById("renamePopup").style.display = "block";
+
+
+
+            console.log("Share activated: " + id  + "   " + type)
+            document.getElementById('renameIdInput').value = id;
+            document.getElementById('renameTypeInput').value = type;
         }
 
         // Function to close the rename popup
@@ -223,8 +238,10 @@
         function showSharePopup(id) {
             document.getElementById("sharePopup").style.display = "block";
 
-
+            console.log("Share activated: " + id)
+            document.getElementById('shareIdInput').value = id;
         }
+
 
         // Function to close the share popup
         function cancelShare() {
