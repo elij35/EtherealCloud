@@ -33,7 +33,7 @@
                     {
                         <div id="uploaded-files" class="file-hover" onmouseover="showButton('fileButtonHolder-@display.Id-@display.Type')" onmouseout="hideButton('fileButtonHolder-@display.Id-@display.Type')">
                             <a id="fileLink">
-                                <img id="uploaded-files-img" src="~/images/file-icons/@GetImageForFileType(@display.Type)" alt="logo" class="logo">
+                                <img id="uploaded-files-img" src="~/images/file-icons/@FileFolderIcon.GetIcon(display.Type)" alt="logo" class="logo">
                             </a>
                             <p>@display.Name</p>
 
@@ -60,11 +60,6 @@
 </div>
 
 @{
-
-    string GetImageForFileType(string fileType)
-    {
-        return FileFolderIcon.GetIcon(fileType);
-    }
 
     <!--Scripts -->
     <script>
