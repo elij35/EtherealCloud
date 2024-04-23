@@ -356,12 +356,6 @@ namespace Ethereal_Cloud.Pages
 
         public async Task OnPostRename(RenameDetails renameDetails)
         {
-            Logger.LogToConsole(ViewData,"Hello");
-
-            //renameDetails.Type = "Folder";
-            //renameDetails.Name = "NewNameTest";
-            //renameDetails.Id = 1;
-
 
             //create file object
             var dataObject = new Dictionary<string, object?>
