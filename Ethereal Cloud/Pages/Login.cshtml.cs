@@ -42,7 +42,7 @@ namespace Ethereal_Cloud.Pages
             if (response != null)
             {
                 //Valid login
-                Logger.LogToConsole(ViewData, "Successfull login of user " + loginDetails.UsernameOrEmail);
+                //Logger.LogToConsole(ViewData, "Successfull login of user " + loginDetails.UsernameOrEmail);
 
                 //Put response in form of FolderContentRecieve
                 string jsonString = response.ToString();
@@ -51,6 +51,7 @@ namespace Ethereal_Cloud.Pages
 
                 //Save authtoken as a cookie
                 CookieManagement.SetCookie(HttpContext, "AuthToken", authDetails.Token);
+                //Logger.LogToConsole(ViewData, "AuthToken: " + authDetails.Token.ToString());
 
                 //Save email
                 CookieManagement.SetCookie(HttpContext, "Email", authDetails.Email);
