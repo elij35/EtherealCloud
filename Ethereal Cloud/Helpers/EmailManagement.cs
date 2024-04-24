@@ -34,7 +34,8 @@ namespace Ethereal_Cloud.Helpers
                 
             try
             {
-                client.Send(message);
+                //Logger.LogToConsole()
+                //client.Send(message);
 
             }
             catch (Exception)
