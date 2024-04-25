@@ -259,4 +259,5 @@
 /* Greyed out button */
 .btn-success:disabled {
     background-color: #808080;
+    border-color: #808080;
 }
