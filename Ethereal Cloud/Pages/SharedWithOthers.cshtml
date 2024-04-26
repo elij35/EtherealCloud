@@ -49,46 +49,51 @@
                             <!-- Buttons for files/folders-->
                             <div id="fileButtonHolder-@display.Id-@display.Type" class="fileButtonHolder" style="">
 
+                                <button id="fileSettingsButton" onclick="downloadFile('@display.Id')">
+                                    <img id="fileSettingsImage" src="~/images/menu-icons/cloud-download.svg" alt="path">
+                                </button>
+                                <button id="fileSettingsButton" aria-expanded="false" aria-controls="file-info-@display.Id-@display.Type" onclick="toggleFileInfo('file-info-@display.Id-@display.Type')">
+                                    <img id="fileSettingsImage" src="~/images/menu-icons/three-dots.svg" alt="path">
 
-                                @if (@display.Type == "Folder")
-                                {
-                                // Folders
-                                    <button id="fileSettingsButton" aria-expanded="false" aria-controls="file-info-@display.Id-@display.Type" onclick="toggleFileInfo('file-info-@display.Id-@display.Type')">
-                                        <img id="fileSettingsImage" src="~/images/menu-icons/three-dots.svg" alt="path">
-
-                                        <div id="file-info-@display.Id-@display.Type" class="file-info">
-                                            <div class="menu" id="@display.Id-menu">
-                                                <div class="menu-item">TO BE DECIDED</div>
-                                                <div class="menu-item" onclick="renameFile('@display.Id')">Rename</div>
-                                                <div class="menu-item" onclick="deleteFile('@display.Id', '@display.Type')">Delete</div>
-                                            </div>
+                                    <div id="file-info-@display.Id-@display.Type" class="file-info">
+                                        <div class="menu" id="@display.Id-menu">
+                                            <div class="menu-item" onclick="downloadFile('@display.Id')">Download</div>
+                                            <div class="menu-item" onclick="showRenamePopup('@display.Id', '@display.Type')">Rename</div>
+                                            <div class="menu-item" onclick="deleteFile('@display.Id', '@display.Type')">Delete</div>
                                         </div>
-                                    </button>
-                                }
-                                else
-                                {
-                                    // Files
-                                    <button id="fileSettingsButton" onclick="downloadFile('@display.Id')">
-                                        <img id="fileSettingsImage" src="~/images/menu-icons/cloud-download.svg" alt="path">
-                                    </button>
-                                    <button id="fileSettingsButton" aria-expanded="false" aria-controls="file-info-@display.Id-@display.Type" onclick="toggleFileInfo('file-info-@display.Id-@display.Type')">
-                                        <img id="fileSettingsImage" src="~/images/menu-icons/three-dots.svg" alt="path">
-
-                                        <div id="file-info-@display.Id-@display.Type" class="file-info">
-                                            <div class="menu" id="@display.Id-menu">
-                                                <div class="menu-item">TO BE DECIDED</div>
-                                                <div class="menu-item" onclick="downloadFile('@display.Id')">Download</div>
-                                                <div class="menu-item" onclick="renameFile('@display.Id')">Rename</div>
-                                                <div class="menu-item" onclick="renameFile('@display.Id')">Share</div>
-                                                <div class="menu-item" onclick="deleteFile('@display.Id', '@display.Type')">Delete</div>
-                                            </div>
-                                        </div>
-                                    </button>
-                                }
+                                    </div>
+                                </button>
+                                
                             </div>
                         </div>
                     }
                 </div>
+
+                <!-- Rename Popup -->
+                <div id="renamePopup" class="popup-input" style="display:none;">
+                    <form id="rename-form" method="post" asp-page-handler="Rename">
+                        <!-- NewFileName Field-->
+                        <div class="form-floating">
+                            <input name="renameDetails.Name" class="form-control" placeholder=" ">
+                            <label for="newFileName">Enter File Name</label>
+                        </div>
+
+                        <div class="form-floating" style="display:none;">
+                            <input name="renameDetails.Id" id="renameIdInput" class="form-control" placeholder=" ">
+                        </div>
+
+                        <div class="form-floating" style="display:none;">
+                            <input name="renameDetails.Type" id="renameTypeInput" class="form-control" placeholder=" ">
+                        </div>
+
+                        <!-- Submit button -->
+                        <div class="mb-3 ">
+                            <button type="submit" id="rename-file-btn" class="popup-input-btn btn btn-primary">Rename File</button>
+                            <button type="button" onclick="cancelRename()" class="popup-input-btn btn btn-secondary">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+
             }
             else
             {
@@ -105,11 +110,56 @@
 
     <!-- Scripts -->
     <script>
+
+
         function switchPage(page) {
             if (page === 'shared-with-me') {
                 window.location.href = '/SharedWithMe';
             } else if (page === 'shared-with-others') {
                 window.location.href = '/SharedWithOthers';
+            }
+        }
+
+
+        // Function to show the rename popup
+        function showRenamePopup(id, type) {
+            document.getElementById("renamePopup").style.display = "block";
+
+
+
+
+            document.getElementById('renameIdInput').value = id;
+            document.getElementById('renameTypeInput').value = type;
+
+            console.log("Share activated: " + id + "   " + type)
+        }
+
+        // Function to close the rename popup
+        function cancelRename() {
+            document.getElementById("renamePopup").style.display = "none";
+        }
+
+
+
+
+
+
+
+
+        
+        function toggleFileInfo(id) {
+
+            var fileInfo = document.getElementById(id);
+            var expanded = fileInfo.getAttribute('aria-expanded') === 'true';
+
+            // Toggle the aria-expanded attribute
+            fileInfo.setAttribute('aria-expanded', !expanded);
+
+            // Toggle the visibility of the file info
+            if (expanded) {
+                fileInfo.style.display = 'none';
+            } else {
+                fileInfo.style.display = 'block';
             }
         }
 
@@ -121,6 +171,11 @@
                 return;
             }
 
+            var menuOpen = document.querySelectorAll('.file-info');
+            menuOpen.forEach(function (menu) {
+                menu.setAttribute('aria-expanded', false);
+                menu.style.display = 'none';
+            });
 
             if (matchMedia('(hover: hover)').matches) {
                 var buttonHolder = document.querySelectorAll('.fileButtonHolder');
@@ -129,6 +184,26 @@
                 });
             }
         });
+
+
+        function showButton(id) {
+            var button = document.getElementById(id);
+            button.style.display = 'inline';
+        }
+
+        function hideButton(holderId, menuId) {
+            if (matchMedia('(hover: hover)').matches) {
+                var holder = document.getElementById(holderId);
+                var menu = document.getElementById(menuId);
+                if (menu.style.display !== "block") {
+                    holder.style.display = "none";
+                }
+            }
+        }
+
+
+
+
 
         function decodeHtml(html) {
             var txt = document.createElement("textarea");
