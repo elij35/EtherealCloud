@@ -46,47 +46,18 @@
                             </a>
                             <p>@display.Name</p>
 
-                            <!-- Buttons for files/folders-->
+
+                            <!-- Buttons for files-->
                             <div id="fileButtonHolder-@display.Id-@display.Type" class="fileButtonHolder" style="">
 
-
-                                @if (@display.Type == "Folder")
-                                {
-                                // Folders
-                                    <button id="fileSettingsButton" aria-expanded="false" aria-controls="file-info-@display.Id-@display.Type" onclick="toggleFileInfo('file-info-@display.Id-@display.Type')">
-                                        <img id="fileSettingsImage" src="~/images/menu-icons/three-dots.svg" alt="path">
-
-                                        <div id="file-info-@display.Id-@display.Type" class="file-info">
-                                            <div class="menu" id="@display.Id-menu">
-                                                <div class="menu-item">TO BE DECIDED</div>
-                                                <div class="menu-item" onclick="renameFile('@display.Id')">Rename</div>
-                                                <div class="menu-item" onclick="deleteFile('@display.Id', '@display.Type')">Delete</div>
-                                            </div>
-                                        </div>
-                                    </button>
-                                }
-                                else
-                                {
-                                    // Files
-                                    <button id="fileSettingsButton" onclick="downloadFile('@display.Id')">
-                                        <img id="fileSettingsImage" src="~/images/menu-icons/cloud-download.svg" alt="path">
-                                    </button>
-                                    <button id="fileSettingsButton" aria-expanded="false" aria-controls="file-info-@display.Id-@display.Type" onclick="toggleFileInfo('file-info-@display.Id-@display.Type')">
-                                        <img id="fileSettingsImage" src="~/images/menu-icons/three-dots.svg" alt="path">
-
-                                        <div id="file-info-@display.Id-@display.Type" class="file-info">
-                                            <div class="menu" id="@display.Id-menu">
-                                                <div class="menu-item">TO BE DECIDED</div>
-                                                <div class="menu-item" onclick="downloadFile('@display.Id')">Download</div>
-                                                <div class="menu-item" onclick="renameFile('@display.Id')">Rename</div>
-                                                <div class="menu-item" onclick="renameFile('@display.Id')">Share</div>
-                                                <div class="menu-item" onclick="deleteFile('@display.Id', '@display.Type')">Delete</div>
-                                            </div>
-                                        </div>
-                                    </button>
-                                }
+                                <button id="fileSettingsButton" onclick="downloadFile('@display.Id')">
+                                    <img id="fileSettingsImage" src="~/images/menu-icons/cloud-download.svg" alt="path">
+                                </button>
                             </div>
                         </div>
+
+                        
+
                     }
                 </div>
             }
