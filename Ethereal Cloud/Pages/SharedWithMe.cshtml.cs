@@ -36,7 +36,7 @@ namespace Ethereal_Cloud.Pages
             Logger.LogToConsole(ViewData, "Endpoint: " + endpointShare);
 
             //Make request
-            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/file/sharing", true, null);
+            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/file/shared", true, null);
 
 
             if (response != null)
