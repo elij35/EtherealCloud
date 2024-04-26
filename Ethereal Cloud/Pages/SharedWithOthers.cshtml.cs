@@ -12,7 +12,7 @@ namespace Ethereal_Cloud.Pages
     public class SharedWithOthersModel : PageModel
     {
         //list of files to be shown to user
-        public List<FolderContentDisplay> DisplayList = new List<FolderContentDisplay>();
+        public List<ShareContentDisplay> DisplayList = new List<ShareContentDisplay>();
 
         public bool sortDisplay = false;
 
@@ -41,24 +41,24 @@ namespace Ethereal_Cloud.Pages
             //Make request
             var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/file/sharing", true, null);
 
-
             if (response != null)
             {
                 //Put response in form of ShareContentRecieve
                 string jsonString = response.ToString();
-                List<FileMetaRecieve>? folderContent = JsonSerializer.Deserialize<List<FileMetaRecieve>>(jsonString);
+                List<ShareFileMetaRecieve>? folderContent = JsonSerializer.Deserialize<List<ShareFileMetaRecieve>>(jsonString);
 
-                DisplayList = new List<FolderContentDisplay>();
+                DisplayList = new List<ShareContentDisplay>();
 
                 //Add files to display list
-                foreach (FileMetaRecieve file in folderContent)
+                foreach (ShareFileMetaRecieve file in folderContent)
                 {
 
-                    FolderContentDisplay newFile = new()
+                    ShareContentDisplay newFile = new()
                     {
                         Id = file.FileID,
                         Name = file.Filename,
-                        Type = file.Filetype
+                        Type = file.Filetype,
+                        SharingUsers = file.SharingUsers
                     };
 
                     DisplayList.Add(newFile);
@@ -66,7 +66,7 @@ namespace Ethereal_Cloud.Pages
 
 
                 //Sort list
-                DisplayList = SortHelper.SortDisplay(HttpContext, DisplayList);
+                DisplayList = SortHelper.SortSharedDisplay(HttpContext, DisplayList);
 
             }
             else
