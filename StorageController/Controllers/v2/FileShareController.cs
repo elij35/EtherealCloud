@@ -52,7 +52,8 @@ namespace StorageController.Controllers.v2
 
             UserFile shareLink = new();
             shareLink.FileID = id;
-            shareLink.UserID = userID;
+            shareLink.UserID = target.UserID;
+            shareLink.OwnerID = userID;
             shareLink.Privilege = "Viewer";
 
             await db.UserFiles.AddAsync(shareLink);
