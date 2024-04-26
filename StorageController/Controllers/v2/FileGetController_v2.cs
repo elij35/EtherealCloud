@@ -146,10 +146,10 @@ namespace StorageController.Controllers.v2
 
             }
 
-            IQueryable<UserFile> userFiles = db.UserFiles.Where(userFile => userFile.UserID == userID
-                                          && db.FileBin.FirstOrDefault(removedFile => removedFile.FileID == userFile.FileID) == null); ;
+            IQueryable<UserFile> userFiles = db.UserFiles.Where(userFile => userFile.UserID == userID && userFile.Privilege == "Owner"
+                                          && db.FileBin.FirstOrDefault(removedFile => removedFile.FileID == userFile.FileID) == null);
             IQueryable<UserFolder> userFolders = db.UserFolders.Where(userFolder => userFolder.UserID == userID
-                                          && db.FolderBin.FirstOrDefault(removedFolder => removedFolder.FolderID == userFolder.FolderID) == null); ;
+                                          && db.FolderBin.FirstOrDefault(removedFolder => removedFolder.FolderID == userFolder.FolderID) == null);
 
             FileData[] files = db.Files.Where(file => userFiles.FirstOrDefault(link => link.FileID == file.FileID) != null && file.FolderID == id).ToArray();
             Folder[] folders = db.Folders.Where(folder => userFolders.FirstOrDefault(link => link.FolderID == folder.FolderID) != null && folder.ParentID == id).ToArray();
