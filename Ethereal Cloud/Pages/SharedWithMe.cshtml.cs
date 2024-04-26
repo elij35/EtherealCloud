@@ -1,6 +1,8 @@
 using Ethereal_Cloud.Helpers;
 using Ethereal_Cloud.Models.Upload.Get;
+using Ethereal_Cloud.Models.Upload.Get.File;
 using Ethereal_Cloud.Models.Upload.Get.Folder;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
@@ -85,5 +87,40 @@ namespace Ethereal_Cloud.Pages
 
             Response.Redirect("/SharedWithMe");
         }
+
+        public async Task<IActionResult> OnPostDownload(int fileId)
+        {
+            //create object
+            var dataObject = new Dictionary<string, object?>
+            {
+                { "authtoken", CookieManagement.GetAuthToken(HttpContext)}
+            };
+
+            //Make request
+            var response = await ApiRequest.Files(ViewData, HttpContext, "v1/file/" + fileId, dataObject);
+
+            if (response != null)
+            {
+                string jsonString = response.ToString();
+                FileModel file = JsonSerializer.Deserialize<FileModel>(jsonString);
+
+                Logger.LogToConsole(ViewData, "Successfull download: " + file.Content + " " + file.Filetype + " " + file.Filename);
+
+                //Response.Redirect("/Upload");
+
+                byte[] bytes = Convert.FromHexString(file.Content);
+
+                return File(bytes, file.Filetype, file.Filename);
+            }
+            else
+            {
+                Logger.LogToConsole(ViewData, "Fail: " + fileId);
+
+                return RedirectToPage("/SharedWithMe");
+            }
+
+
+        }
+
     }
 }
