@@ -46,5 +46,41 @@ namespace StorageController.Controllers.v2
 
         }
 
+        [HttpPost]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        [Route("/v2/file/sharing")]
+        public async Task<string> GetSharingFiles()
+        {
+
+            Response<string> authResponse = await UserUtils.AuthFromHeader(Request);
+
+            if (!authResponse.Success)
+                return await authResponse.Serialize();
+
+            int userID = int.Parse(authResponse.Message);
+
+            DataHandler db = new();
+
+            IEnumerable<UserFile> sharedFiles = db.UserFiles.Where(link => link.OwnerID == userID && link.Privilege == "Viewer");
+            IEnumerable<FileData> sharedFileData = db.Files.Where(link => sharedFiles.FirstOrDefault(shared => shared.FileID == link.FileID) != null);
+
+            Dictionary<int, FileMetaReturn> fileData = new Dictionary<int, FileMetaReturn>();
+            foreach (FileData sharedFile in sharedFileData)
+            {
+
+                FileMetaReturn data = new();
+                data.Filetype = sharedFile.FileType;
+                data.FileID = sharedFile.FileID;
+                data.Filename = sharedFile.FileName;
+
+                if (!fileData.ContainsKey(sharedFile.FileID))
+                    fileData.Add(data.FileID, data);
+            }
+
+            return await new Response<List<FileMetaReturn>>(true, fileData.Values.ToList()).Serialize();
+
+        }
+
     }
 }
