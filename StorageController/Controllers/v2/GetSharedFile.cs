@@ -82,5 +82,52 @@ namespace StorageController.Controllers.v2
 
         }
 
+        public struct DisplayUserData
+        {
+            public int UserID { get; set; }
+            public string Username { get; set; }
+        }
+
+        [HttpPost]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        [Route("/v2/file/sharing/users/{id}")]
+        public async Task<string> GetSharingFileUsers([FromRoute] int id)
+        {
+
+            Response<string> authResponse = await UserUtils.AuthFromHeader(Request);
+
+            if (!authResponse.Success)
+                return await authResponse.Serialize();
+
+            int userID = int.Parse(authResponse.Message);
+
+            if (!FileUtils.DoesUserOwnFile(id, userID))
+                return await new Response<string>(false, "You don't own this file").Serialize();
+
+            DataHandler db = new();
+
+            IEnumerable<UserFile> sharedFiles = db.UserFiles.Where(link => link.FileID == id && link.Privilege == "Viewer" && link.OwnerID == userID);
+
+            List<int> sharedUserIDs = new List<int>();
+            foreach (UserFile sharedFile in sharedFiles)
+                sharedUserIDs.Add(sharedFile.UserID);
+
+            IEnumerable<User> sharedUsers = UserUtils.GetUsersFromID(sharedUserIDs);
+
+            List<DisplayUserData> users = new List<DisplayUserData>();
+            foreach (User user in sharedUsers)
+            {
+                users.Add(new DisplayUserData
+                {
+                    UserID = user.UserID,
+                    Username = user.Username
+                });
+            }
+
+            return await new Response<List<DisplayUserData>>(true, users).Serialize();
+
+        }
+
     }
 }
