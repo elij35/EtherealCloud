@@ -16,6 +16,17 @@ namespace StorageController
 
         }
 
+        public static IEnumerable<User> GetUsersFromID(List<int> userIDs)
+        {
+
+            DataHandler db = new();
+
+            IEnumerable<User> users = db.Users.Where(user => userIDs.Contains(user.UserID));
+
+            return users;
+
+        }
+
         public static User? GetUserFromUsername(string username)
         {
 
