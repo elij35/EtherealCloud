@@ -14,7 +14,7 @@ namespace StorageController.Controllers.v2
         [HttpPost]
         [Produces("application/json")]
         [Consumes("application/json")]
-        [Route("/v2/file/sharing")]
+        [Route("/v2/file/shared")]
         public async Task<string> GetSharedFiles()
         {
 
@@ -28,17 +28,16 @@ namespace StorageController.Controllers.v2
             DataHandler db = new();
 
             IEnumerable<UserFile> sharedFiles = db.UserFiles.Where(link => link.UserID == userID && link.Privilege == "Viewer");
+            IEnumerable<FileData> sharedFileData = db.Files.Where(link => sharedFiles.FirstOrDefault(shared => shared.FileID == link.FileID) != null);
 
             List<FileMetaReturn> fileData = new List<FileMetaReturn>();
-            foreach (UserFile fileLink in sharedFiles)
+            foreach (FileData sharedFile in sharedFileData)
             {
 
-                FileData file = fileLink.File;
-
                 FileMetaReturn data = new();
-                data.Filetype = file.FileType;
-                data.FileID = file.FileID;
-                data.Filename = file.FileName;
+                data.Filetype = sharedFile.FileType;
+                data.FileID = sharedFile.FileID;
+                data.Filename = sharedFile.FileName;
 
                 fileData.Add(data);
             }
