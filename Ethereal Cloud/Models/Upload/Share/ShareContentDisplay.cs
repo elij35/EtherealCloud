@@ -14,6 +14,8 @@ namespace Ethereal_Cloud.Models.Upload.Get.Folder
     public class SharingUsers
     {
         public string Username { get; set; }
+
+        public string UserId { get; set; }
     }
 
 
