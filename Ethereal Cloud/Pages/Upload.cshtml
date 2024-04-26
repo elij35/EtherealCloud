@@ -144,12 +144,15 @@
                 <div class="form-floating">
                     <input asp-for="createFolderDetails.FolderName" class="form-control" placeholder=" ">
                     <label for="folderName">Enter Folder Name</label>
+                </div>
+
+                <div class="error-text">
                     <span asp-validation-for="createFolderDetails.FolderName" class="text-danger"></span>
                 </div>
 
                 <!-- Submit button -->
                 <div class="mb-3 ">
-                    <button type="submit" id="create-folder-btn" class="popup-input-btn btn btn-primary">Create Folder</button>
+                    <button type="submit" id="create-folder-btn" class=" btn btn-primary">Create Folder</button>
                     <button type="button" onclick="cancelFolderCreation()" class="popup-input-btn btn btn-secondary">Cancel</button>
                 </div>
             </form>
@@ -164,11 +167,11 @@
                     <label for="newFileName">Enter File Name</label>
                 </div>
 
-                <div class="form-floating" style="">
+                <div class="form-floating" style="display:none;">
                     <input name="renameDetails.Id" id="renameIdInput" class="form-control" placeholder=" ">
                 </div>
 
-                <div class="form-floating" style="">
+                <div class="form-floating" style="display:none;">
                     <input name="renameDetails.Type" id="renameTypeInput" class="form-control" placeholder=" ">
                 </div>
 

@@ -346,8 +346,9 @@ namespace Ethereal_Cloud.Pages
             else
             {
                 Logger.LogToConsole(ViewData, "Bad share response");
+
+
                 Response.Redirect("/Upload");
-                return;
             }
         }
 
