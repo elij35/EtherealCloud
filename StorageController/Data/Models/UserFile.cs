@@ -13,6 +13,9 @@ namespace StorageController.Data.Models
         public int FileID { get; set; }
 
         [Required]
+        public int OwnerID { get; set; }
+
+        [Required]
         public int UserID { get; set; }
 
         [Required]
@@ -22,7 +25,11 @@ namespace StorageController.Data.Models
         /// <summary>
         /// Foreign key section
         /// </summary>
+        [ForeignKey("UserID")]
         public User UserData { get; set; }
+
+        [ForeignKey("OwnerID")]
+        public User OwnerData { get; set; }
         public FileData File { get; set; }
 
     }
