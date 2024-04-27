@@ -1,6 +1,6 @@
 ﻿@page
 @using Ethereal_Cloud.Models
-@using Ethereal_Cloud.Icons
+@using Ethereal_Cloud.Helpers.Icons
 @model Ethereal_Cloud.Pages.SharedWithMeModel
 @{
     ViewBag.Title = "Shared With Me";
@@ -50,7 +50,7 @@
                             <!-- Buttons for files-->
                             <div id="fileButtonHolder-@display.Id-@display.Type" class="fileButtonHolder" style="">
 
-                                <button id="fileSettingsButton" onclick="downloadFile('@display.Id')">
+                                <button title="Download" id="fileSettingsButton" onclick="downloadFile('@display.Id')">
                                     <img id="fileSettingsImage" src="~/images/menu-icons/cloud-download.svg" alt="path">
                                 </button>
                             </div>

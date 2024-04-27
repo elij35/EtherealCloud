@@ -1,6 +1,6 @@
 ﻿@page
 @using Ethereal_Cloud.Models
-@using Ethereal_Cloud.Icons
+@using Ethereal_Cloud.Helpers.Icons
 @model Ethereal_Cloud.Pages.UploadModel
 @{
     ViewBag.Title = "Upload";
@@ -90,7 +90,7 @@
                                 @if (@display.Type == "Folder")
                                 {
                                 // Folders
-                                    <button id="fileSettingsButton" aria-expanded="false" aria-controls="file-info-@display.Id" onclick="toggleFileInfo('file-info-@display.Id-@display.Type')">
+                                    <button title="More Options" id="fileSettingsButton" aria-expanded="false" aria-controls="file-info-@display.Id" onclick="toggleFileInfo('file-info-@display.Id-@display.Type')">
                                         <img id="fileSettingsImage" src="~/images/menu-icons/three-dots.svg" alt="path">
 
                                         <div id="file-info-@display.Id-@display.Type" class="file-info">
@@ -104,10 +104,10 @@
                                 else
                                 {
                                     // Files
-                                    <button id="fileSettingsButton" onclick="downloadFile('@display.Id')">
+                                    <button title="Download" id="fileSettingsButton" onclick="downloadFile('@display.Id')">
                                         <img id="fileSettingsImage" src="~/images/menu-icons/cloud-download.svg" alt="path">
                                     </button>
-                                    <button id="fileSettingsButton" aria-expanded="false" aria-controls="file-info-@display.Id-@display.Type" onclick="toggleFileInfo('file-info-@display.Id-@display.Type')">
+                                    <button title="More Options" id="fileSettingsButton" aria-expanded="false" aria-controls="file-info-@display.Id-@display.Type" onclick="toggleFileInfo('file-info-@display.Id-@display.Type')">
                                         <img id="fileSettingsImage" src="~/images/menu-icons/three-dots.svg" alt="path">
 
                                         <div id="file-info-@display.Id-@display.Type" class="file-info">
