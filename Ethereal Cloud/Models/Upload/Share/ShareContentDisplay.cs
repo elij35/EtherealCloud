@@ -8,14 +8,14 @@ namespace Ethereal_Cloud.Models.Upload.Get.Folder
         public string Name { get; set; }
         public string Type { get; set; }
 
-        public string[] SharingUsers { get; set; }
+        public List<SharingUsers> SharingUsers { get; set; }
     }
 
     public class SharingUsers
     {
         public string Username { get; set; }
 
-        public string UserId { get; set; }
+        public int UserID { get; set; }
     }
 
 
@@ -31,7 +31,7 @@ namespace Ethereal_Cloud.Models.Upload.Get.Folder
         [StringLength(64)]
         public string Filetype { get; set; }
 
-        public string[] SharingUsers { get; set; }
+        public List<SharingUsers> SharingUsers { get; set; }
     }
 
 
