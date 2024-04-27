@@ -1,6 +1,6 @@
 ﻿@page
 @using Ethereal_Cloud.Models
-@using Ethereal_Cloud.Icons
+@using Ethereal_Cloud.Helpers.Icons
 @model Ethereal_Cloud.Pages.SharedWithOthersModel
 @{
     ViewBag.Title = "Shared With Others";
@@ -46,42 +46,58 @@
                             </a>
                             <p>@display.Name</p>
 
+                                
+
+
                             <!-- Buttons for files/folders-->
                             <div id="fileButtonHolder-@display.Id-@display.Type" class="fileButtonHolder" style="">
 
-                                <button id="fileSettingsButton" onclick="downloadFile('@display.Id')">
+                                <button title="Download" id="fileSettingsButton" onclick="downloadFile('@display.Id')">
                                     <img id="fileSettingsImage" src="~/images/menu-icons/cloud-download.svg" alt="path">
                                 </button>
-                                <button id="fileSettingsButton" aria-expanded="false" aria-controls="file-info-@display.Id-@display.Type" onclick="toggleFileInfo('file-info-@display.Id-@display.Type')">
+                                <button title="More Options" id="fileSettingsButton" aria-expanded="false" aria-controls="file-info-@display.Id-@display.Type" onclick="toggleFileInfo('file-info-@display.Id-@display.Type')">
                                     <img id="fileSettingsImage" src="~/images/menu-icons/three-dots.svg" alt="path">
 
                                     <div id="file-info-@display.Id-@display.Type" class="file-info">
                                         <div class="menu" id="@display.Id-menu">
                                             <div class="menu-item" onclick="downloadFile('@display.Id')">Download</div>
                                             <div class="menu-item" onclick="showRenamePopup('@display.Id', '@display.Type')">Rename</div>
+                                            <div class="menu-item" onclick="showSharePopup('@display.Id')">Share</div>
                                             <div class="menu-item" onclick="deleteFile('@display.Id', '@display.Type')">Delete</div>
                                         </div>
                                     </div>
                                 </button>
 
                             </div>
+
+                            <p id="shared-with">Shared With:</p>
+
+                            <div id="Holder-SharingUsers">
+                                
+                                <!-- Users the files is shared with -->
+                                @foreach (var user in display.SharingUsers)
+                                {
+                                    <div id="SharingUser">
+                                        <p id="Username" >@user.Username</p>
+                                        <button id="Unshare" title="Unshare" onclick="Unshare('@display.Id','@user.Username')">
+                                            <img id="fileSettingsImage" src="~/images/menu-icons/x-square.svg" alt="path">
+                                        </button>
+                                    </div>
+
+                                }
+
+                            </div>
                             
-                            <!-- Users the files is shared with -->
-                            @foreach (var Username in display.SharingUsers)
-                            {
-                                <div>
-                                    <h1>Hello</h1>
-
-                                </div>
 
 
-
-
-                            }
 
 
                             
                         </div>
+
+
+                            
+
                     }
                 </div>
 
@@ -120,6 +136,27 @@
             }
         </div>
     </div>
+
+    <!-- Share Popup -->
+    <div id="sharePopup" class="popup-input" style="display:none;">
+        <form id="share-form" method="post" asp-page-handler="Share">
+            <!-- Email Field-->
+            <div class="form-floating">
+                <input name="Username" id="shareUsernameInput" class="form-control" placeholder=" ">
+                <label for="email">Enter Username</label>
+            </div>
+
+            <div class="form-floating" style="display:none;">
+                <input name="Id" id="shareIdInput" class="form-control" placeholder=" ">
+            </div>
+
+            <!-- Share button -->
+            <div class="mb-3 ">
+                <button type="submit" id="share-file-btn" class="popup-input-btn btn btn-primary">Share</button>
+                <button type="button" onclick="cancelShare()" class="popup-input-btn btn btn-secondary">Cancel</button>
+            </div>
+        </form>
+    </div>
 </div>
 
 @{
@@ -156,8 +193,22 @@
         }
 
 
+        // Function to show the share popup
+        function showSharePopup(id) {
+            document.getElementById("sharePopup").style.display = "block";
 
+            console.log("Share activated: " + id)
+            document.getElementById('shareIdInput').value = id;
+        }
 
+        // Function to unshare
+        function Unshare(id, username) {
+            document.getElementById('shareIdInput').value = id;
+
+            document.getElementById('shareUsernameInput').value = username;
+
+            document.getElementById('share-form').submit();
+        }
 
 
 

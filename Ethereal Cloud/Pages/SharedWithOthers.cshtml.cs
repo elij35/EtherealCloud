@@ -3,6 +3,7 @@ using Ethereal_Cloud.Models.Upload.Get;
 using Ethereal_Cloud.Models.Upload.Get.File;
 using Ethereal_Cloud.Models.Upload.Get.Folder;
 using Ethereal_Cloud.Models.Upload.Rename;
+using Ethereal_Cloud.Models.Upload.Share;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using JsonSerializer = System.Text.Json.JsonSerializer;
@@ -26,17 +27,6 @@ namespace Ethereal_Cloud.Pages
             sortDisplay = CookieManagement.GetSorting(HttpContext);
 
             bool sharedWithMe = CookieManagement.GetActiveShare(HttpContext);
-
-            // Shared with me request
-            string endpointShare = "v2/file/sharing";
-
-            if (!sharedWithMe)
-            {
-                // Sharing with request
-                endpointShare = "temp";
-            }
-
-            Logger.LogToConsole(ViewData, "Endpoint: " + endpointShare);
 
             //Make request
             var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/file/sharing", true, null);
@@ -135,8 +125,6 @@ namespace Ethereal_Cloud.Pages
             }
 
 
-
-
             Logger.LogToConsole(ViewData, "Deleted: " + fileId + type);
 
             string uriFileType;
@@ -200,6 +188,34 @@ namespace Ethereal_Cloud.Pages
                 Logger.LogToConsole(ViewData, "Bad share response");
                 Response.Redirect("/SharedWithOthers");
                 return;
+            }
+        }
+
+
+        public async Task OnPostShare(ShareDetails shareDetails)
+        {
+            //create file object
+            var dataObject = new Dictionary<string, object?>
+            {
+                { "ShareUsername", shareDetails.Username }
+            };
+
+
+
+            //Make request
+            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/file/share/" + shareDetails.Id, true, dataObject);
+
+            if (response != null)
+            {
+                Logger.LogToConsole(ViewData, "Successfull Share: " + shareDetails.Id);
+                Response.Redirect("/SharedWithOthers");
+            }
+            else
+            {
+                Logger.LogToConsole(ViewData, "Bad share response");
+
+
+                Response.Redirect("/SharedWithOthers");
             }
         }
 
