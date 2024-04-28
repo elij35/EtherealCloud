@@ -30,13 +30,11 @@ namespace Ethereal_Cloud.Helpers
             Logger.LogToConsole(viewData, "Made it this far");
 
 
-
-
             //-2 means goto root
             if (folderId == -2)
             {
                 //folderId is null so set the folderpath back to the root
-                CookieManagement.SetCookie(context, "FolderPath", "");
+                CookieManagement.RemoveCookie(context, "FolderPath");
                 return true;
             }
 
