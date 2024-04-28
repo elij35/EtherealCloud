@@ -214,7 +214,7 @@ namespace StorageController.Controllers.v2
                 return await new Response<string>(false, "Invalid user.").Serialize();
             }
 
-            IQueryable<UserFile> userFiles = db.UserFiles.Where(userFile => userFile.UserID == userID
+            IQueryable<UserFile> userFiles = db.UserFiles.Where(userFile => userFile.UserID == userID && userFile.Privilege == "Owner"
                                           && db.FileBin.FirstOrDefault(removedFile => removedFile.FileID == userFile.FileID) != null);
             IQueryable<UserFolder> userFolders = db.UserFolders.Where(userFolder => userFolder.UserID == userID
                                               && db.FolderBin.FirstOrDefault(removedFolder => removedFolder.FolderID == userFolder.FolderID) != null);
