@@ -15,7 +15,6 @@ namespace Ethereal_Cloud.Pages
         {
             if (!ModelState.IsValid)
             {
-                Logger.LogToConsole(ViewData, "Invalid: Model error");
                 return Page();
             }
 
@@ -28,12 +27,11 @@ namespace Ethereal_Cloud.Pages
             };
 
             //Make request
-            var response = await ApiRequest.Files(ViewData, HttpContext, "v1/user/signup", dataObject);
+            var response = await ApiRequest.Files(HttpContext, "v1/user/signup", dataObject);
 
             if (response != null)
             {
                 //Valid Signup
-                Logger.LogToConsole(ViewData, "Successful signup of user " + signupDetails.Username);
 
                 ViewData["SuccessMessage"] = "You have successfully registered.";
 
@@ -41,7 +39,6 @@ namespace Ethereal_Cloud.Pages
             }
             else
             {
-                Logger.LogToConsole(ViewData, "Invalid: Couldn't signup");
                 ViewData["FailureMessage"] = "Signup failed.";
                 return Page();
             }

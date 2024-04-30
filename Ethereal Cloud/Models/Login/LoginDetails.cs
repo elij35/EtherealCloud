@@ -2,7 +2,6 @@
 
 namespace Ethereal_Cloud.Models.Login
 {
-    //lengths
     public class LoginDetails
     {
         [Required(ErrorMessage = "Username or Email is required.")]

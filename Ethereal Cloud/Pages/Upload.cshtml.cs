@@ -39,7 +39,7 @@ namespace Ethereal_Cloud.Pages
 
 
             //Make request
-            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/folder/files/" + folderId, true, null);
+            var response = await ApiRequestV2.Files(HttpContext, "v2/folder/files/" + folderId, true, null);
 
             if (response != null)
             {
@@ -83,7 +83,6 @@ namespace Ethereal_Cloud.Pages
             }
             else
             {
-                Logger.LogToConsole(ViewData, "Failed Get");
 
                 ViewData["FailureMessage"] = "Failed to get files & folders. Please try again.";
             }
@@ -110,16 +109,12 @@ namespace Ethereal_Cloud.Pages
             };
 
             //Make request
-            var response = await ApiRequest.Files(ViewData, HttpContext, "v1/file/" + fileId, dataObject);
+            var response = await ApiRequest.Files( HttpContext, "v1/file/" + fileId, dataObject);
 
             if (response != null)
             {
                 string jsonString = response.ToString();
                 FileModel file = JsonSerializer.Deserialize<FileModel>(jsonString);
-
-                Logger.LogToConsole(ViewData, "Successfull download: " + file.Content + " " + file.Filetype + " " + file.Filename);
-
-                //Response.Redirect("/Upload");
 
                 byte[] bytes = Convert.FromHexString(file.Content);
 
@@ -127,8 +122,6 @@ namespace Ethereal_Cloud.Pages
             }
             else
             {
-                Logger.LogToConsole(ViewData, "Fail: " + fileId);
-
                 return RedirectToPage("/Upload");
             }
 
@@ -164,18 +157,7 @@ namespace Ethereal_Cloud.Pages
 
         public async Task OnGetGoToFolderInPathAsync(GotoDetails details)
         {
-            bool success = PathManagement.GoBackInFolderPath(HttpContext, details.Id, ViewData);
-
-            if (success)
-            {
-                Logger.LogToConsole(ViewData, "Navigated to folder with id: " + details.Id);
-
-            }
-            else
-            {
-                Logger.LogToConsole(ViewData, "Failed navigation to: " + details.Id);
-
-            }
+            PathManagement.GoBackInFolderPath(HttpContext, details.Id);
 
             Response.Redirect("/Upload");
 
@@ -216,22 +198,22 @@ namespace Ethereal_Cloud.Pages
 
 
                         //Make request
-                        var response = await ApiRequest.Files(ViewData, HttpContext, "v1/file", dataObject);
+                        var response = await ApiRequest.Files(HttpContext, "v1/file", dataObject);
 
                         if (response != null)
                         {
-                            Logger.LogToConsole(ViewData, "Successfull file upload: " + response);
+                            // Success
                         }
                         else
                         {
-                            //Logger.LogToConsole(ViewData, "Bad upload response");
+                            // Failure
                         }
                     }
 
                 }
                 else
                 {
-                    Logger.LogToConsole(ViewData, "Invalid file upload");
+                    // Invalid File
                 }
             }
 
@@ -250,7 +232,6 @@ namespace Ethereal_Cloud.Pages
         {
             if (!ModelState.IsValid)
             {
-                Logger.LogToConsole(ViewData, "Invalid: Model error");
                 Response.Redirect("/Upload");
                 return;
             }
@@ -264,16 +245,16 @@ namespace Ethereal_Cloud.Pages
             };
 
             //Make request
-            var response = await ApiRequest.Files(ViewData, HttpContext, "v1/folder", dataObject);
+            var response = await ApiRequest.Files(HttpContext, "v1/folder", dataObject);
 
             if (response != null)
             {
-                Logger.LogToConsole(ViewData, "Successfull folder creation: " + response);
+                // Success
 
             }
             else
             {
-                Logger.LogToConsole(ViewData, "Bad folder response");
+                // Failure
 
             }
 
@@ -287,14 +268,8 @@ namespace Ethereal_Cloud.Pages
             // Check fileId validity
             if (fileId == null || type == null)
             {
-                Logger.LogToConsole(ViewData, "Invalid: Model error");
                 return;
             }
-
-
-
-
-            Logger.LogToConsole(ViewData, "Deleted: " + fileId + type);
 
             string uriFileType;
             if (type.ToLower() == "folder")
@@ -307,17 +282,14 @@ namespace Ethereal_Cloud.Pages
             }
 
             //Make request
-            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/" + uriFileType + "/remove/" + fileId, true, null);
+            var response = await ApiRequestV2.Files(HttpContext, "v2/" + uriFileType + "/remove/" + fileId, true, null);
 
             if (response != null)
             {
-                //Logger.LogToConsole(ViewData, "Successfull Deletion: " + fileId + " : " + type);
-                Logger.LogToConsole(ViewData, "After: " + fileId + type);
                 Response.Redirect("/Upload");
             }
             else
             {
-                //Logger.LogToConsole(ViewData, "Bad delete response");
                 Response.Redirect("/Upload");
                 return;
             }
@@ -327,6 +299,13 @@ namespace Ethereal_Cloud.Pages
 
         public async Task OnPostShare(ShareDetails shareDetails)
         {
+
+            if (shareDetails.Username == null || shareDetails.Username.Trim() == "")
+            {
+                Response.Redirect("/Upload");
+                return;
+            }
+
             //create file object
             var dataObject = new Dictionary<string, object?>
             {
@@ -336,16 +315,14 @@ namespace Ethereal_Cloud.Pages
 
 
             //Make request
-            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/file/share/" + shareDetails.Id, true, dataObject);
+            var response = await ApiRequestV2.Files(HttpContext, "v2/file/share/" + shareDetails.Id, true, dataObject);
 
             if (response != null)
             {
-                Logger.LogToConsole(ViewData, "Successfull Share: " + shareDetails.Id);
                 Response.Redirect("/Upload");
             }
             else
             {
-                Logger.LogToConsole(ViewData, "Bad share response");
 
 
                 Response.Redirect("/Upload");
@@ -376,16 +353,14 @@ namespace Ethereal_Cloud.Pages
 
 
             //Make request
-            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/" + uriFileType + "/rename/" + renameDetails.Id, true, dataObject);
+            var response = await ApiRequestV2.Files( HttpContext, "v2/" + uriFileType + "/rename/" + renameDetails.Id, true, dataObject);
 
             if (response != null)
             {
-                Logger.LogToConsole(ViewData, "Successfull Share: " + renameDetails.Id);
                 Response.Redirect("/Upload");
             }
             else
             {
-                Logger.LogToConsole(ViewData, "Bad share response");
                 Response.Redirect("/Upload");
                 return;
             }

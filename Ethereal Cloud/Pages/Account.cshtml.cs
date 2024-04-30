@@ -14,7 +14,7 @@ namespace Ethereal_Cloud.Pages
         {
             if (!ModelState.IsValid)
             {
-                Logger.LogToConsole(ViewData, "Invalid: Model error");
+                // Invalid model
                 return;
             }
 
@@ -25,17 +25,16 @@ namespace Ethereal_Cloud.Pages
             };
 
             //Make request
-            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/user/password", true, dataObject);
+            var response = await ApiRequestV2.Files(HttpContext, "v2/user/password", true, dataObject);
 
             if (response != null)
             {
                 //Valid login
-                Logger.LogToConsole(ViewData, "Successfull change of password to" + changePasswordDetails.NewPassword);
                 ViewData["SuccessMessage"] = "Success: Password has been changed.";
             }
             else
             {
-                Logger.LogToConsole(ViewData, "Invalid: Failed to change");
+                // Invalid
                 ViewData["FailureMessage"] = "Invalid: Failed to change.";
             }
         }

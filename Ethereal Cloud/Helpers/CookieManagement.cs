@@ -10,7 +10,7 @@ namespace Ethereal_Cloud.Helpers
             context.Session.SetString(name, token);
         }
 
-        public static string Get(HttpContext context, string key)
+        public static string? Get(HttpContext context, string key)
         {
             return context.Session.GetString(key);
         }

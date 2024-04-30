@@ -23,7 +23,6 @@ namespace Ethereal_Cloud.Pages
         {
             if (!ModelState.IsValid)
             {
-                Logger.LogToConsole(ViewData, "Invalid: Model error");
                 return;
             }
 
@@ -35,14 +34,11 @@ namespace Ethereal_Cloud.Pages
             };
 
             //Make request
-            var response = await ApiRequest.Files(ViewData, HttpContext, "v1/user/login", dataObject);
-
-            Logger.LogToConsole(ViewData, "Checker: " + response);
+            var response = await ApiRequest.Files(HttpContext, "v1/user/login", dataObject);
 
             if (response != null)
             {
                 //Valid login
-                //Logger.LogToConsole(ViewData, "Successfull login of user " + loginDetails.UsernameOrEmail);
 
                 //Put response in form of FolderContentRecieve
                 string jsonString = response.ToString();
@@ -51,7 +47,6 @@ namespace Ethereal_Cloud.Pages
 
                 //Save authtoken as a cookie
                 CookieManagement.SetCookie(HttpContext, "AuthToken", authDetails.Token);
-                //Logger.LogToConsole(ViewData, "AuthToken: " + authDetails.Token.ToString());
 
                 //Save email
                 CookieManagement.SetCookie(HttpContext, "Email", authDetails.Email);
@@ -61,7 +56,6 @@ namespace Ethereal_Cloud.Pages
             }
             else
             {
-                Logger.LogToConsole(ViewData, "Invalid: Invalid Login");
                 ViewData["FailureMessage"] = "Invalid login.";
             }
         }

@@ -27,8 +27,9 @@ namespace StorageController.Controllers.v2
 
             DataHandler db = new();
 
-            IEnumerable<UserFile> sharedFiles = db.UserFiles.Where(link => link.UserID == userID && link.Privilege == "Viewer");
+            IEnumerable<UserFile> sharedFiles = db.UserFiles.Where(link => link.UserID == userID && link.Privilege == "Viewer" && db.FileBin.FirstOrDefault(bin => bin.FileID == link.FileID) == null);
             IEnumerable<FileData> sharedFileData = db.Files.Where(link => sharedFiles.FirstOrDefault(shared => shared.FileID == link.FileID) != null);
+
 
             List<FileMetaReturn> fileData = new List<FileMetaReturn>();
             foreach (FileData sharedFile in sharedFileData)
@@ -79,7 +80,7 @@ namespace StorageController.Controllers.v2
 
             DataHandler db = new();
 
-            IEnumerable<UserFile> sharedFiles = db.UserFiles.Where(link => link.OwnerID == userID && link.Privilege == "Viewer");
+            IEnumerable<UserFile> sharedFiles = db.UserFiles.Where(link => link.OwnerID == userID && link.Privilege == "Viewer" && db.FileBin.FirstOrDefault(bin => bin.FileID == link.FileID) == null);
             IEnumerable<FileData> sharedFileData = db.Files.Where(link => sharedFiles.FirstOrDefault(shared => shared.FileID == link.FileID) != null);
 
             Dictionary<int, SharingFileMetaReturn> fileData = new Dictionary<int, SharingFileMetaReturn>();

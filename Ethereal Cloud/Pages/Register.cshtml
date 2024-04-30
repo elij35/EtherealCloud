@@ -119,12 +119,6 @@
             passwordInput2.type = (passwordInput2.type === 'password') ? 'text' : 'password';
         }
 
-        // Logger for errors
-        var logger = '@ViewData["logger"]';
-        if (logger !== null) {
-            console.log(logger);
-        }
-
         function openTermsWindow() {
             var termsUrl = "/TermsAndConditions";
             window.open(termsUrl, "_blank", "width=800,height=600,top=350");

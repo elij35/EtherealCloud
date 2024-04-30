@@ -18,7 +18,7 @@ namespace Ethereal_Cloud.Pages
             sortDisplay = CookieManagement.GetSorting(HttpContext);
 
             //Make request
-            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/bin", true, null);
+            var response = await ApiRequestV2.Files(HttpContext, "v2/bin", true, null);
 
             if (response != null)
             {
@@ -62,7 +62,7 @@ namespace Ethereal_Cloud.Pages
             }
             else
             {
-                Logger.LogToConsole(ViewData, "Failed Get");
+                // Failed to get files
 
                 ViewData["FailureMessage"] = "Failed to get files & folders. Please try again.";
             }
@@ -85,7 +85,6 @@ namespace Ethereal_Cloud.Pages
             // Check fileId validity
             if (Id == null || fileType == null)
             {
-                Logger.LogToConsole(ViewData, "Invalid: Model error");
                 return;
             }
 
@@ -102,17 +101,16 @@ namespace Ethereal_Cloud.Pages
             }
 
             //Make request
-            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/" + uriFileType + "/restore/" + Id, true, null);
+            var response = await ApiRequestV2.Files( HttpContext, "v2/" + uriFileType + "/restore/" + Id, true, null);
 
             if (response != null)
             {
-                //Logger.LogToConsole(ViewData, "Successfull Deletion: " + fileId + " : " + type);
-                Logger.LogToConsole(ViewData, "After: " + Id + fileType);
+                // Valid
                 Response.Redirect("/Bin");
             }
             else
             {
-                //Logger.LogToConsole(ViewData, "Bad delete response");
+                // Invalid
                 Response.Redirect("/Bin");
                 return;
             }

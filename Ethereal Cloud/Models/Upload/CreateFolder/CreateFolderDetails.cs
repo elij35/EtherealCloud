@@ -2,7 +2,6 @@
 
 namespace Ethereal_Cloud.Models.Upload.CreateFolder
 {
-    // types lengths
     public class CreateFolderDetails
     {
         [Required(ErrorMessage = "Folder name is required.")]

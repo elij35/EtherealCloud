@@ -5,8 +5,9 @@ namespace Ethereal_Cloud.Helpers
 {
     public class EmailManagement
     {
-        public static string Send2FAEmail(string userEmail)
+        public static string? Send2FAEmail(string userEmail)
         {
+            // Create email
             string email = "EtherealCloudGroup@outlook.com";
             string pass = "Phew0=che=lZiyo&rLSwl9rimud7yo6E@r1phutRuc5lxeWri2otr2n7z+zotO3i";
 
@@ -17,7 +18,7 @@ namespace Ethereal_Cloud.Helpers
             client.Credentials = new NetworkCredential(email, pass);
 
             Random random = new Random();
-            int genCode = random.Next(100000, 1000000);
+            int genCode = random.Next(100000, 1000000); // Generate 6 digit random code
 
             MailMessage message = new MailMessage(email, userEmail);
             message.Subject = "Verification Code";
@@ -34,12 +35,13 @@ namespace Ethereal_Cloud.Helpers
                 
             try
             {
-                //Logger.LogToConsole()
-                //client.Send(message);
+                // Send Email
+                client.Send(message);
 
             }
             catch (Exception)
             {
+                // An error occured
                 return null;
             }
 

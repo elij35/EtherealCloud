@@ -23,11 +23,9 @@ namespace Ethereal_Cloud.Helpers
 
         }
 
-        public static bool GoBackInFolderPath(HttpContext context, int folderId, ViewDataDictionary viewData)
+        public static bool GoBackInFolderPath(HttpContext context, int folderId)
         {
             //true is success, false is failure
-
-            Logger.LogToConsole(viewData, "Made it this far");
 
 
 
@@ -36,7 +34,7 @@ namespace Ethereal_Cloud.Helpers
             if (folderId == -2)
             {
                 //folderId is null so set the folderpath back to the root
-                CookieManagement.SetCookie(context, "FolderPath", "");
+                CookieManagement.RemoveCookie(context, "FolderPath");
                 return true;
             }
 

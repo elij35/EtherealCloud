@@ -29,7 +29,7 @@ namespace Ethereal_Cloud.Pages
             bool sharedWithMe = CookieManagement.GetActiveShare(HttpContext);
 
             //Make request
-            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/file/sharing", true, null);
+            var response = await ApiRequestV2.Files(HttpContext, "v2/file/sharing", true, null);
 
             if (response != null)
             {
@@ -61,7 +61,6 @@ namespace Ethereal_Cloud.Pages
             }
             else
             {
-                //Logger.LogToConsole(ViewData, "Failed Get");
 
                 ViewData["FailureMessage"] = "Failed to get files & folders. Please try again.";
             }
@@ -89,16 +88,12 @@ namespace Ethereal_Cloud.Pages
             };
 
             //Make request
-            var response = await ApiRequest.Files(ViewData, HttpContext, "v1/file/" + fileId, dataObject);
+            var response = await ApiRequest.Files(HttpContext, "v1/file/" + fileId, dataObject);
 
             if (response != null)
             {
                 string jsonString = response.ToString();
                 FileModel file = JsonSerializer.Deserialize<FileModel>(jsonString);
-
-                Logger.LogToConsole(ViewData, "Successfull download: " + file.Content + " " + file.Filetype + " " + file.Filename);
-
-                //Response.Redirect("/Upload");
 
                 byte[] bytes = Convert.FromHexString(file.Content);
 
@@ -106,7 +101,6 @@ namespace Ethereal_Cloud.Pages
             }
             else
             {
-                Logger.LogToConsole(ViewData, "Fail: " + fileId);
 
                 return RedirectToPage("/SharedWithOthers");
             }
@@ -120,12 +114,9 @@ namespace Ethereal_Cloud.Pages
             // Check fileId validity
             if (fileId == null || type == null)
             {
-                Logger.LogToConsole(ViewData, "Invalid: Model error");
                 return;
             }
 
-
-            Logger.LogToConsole(ViewData, "Deleted: " + fileId + type);
 
             string uriFileType;
             if (type.ToLower() == "folder")
@@ -138,17 +129,14 @@ namespace Ethereal_Cloud.Pages
             }
 
             //Make request
-            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/" + uriFileType + "/remove/" + fileId, true, null);
+            var response = await ApiRequestV2.Files(HttpContext, "v2/" + uriFileType + "/remove/" + fileId, true, null);
 
             if (response != null)
             {
-                //Logger.LogToConsole(ViewData, "Successfull Deletion: " + fileId + " : " + type);
-                Logger.LogToConsole(ViewData, "After: " + fileId + type);
                 Response.Redirect("/SharedWithOthers");
             }
             else
             {
-                //Logger.LogToConsole(ViewData, "Bad delete response");
                 Response.Redirect("/SharedWithOthers");
                 return;
             }
@@ -176,16 +164,14 @@ namespace Ethereal_Cloud.Pages
 
 
             //Make request
-            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/" + uriFileType + "/rename/" + renameDetails.Id, true, dataObject);
+            var response = await ApiRequestV2.Files(HttpContext, "v2/" + uriFileType + "/rename/" + renameDetails.Id, true, dataObject);
 
             if (response != null)
             {
-                Logger.LogToConsole(ViewData, "Successfull Share: " + renameDetails.Id);
                 Response.Redirect("/SharedWithOthers");
             }
             else
             {
-                Logger.LogToConsole(ViewData, "Bad share response");
                 Response.Redirect("/SharedWithOthers");
                 return;
             }
@@ -203,16 +189,14 @@ namespace Ethereal_Cloud.Pages
 
 
             //Make request
-            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/file/share/" + shareDetails.Id, true, dataObject);
+            var response = await ApiRequestV2.Files( HttpContext, "v2/file/share/" + shareDetails.Id, true, dataObject);
 
             if (response != null)
             {
-                Logger.LogToConsole(ViewData, "Successfull Share: " + shareDetails.Id);
                 Response.Redirect("/SharedWithOthers");
             }
             else
             {
-                Logger.LogToConsole(ViewData, "Bad share response");
 
 
                 Response.Redirect("/SharedWithOthers");

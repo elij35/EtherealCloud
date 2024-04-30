@@ -35,10 +35,8 @@ namespace Ethereal_Cloud.Pages
                 endpointShare = "temp";
             }
 
-            Logger.LogToConsole(ViewData, "Endpoint: " + endpointShare);
-
             //Make request
-            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/file/shared", true, null);
+            var response = await ApiRequestV2.Files(HttpContext, "v2/file/shared", true, null);
 
 
             if (response != null)
@@ -70,7 +68,6 @@ namespace Ethereal_Cloud.Pages
             }
             else
             {
-                //Logger.LogToConsole(ViewData, "Failed Get");
 
                 ViewData["FailureMessage"] = "Failed to get files & folders. Please try again.";
             }
@@ -97,16 +94,12 @@ namespace Ethereal_Cloud.Pages
             };
 
             //Make request
-            var response = await ApiRequest.Files(ViewData, HttpContext, "v1/file/" + fileId, dataObject);
+            var response = await ApiRequest.Files(HttpContext, "v1/file/" + fileId, dataObject);
 
             if (response != null)
             {
                 string jsonString = response.ToString();
                 FileModel file = JsonSerializer.Deserialize<FileModel>(jsonString);
-
-                Logger.LogToConsole(ViewData, "Successfull download: " + file.Content + " " + file.Filetype + " " + file.Filename);
-
-                //Response.Redirect("/Upload");
 
                 byte[] bytes = Convert.FromHexString(file.Content);
 
@@ -114,7 +107,6 @@ namespace Ethereal_Cloud.Pages
             }
             else
             {
-                Logger.LogToConsole(ViewData, "Fail: " + fileId);
 
                 return RedirectToPage("/SharedWithMe");
             }
