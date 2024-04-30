@@ -7,8 +7,7 @@ namespace Ethereal_Cloud.Helpers
 {
     public class ApiRequest
     {
-        //Viewdata is only used for console logging
-        public static async Task<object> Files(ViewDataDictionary viewData, HttpContext context, string endpoint, Dictionary<string, object?> bodyObject)
+        public static async Task<object?> Files(HttpContext context, string endpoint, Dictionary<string, object?> bodyObject)
         {
             string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/" + endpoint;
 
@@ -33,14 +32,12 @@ namespace Ethereal_Cloud.Helpers
                     else
                     {
                         //Invalid request
-                        Logger.LogToConsole(viewData, "Invalid: " + responseData.Message);
                         return null;
                     }
                 }
                 else
                 {
                     //Couldn't connect to endpoint
-                    Logger.LogToConsole(viewData, "Invalid Connect: " + responseEndpoint.RequestMessage);
                     return null;
                 }
 
@@ -51,8 +48,7 @@ namespace Ethereal_Cloud.Helpers
 
     public class ApiRequestV2
     {
-        //Viewdata is only used for console logging
-        public static async Task<object> Files(ViewDataDictionary viewData, HttpContext context, string endpoint, bool AuthTokenRequired, Dictionary<string, object?>? bodyObject)
+        public static async Task<object?> Files(HttpContext context, string endpoint, bool AuthTokenRequired, Dictionary<string, object?>? bodyObject)
         {
             string apiUrl = "http://" + Environment.GetEnvironmentVariable("SC_IP") + ":8090/" + endpoint;
 
@@ -61,7 +57,7 @@ namespace Ethereal_Cloud.Helpers
                 // Add AuthToken to header if required
                 if (AuthTokenRequired)
                 {
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthTokenManagement.GetToken(context));
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", CookieManagement.GetAuthToken(context));
                 }
 
 
@@ -85,14 +81,12 @@ namespace Ethereal_Cloud.Helpers
                     else
                     {
                         //Invalid request
-                        Logger.LogToConsole(viewData, "Invalid: " + responseData.Message);
                         return null;
                     }
                 }
                 else
                 {
                     //Couldn't connect to endpoint
-                    Logger.LogToConsole(viewData, "Invalid Connect: " + responseEndpoint.RequestMessage);
                     return null;
                 }
 

@@ -30,10 +30,11 @@ namespace StorageController.Data.Models
         [Required]
         public bool Administrator { get; set; }
 
-        /// <summary>
-        /// Foreign key section
-        /// </summary>
+        [InverseProperty("UserData")]
         public ICollection<UserFile> UserFiles { get; set; }
+
+        [InverseProperty("OwnerData")]
+        public ICollection<UserFile> OwnerFiles { get; set; }
 
     }
 

@@ -1,15 +1,15 @@
 ﻿#file-explorer {
     padding: 0px;
     justify-content: center;
+    position: relative;
 }
 
 /* This is where the scrollbox is contained */
 #filebox {
-    height: 40vh;
     background: #f2f2f2;
     border: solid;
     border-color: #808080;
-    border-radius: 20px;
+    border-radius: 10px;
     padding: 0px;
     overflow: hidden;
 }
@@ -97,45 +97,102 @@
 
 #content-container {
     display: contents;
-    justify-content: flex-start;
 }
 
 /* This is where all the uploaded files are contained */
 #scrollbox {
     margin: 0px;
     width: 100%;
-    display: ruby-text;
-    height: 48vh;
+    height: 49vh;
     max-height: inherit;
     justify-content: flex-start;
     overflow-y: scroll;
     text-align: center;
 }
 
+#scrollbox-contents {
+    justify-content: center;
+    height: fit-content;
+    margin: 0;
+}
+
 /* Everything inside the containers for the files (img and file name) */
 #uploaded-files {
-    width: 120px;
+    width: 140px;
     height: fit-content;
     padding: 5px;
     margin: 5px;
+    position: relative;
 }
 
-    #uploaded-files img {
-        width: 100%;
-        height: auto;
-        margin-bottom: 5px;
+#uploaded-files-img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 5px;
+}
+
+#uploaded-files p {
+    text-align: center;
+    text-decoration: none;
+    color: black;
+    margin: 0px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-decoration: none;
+}
+
+/*New stuff in need of organising */
+.fileButtonHolder {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+@media (hover: hover) {
+    .fileButtonHolder {
+        display: none;
+    }
+}
+
+@media(hover: none) {
+    .fileButtonHolder {
+        display: inline;
+    }
+}
+
+#fileSettingsButton {
+    display: contents;
+}
+
+#fileSettingsImage {
+    background-color: #9265cc;
+    border-radius: 5px;
+    width: 40px;
+    border: 2px solid #000000;
+}
+
+.file-info {
+    display: none;
+}
+
+.menu {
+    position: absolute;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+}
+
+.menu-item {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+    .menu-item:hover {
+        background-color: #e9e9e9;
     }
 
-    #uploaded-files p {
-        text-align: center;
-        text-decoration: none;
-        color: black;
-        margin: 0px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        text-decoration: none;
-    }
 
 /* Upload box (at bottom of page) */
 #upload-box {
@@ -198,3 +255,9 @@
     .dropdown-item:hover {
         background-color: #f1f1f1;
     }
+
+/* Greyed out button */
+.btn-success:disabled {
+    background-color: #808080;
+    border-color: #808080;
+}

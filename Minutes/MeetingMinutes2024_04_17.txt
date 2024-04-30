@@ -1,0 +1,27 @@
+MeetingMinutes2024_04_17
+
+All in attendence SMB109
+
+Catching up on progress
+
+Riley - Upkeep of live documents
+
+
+catch up:
+Riley and Ben collected user testing
+Eli acted on responses (front end changes):
+-changed background colour on main pages
+-modified input prompts
+-register page now redirects to login
+-added on hover information
+
+Will endpoints:
+-creating sharing/unsharing endpoints
+--------------------------------------
+Ben:
+Tackling to do list
+file interaction to download changes (removed on right click feature, replaced to on left click)
+
+Riley:
+database constraints
+model constraints

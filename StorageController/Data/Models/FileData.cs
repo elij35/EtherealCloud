@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
+//change lengths
 namespace StorageController.Data.Models
 {
     [Table("Files", Schema = "ethereal")]
