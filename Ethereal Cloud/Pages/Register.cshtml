@@ -136,43 +136,34 @@
         }
 
         // Password strength checker
-        $('#Password').on('input', function () {
-            var password = $(this).val();
-            var strength = 0;
-
-            if (password.length >= 10) {
-                strength += 1;
-            }
-
-            if (password.match(/[a-z]/)) {
-                strength += 1;
-            }
-
-            if (password.match(/[A-Z]/)) {
-                strength += 1;
-            }
-
-            if (password.match(/[0-9]/)) {
-                strength += 1;
-            }
-
-            if (password.match(/[!#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/)) {
-                strength += 1;
-            }
+        function passStrengthCheck() {
+            var password = document.getElementById('Password').value;
 
             var indicator = $('.password-strength-indicator div');
 
-            if (strength <= 1) {
+            var low = /(?=.*[a-zA-Z\d!#$%^&()_+\-=[\]{};':"\\|,.<>\/?])/;
+            var med = /(?=.*[a-z])(?=.*[A-Z\d!#$%^&()_+\-=[\]{};':"\\|,.<>\/?])/;
+            var high = /(?=.*[a-z])(?=.*[A-Z])(?=.*[\d!#$%^&()_+\-=[\]{};':"\\|,.<>\/?])/;
+            var highest = /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%^&()_+\-=[\]{};':"\\|,.<>\/?]).{10,}/;
+
+
+            if (password.match(low)) {
                 indicator.removeClass().addClass('strength-weak');
-            } else if (strength === 2) {
-                indicator.removeClass().addClass('strength-weak');
-            } else if (strength === 3) {
+            }
+
+            if (password.match(med)) {
                 indicator.removeClass().addClass('strength-moderate');
-            } else if (strength === 4) {
+
+            }
+
+            if (password.match(high)) {
                 indicator.removeClass().addClass('strength-strong');
-            } else if (strength === 5) {
+            }
+
+            if (password.match(highest)) {
                 indicator.removeClass().addClass('strength-very-strong');
             }
-        });
+
+        };
     </script>
 }

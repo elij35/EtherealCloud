@@ -17,6 +17,7 @@ namespace Ethereal_Cloud.Models.Signup
         [Required(ErrorMessage = "Password is required.")]
         [DataType(DataType.Password)]
         [StringLength(64)]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%^&()_+\-=[\]{};':""\\|,.<>\/?]).{10,}$", ErrorMessage = "Password must contain at least 10 characters with 1 lowercase, 1 uppercase, 1 special and 1 number")]
         public string Password { get; set; }
 
         [Required(ErrorMessage = "Confirm Password is required.")]
