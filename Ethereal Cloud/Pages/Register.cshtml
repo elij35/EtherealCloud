@@ -65,7 +65,7 @@
 
                     <!-- Password field -->
                     <div class="form-floating">
-                        <input type="password" id="Password" asp-for="signupDetails.Password" class="form-control" placeholder=" ">
+                        <input type="password" id="Password" asp-for="signupDetails.Password" class="form-control" placeholder=" " oninput="passStrengthCheck()">
                         <label for="password">Password</label>
                     </div>
                     <div class="password-strength-indicator">
