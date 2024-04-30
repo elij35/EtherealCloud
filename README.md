@@ -43,7 +43,7 @@ The solution uses docker to help solve the age old problem of "it works on my ma
 
 - **Delete files / folders -** *Folders and files can both be deleted and will be moved into the bin.*
 
-- **Restore within 30 days -** *The bin will get removed after 30 days and files can be restored within that time.*
+- **Restore files -** *Files that have been deleted can be restored from the bin.*
 
 - **Sorting -** *The files and folders in the upload, bin and sharing can be sorted in alphabetical or reverse alphabetical.*
 
