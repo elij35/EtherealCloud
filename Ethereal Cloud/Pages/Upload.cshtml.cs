@@ -327,12 +327,6 @@ namespace Ethereal_Cloud.Pages
 
         public async Task OnPostShare(ShareDetails shareDetails)
         {
-            if (shareDetails.Username == null || shareDetails.Username.Trim() == "")
-            {
-                Logger.LogToConsole(ViewData, "Bad share response");
-                Response.Redirect("/Upload");
-            }
-
             //create file object
             var dataObject = new Dictionary<string, object?>
             {
