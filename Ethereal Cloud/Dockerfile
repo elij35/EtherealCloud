@@ -1,6 +1,9 @@
 #See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+RUN mkdir -p /home/app/.aspnet/DataProtection-Keys && \
+    chown -R app:app /home/app/.aspnet && \
+    chmod -R 700 /home/app/.aspnet
 USER app
 WORKDIR /app
 EXPOSE 8080
@@ -23,4 +26,9 @@ RUN dotnet publish "./Ethereal Cloud.csproj" -c $BUILD_CONFIGURATION -o /app/pub
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+COPY ["certs/cert.pfx", "/app/cert.pfx"]
+COPY certs/ /app/certs/
+ENV ASPNETCORE_URLS=https://+:8081;http://+:8080
+ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/app/cert.pfx
+ENV ASPNETCORE_Kestrel__Certificates__Default__Password=EtherealDatabaseStorage!!
 ENTRYPOINT ["dotnet", "Ethereal Cloud.dll"]

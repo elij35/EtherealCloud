@@ -2,6 +2,8 @@ using Ethereal_Cloud.Helpers;
 using Ethereal_Cloud.Models.Login;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using StorageController.Data.Models;
+using System.Text.Json;
 
 namespace Ethereal_Cloud.Pages
 {
@@ -10,11 +12,17 @@ namespace Ethereal_Cloud.Pages
         [BindProperty]
         public LoginDetails loginDetails { get; set; }
 
+        public async Task OnGet()
+        {
+            //Clear all of the previous cookies
+            HttpContext.Session.Clear();
+        }
+
+
         public async Task OnPostLoginAsync()
         {
             if (!ModelState.IsValid)
             {
-                Logger.LogToConsole(ViewData, "Invalid: Model error");
                 return;
             }
 
@@ -26,27 +34,28 @@ namespace Ethereal_Cloud.Pages
             };
 
             //Make request
-            var response = await ApiRequest.Files(ViewData, HttpContext, "v1/user/login", dataObject);
-
-            Logger.LogToConsole(ViewData, "Checker: " + response);
+            var response = await ApiRequest.Files(HttpContext, "v1/user/login", dataObject);
 
             if (response != null)
             {
                 //Valid login
-                Logger.LogToConsole(ViewData, "Successfull login of user " + loginDetails.UsernameOrEmail);
+
+                //Put response in form of FolderContentRecieve
+                string jsonString = response.ToString();
+                AuthDetails authDetails = JsonSerializer.Deserialize<AuthDetails>(jsonString);
+
 
                 //Save authtoken as a cookie
-                AuthTokenManagement.SetToken(HttpContext, response.ToString());
+                CookieManagement.SetCookie(HttpContext, "AuthToken", authDetails.Token);
 
-                //reset the folderpath cookie
-                PathManagement.Remove(HttpContext);
+                //Save email
+                CookieManagement.SetCookie(HttpContext, "Email", authDetails.Email);
 
                 //goto the my files page
-                Response.Redirect("/Upload");
+                Response.Redirect("/Auth");
             }
             else
             {
-                Logger.LogToConsole(ViewData, "Invalid: Invalid Login");
                 ViewData["FailureMessage"] = "Invalid login.";
             }
         }

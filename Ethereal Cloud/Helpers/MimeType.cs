@@ -4,6 +4,7 @@ namespace Ethereal_Cloud.Helpers
 {
     public class MimeType
     {
+        // Get the mime type of the file
         public static string GetMimeType(string fileName)
         {
             var provider = new FileExtensionContentTypeProvider();

@@ -11,6 +11,7 @@ namespace StorageController.Data.Models
         [Required]
         public int FolderID { get; set; }
 
+        [StringLength(30)]
         public string FolderName { get; set; }
 
         public int? ParentID { get; set; }

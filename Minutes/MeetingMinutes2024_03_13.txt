@@ -1,0 +1,10 @@
+all in attendance
+online
+
+Ben - delete functionality
+Will - Working on endpoints
+Eli - Resolving Firefox compatibility
+Riley - Meeting minutes model restraints
+
+
+2:15 Resolved firefox incompatibility (Eli)

@@ -39,11 +39,15 @@ namespace StorageController.Controllers.v1
             {
                 return await new Response<string>(false, "Incorrect credentials.").Serialize();
             }
-
-            string token = await AuthManager.AuthorizeUser(user.UserID);
+            
+            var authDetails = new AuthDetails
+            {
+                Token = await AuthManager.AuthorizeUser(user.UserID),
+                Email = user.Email
+            };
 
             // If it reached here, all checks passed and the user exists and the password matched
-            return await new Response<string>(true, token).Serialize();
+            return await new Response<AuthDetails>(true, authDetails).Serialize();
         }
     }
 }

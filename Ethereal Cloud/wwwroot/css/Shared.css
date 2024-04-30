@@ -1,1 +1,50 @@
-﻿
+﻿#share-button-holder {
+    margin-left: auto;
+}
+
+.share-button {
+    background: #ffffff;
+    padding: 2px;
+}
+
+    .share-button.active {
+        background: #947aba;
+    }
+
+    .share-button:hover {
+        background: #7c47c7
+    }
+
+#shared-with {
+    border-top: dashed;
+    border-color: #cbbbe2;
+    border-width: 2px;
+}
+
+#Holder-SharingUsers {
+    width: 130px;
+    padding: 5px;
+}
+
+#SharingUser {
+    flex-wrap: nowrap;
+    margin: 5px;
+    display: flex;
+}
+
+#Username {
+    width: 100%;
+    font-style: italic;
+}
+
+#Unshare {
+    display: contents;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+    #Unshare img {
+        width: 25px;
+        height: 25px;
+    }
