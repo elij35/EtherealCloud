@@ -1,5 +1,5 @@
 
-![Ethereal Cloud Logo](wwwroot/images/LogoVector.svg)
+![Ethereal Cloud Logo](Ethereal%20Cloud/wwwroot/images/LogoVector.svg)
 
 # Ethereal Cloud
 
