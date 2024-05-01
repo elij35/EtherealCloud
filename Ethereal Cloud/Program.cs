@@ -7,7 +7,7 @@ builder.Services.AddControllers();
 builder.Services.AddSession(options =>
 {
     options.Cookie.Name = ".MySession";
-    options.IdleTimeout = TimeSpan.FromSeconds(3600);
+    options.IdleTimeout = TimeSpan.FromMinutes(180);
 });
 
 // Configure Kestrel to use HTTPS

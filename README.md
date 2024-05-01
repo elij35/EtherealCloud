@@ -9,7 +9,7 @@
 
 Ethereal Cloud is a cloud storage solutions in which users can upload, share and download files from anywhere and on any device.
 
-As a group that believes in accessibility and ease of use for our users. Our vision for this project was to allow everyone to quickly and efficiently access, store and share files with a user friendly interface. We achieved this by hosting our cloud storage on a web application which gives it the capacity to run on any device. With the global shift towards online technology and the internet becoming a crucial
+As a group that believes in accessibility and ease of use for our users; Our vision for this project was to allow everyone to quickly and efficiently access, store and share files with a user friendly interface. We achieved this by hosting our cloud storage on a web application which gives it the capacity to run on any device. With the global shift towards online technology and the internet becoming a crucial
 part of the everyday world for both companies and individuals, as a team we wanted to
 tap into the growing demand for secure cloud storage solutions. Our goal was to make this product accessible, affordable, and useful for all of our users.
 ## How it works
