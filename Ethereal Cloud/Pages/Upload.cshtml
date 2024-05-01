@@ -1,15 +1,16 @@
 ﻿@page
 @using Ethereal_Cloud.Models
+@using Ethereal_Cloud.Helpers.Icons
 @model Ethereal_Cloud.Pages.UploadModel
 @{
     ViewBag.Title = "Upload";
     Layout = "Shared/_Layout.cshtml";
     <link rel="stylesheet" href="/css/Upload.css" asp-append-version="true">
+    <script src="/js/scripts.js"></script>
 }
 
 <!-- File explorer -->
 <div id="file-explorer" class="row mt-3">
-
     <!-- Files Box -->
     <div id="filebox" class="col-lg-12 col-md-12 col-sm-12 h-100">
         <!-- FilePath -->
@@ -17,8 +18,8 @@
 
             <!-- Sort button -->
             <div id="filepath-button" class="col">
-                <a href="#" onclick="toggleImage()">
-                    <img title="Sort" id="toggleImage" class="row" src="~/images/tools/sort-alpha-down.svg" alt="path">
+                <a href="#" onclick="toggleSort()">
+                    <img title="Sort" id="toggleImage" class="row" src="@SetSort()" alt="path">
                 </a>
             </div>
 
@@ -60,7 +61,7 @@
 
                         <div class="file-hover">
                             <a asp-page-handler="GoToFolderInPath" asp-route-Id="@display.FolderID">
-                                <p id="path-folder" style="margin:0px;">@display.Foldername</p>
+                                <p id="path-folder" style="margin:3px;">@display.Foldername</p>
                             </a>
                         </div>
                     }
@@ -70,16 +71,59 @@
 
         <!-- Appears when the files are loaded -->
         <div id="scrollbox" class="row d-flex">
+
             @if (Model.DisplayList.Count > 0)
             {
-                <div class="row d-flex">
+                <div class="row" id="scrollbox-contents">
                     @foreach (var display in Model.DisplayList)
                     {
-                        <div id="uploaded-files" class="file-hover" oncontextmenu="showContextMenu(event, '@display.Id', '@display.Name', '@display.Type')">
-                            <a id="fileLink" asp-page-handler="@GetFileItemHandler(display.Type)" asp-route-id="@display.Id" asp-route-name="@display.Name">
-                                <img src="~/images/file-icons/@GetImageForFileType(@display.Type)" alt="logo" class="logo">
+                        <div id="uploaded-files" class="file-hover" ontouchstart="tap('@display.Id','@display.Type','@display.Name')" ontouchend="tapCancel()" ondblclick="navIntoFolderOrDownload('@display.Id','@display.Type','@display.Name')" onmouseover="showButton('fileButtonHolder-@display.Id-@display.Type')" onmouseout="hideButton('fileButtonHolder-@display.Id-@display.Type', 'file-info-@display.Id-@display.Type')">
+                            <a id="fileLink">
+                                <img id="uploaded-files-img" src="~/images/file-icons/@FileFolderIcon.GetIcon(display.Type)" alt="logo" class="logo">
                             </a>
                             <p>@display.Name</p>
+
+                            <!-- Buttons for files/folders-->
+                            <div id="fileButtonHolder-@display.Id-@display.Type" class="fileButtonHolder" style="">
+
+
+                                @if (@display.Type == "Folder")
+                                {
+                                // Folders
+                                    <button title="More Options" id="fileSettingsButton" aria-expanded="false" aria-controls="file-info-@display.Id" onclick="toggleFileInfo('file-info-@display.Id-@display.Type')">
+                                        <img id="fileSettingsImage" src="~/images/menu-icons/three-dots.svg" alt="path">
+
+                                        <div id="file-info-@display.Id-@display.Type" class="file-info">
+                                            <div class="menu" id="@display.Id-menu">
+                                                <div class="menu-item" onclick="showRenamePopup('@display.Id', '@display.Type')">Rename</div>
+                                                <div class="menu-item" onclick="deleteFile('@display.Id', '@display.Type')">Delete</div>
+                                            </div>
+                                        </div>
+                                    </button>
+                                }
+                                else
+                                {
+                                    // Files
+                                    <button title="Download" id="fileSettingsButton" onclick="downloadFile('@display.Id')">
+                                        <img id="fileSettingsImage" src="~/images/menu-icons/cloud-download.svg" alt="path">
+                                    </button>
+                                    <button title="More Options" id="fileSettingsButton" aria-expanded="false" aria-controls="file-info-@display.Id-@display.Type" onclick="toggleFileInfo('file-info-@display.Id-@display.Type')">
+                                        <img id="fileSettingsImage" src="~/images/menu-icons/three-dots.svg" alt="path">
+
+                                        <div id="file-info-@display.Id-@display.Type" class="file-info">
+                                            <div class="menu" id="@display.Id-menu">
+                                                <div class="menu-item" onclick="downloadFile('@display.Id')">Download</div>
+
+                                                <div class="menu-item" onclick="showRenamePopup('@display.Id', '@display.Type')">Rename</div>
+
+                                                <div class="menu-item" onclick="showSharePopup('@display.Id')">Share</div>
+
+                                                <div class="menu-item" onclick="deleteFile('@display.Id', '@display.Type')">Delete</div>
+                                            </div>
+                                        </div>
+                                    </button>
+                                }
+                            </div>
                         </div>
                     }
                 </div>
@@ -99,7 +143,10 @@
                 <!--FileName Field-->
                 <div class="form-floating">
                     <input asp-for="createFolderDetails.FolderName" class="form-control" placeholder=" ">
-                    <label for="folderName">Folder Name</label>
+                    <label for="folderName">Enter Folder Name</label>
+                </div>
+
+                <div class="error-text">
                     <span asp-validation-for="createFolderDetails.FolderName" class="text-danger"></span>
                 </div>
 
@@ -110,47 +157,148 @@
                 </div>
             </form>
         </div>
+
+        <!-- Rename Popup -->
+        <div id="renamePopup" class="popup-input" style="display:none;">
+            <form id="rename-form" method="post" asp-page-handler="Rename">
+                <!-- NewFileName Field-->
+                <div class="form-floating">
+                    <input name="renameDetails.Name" class="form-control" placeholder=" ">
+                    <label for="newFileName">Enter File Name</label>
+                </div>
+
+                <div class="form-floating" style="display:none;">
+                    <input name="renameDetails.Id" id="renameIdInput" class="form-control" placeholder=" ">
+                </div>
+
+                <div class="form-floating" style="display:none;">
+                    <input name="renameDetails.Type" id="renameTypeInput" class="form-control" placeholder=" ">
+                </div>
+
+                <!-- Submit button -->
+                <div class="mb-3 ">
+                    <button type="submit" id="rename-file-btn" class="popup-input-btn btn btn-primary">Rename File</button>
+                    <button type="button" onclick="cancelRename()" class="popup-input-btn btn btn-secondary">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Share Popup -->
+        <div id="sharePopup" class="popup-input" style="display:none;">
+            <form id="share-form" method="post" asp-page-handler="Share">
+                <!-- Email Field-->
+                <div class="form-floating">
+                    <input name="Username" class="form-control" placeholder=" ">
+                    <label for="email">Enter Username</label>
+                </div>
+
+                <div class="form-floating" style="display:none;">
+                    <input name="Id" id="shareIdInput" class="form-control" placeholder=" ">
+                </div>
+
+                <!-- Share button -->
+                <div class="mb-3 ">
+                    <button type="submit" id="share-file-btn" class="popup-input-btn btn btn-primary">Share</button>
+                    <button type="button" onclick="cancelShare()" class="popup-input-btn btn btn-secondary">Cancel</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- Bottom upload dotted box -->
     <div id="upload-box" class="row mt-3">
+
         <h3>Upload your files</h3>
-        <form id="uploadForm" method="post" enctype="multipart/form-data" asp-page-handler="Upload">
+        <form method="post" enctype="multipart/form-data" asp-page-handler="Upload" id="upload-box-spinner-hide" style="display:block;">
             <div class="mb-3" id="file-input-box">
-                <!-- File input with drag and drop -->
-                <label for="fileInput" id="dragDropArea" class="drag-drop-area">
-                    Drag & drop files here or click to select
-                </label>
-                <input class="form-control" type="file" name="uploadedFile" id="fileInput" multiple style="display: none;">
-                <input type="submit" class="btn btn-success" value="Upload" />
+                <input class="form-control" type="file" name="uploadedFiles" id="fileInput" multiple>
+                <input type="submit" class="btn btn-success" value="Upload" onclick="showLoading()" disabled>
             </div>
         </form>
+
+        <!-- Loading -->
+        <div id="upload-spinner" style="display: none;">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
     </div>
 </div>
 
 @{
     <!-- Scripts -->
     <script>
-        // Console logger
-        var logger = '@ViewData["logger"]';
-        if (logger !== null) {
-            console.log(decodeHtml(logger));
+
+        function showLoading(){
+            document.getElementById("upload-box-spinner-hide").style.display = "none";
+            document.getElementById("upload-spinner").style.display = "block";
+
         }
 
-        //Decodes html text
-        function decodeHtml(html) {
-            var txt = document.createElement("textarea");
-            txt.innerHTML = html;
-            return txt.value;
+
+
+
+
+
+
+        // Function to show the rename popup
+        function showRenamePopup(id, type) {
+            document.getElementById("renamePopup").style.display = "block";
+
+
+
+            
+            document.getElementById('renameIdInput').value = id;
+            document.getElementById('renameTypeInput').value = type;
+
+            console.log("Share activated: " + id + "   " + type)
         }
 
-        //Changes the sort image when pressed
-        function toggleImage() {
-            var imageElement = document.getElementById('toggleImage');
-            if (imageElement.src.endsWith('sort-alpha-down.svg')) {
-                imageElement.src = 'images/tools/sort-alpha-up.svg';
+        // Function to close the rename popup
+        function cancelRename() {
+            document.getElementById("renamePopup").style.display = "none";
+        }
+
+        // Function to show the share popup
+        function showSharePopup(id) {
+            document.getElementById("sharePopup").style.display = "block";
+
+            console.log("Share activated: " + id)
+            document.getElementById('shareIdInput').value = id;
+        }
+
+
+        // Function to close the share popup
+        function cancelShare() {
+            document.getElementById("sharePopup").style.display = "none";
+        }
+
+
+
+
+
+        //Below greys out upload button until files are selected
+        document.getElementById('fileInput').addEventListener('change', function () {
+            var uploadButton = document.querySelector('.btn-success');
+            if (this.files.length > 0) {
+                uploadButton.disabled = false;
             } else {
-                imageElement.src = 'images/tools/sort-alpha-down.svg';
+                uploadButton.disabled = true;
+            }
+        });
+
+        function showButton(id) {
+            var button = document.getElementById(id);
+            button.style.display = 'inline';
+        }
+
+        function hideButton(holderId, menuId) {
+            if (matchMedia('(hover: hover)').matches) {
+                var holder = document.getElementById(holderId);
+                var menu = document.getElementById(menuId);
+                if (menu.style.display !== "block") {
+                    holder.style.display = "none";
+                }
             }
         }
 
@@ -160,57 +308,61 @@
             document.querySelector('#input-box input[name="foldername"]').focus();
         }
 
-        //Cancels the folder creation
-        function cancelFolderCreation() {
-            document.getElementById('input-box').style.display = 'none';
+        function toggleFileInfo(id) {
+
+            var fileInfo = document.getElementById(id);
+            var expanded = fileInfo.getAttribute('aria-expanded') === 'true';
+
+            // Toggle the aria-expanded attribute
+            fileInfo.setAttribute('aria-expanded', !expanded);
+
+            // Toggle the visibility of the file info
+            if (expanded) {
+                fileInfo.style.display = 'none';
+            } else {
+                fileInfo.style.display = 'block';
+            }
         }
 
+        document.body.addEventListener('click', function (event) {
+            var parent = event.target.parentNode;
+
+            if (parent.id === 'fileSettingsButton') {
+
+                return;
+            }
+
+            var menuOpen = document.querySelectorAll('.file-info');
+            menuOpen.forEach(function (menu) {
+                menu.setAttribute('aria-expanded', false);
+                menu.style.display = 'none';
+            });
+
+            if (matchMedia('(hover: hover)').matches) {
+                var buttonHolder = document.querySelectorAll('.fileButtonHolder');
+                buttonHolder.forEach(function (button) {
+                    button.style.display = 'none';
+                });
+            }
+        });
+
+        
     </script>
 
-    string GetFileItemHandler(string fileHandler)
+    string SetSort()
     {
-        if (fileHandler == "Folder")
+        if (@Model.sortDisplay)
         {
-            return "Navigate";
+            // Alphabetical
+            return "images/tools/sort-alpha-up.svg";
+
         }
         else
         {
-            return "Download";
+            // Backwards alphabetical
+            return "images/tools/sort-alpha-down.svg";
         }
     }
-
-    string GetImageForFileType(string fileType)
-    {
-        //looks at files Mime type and gets appropriate image
-        switch (fileType.ToLower())
-        {
-            case "folder":
-                return "folder.svg";
-            case "image/png":
-            case "image/jpeg":
-            case "image/gif":
-                return "file-image.svg";
-            case "audio/mpeg":
-                return "file-music.svg";
-            case "video/mp4":
-                return "file-video.svg";
-            case "application/pdf":
-                return "file-pdf.svg";
-            case "application/msword":
-            case "text/plain":
-                return "file-doc.svg";
-            default:
-                return "unknown.svg"; //Unknown type
-        }
-    }
-
-    <!-- RIGHT CLICK MENU -->
-    <div id="contextMenu" class="dropdown">
-        <a class="dropdown-item" id="downloadItem" href="#">Download</a>
-        <a class="dropdown-item" id="moveItem" href="#">Rename</a>
-        <a class="dropdown-item" id="moveItem" href="#">Share</a>
-        <a class="dropdown-item" id="deleteItem" href="#">Delete</a>
-    </div>
 
     <!-- Hidden form for delete action -->
     <form id="deleteForm" method="post" asp-page-handler="Delete">
@@ -218,53 +370,24 @@
         <input name="type" type="hidden" id="typeInput">
     </form>
 
-    <script>
-        function showContextMenu(event, id, name, type) {
-            event.preventDefault();
-            var contextMenu = document.getElementById('contextMenu');
-            contextMenu.style.display = 'block';
-            contextMenu.style.left = event.clientX + 'px';
-            contextMenu.style.top = event.clientY + 'px';
+    <!-- Hidden form for download action -->
+    <form id="downloadForm" method="post" asp-page-handler="Download">
+        <input name="fileId" type="hidden" id="fileIdDownloadInput">
+    </form>
 
-            // Store the file info in context menu for later use
-            contextMenu.dataset.fileId = id;
-            contextMenu.dataset.fileName = name;
-            contextMenu.dataset.fileType = type;
+    <!-- Hidden form for share action -->
+    <form id="shareForm" method="post" asp-page-handler="Share">
+        <input name="fileId" type="hidden" id="fileIdShareInput">
+    </form>
 
-            console.log("Id: " + id + "  Name: " + name + "   Type: " + type);
+    <!-- Hidden form for nav action -->
+    <form id="navForm" method="post" asp-page-handler="Navigate">
+        <input name="Id" type="hidden" id="idNavInput">
+        <input name="Name" type="hidden" id="nameNavInput">
+    </form>
 
-            // Add event listeners for context menu items
-            document.getElementById('downloadItem').addEventListener('click', downloadFile);
-            document.getElementById('deleteItem').addEventListener('click', deleteFile);
+    <!-- Hidden form for sorting -->
+    <form id="sortForm" method="post" asp-page-handler="Sort">
+    </form>
 
-            // Hide the context menu when clicking elsewhere
-            document.addEventListener('click', hideContextMenu);
-        }
-
-        function hideContextMenu() {
-            var contextMenu = document.getElementById('contextMenu');
-            contextMenu.style.display = 'none';
-            document.removeEventListener('click', hideContextMenu);
-        }
-
-        function downloadFile() {
-            var fileId = document.getElementById('contextMenu').dataset.fileId;
-            // Implement download functionality using fileId
-        }
-
-        function deleteFile() {
-            var contextMenu = document.getElementById('contextMenu');
-            var fileId = contextMenu.dataset.fileId;
-            var fileType = contextMenu.dataset.fileType;
-            console.log("Deleting  -  Id: " + fileId + "   Type: " + fileType);
-
-            // Fill the hidden form inputs with fileId and fileType
-            document.getElementById('fileIdInput').value = fileId;
-            document.getElementById('typeInput').value = fileType;
-
-            // Submit the form
-            document.getElementById('deleteForm').submit();
-
-        }
-    </script>
 }

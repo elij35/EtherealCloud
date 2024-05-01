@@ -48,7 +48,7 @@ namespace StorageController.Controllers.v2
             if (fileData == null)
                 return await new Response<string>(false, "File not found").Serialize();
 
-            fileData.FileName = data.Name;
+            fileData.FileName = data.Name + Path.GetExtension(fileData.FileName);
             await db.SaveChangesAsync();
 
             return await new Response<string>(true, "File name changed successfully").Serialize();

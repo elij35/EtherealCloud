@@ -76,6 +76,7 @@ namespace StorageController.Controllers.v1
             // Creating user file link
             UserFile userFileSave = new();
             userFileSave.Privilege = "Owner";
+            userFileSave.OwnerData = userData;
             userFileSave.UserData = userData;
 
             FileData saved = (await db.Files.AddAsync(fileSave)).Entity;

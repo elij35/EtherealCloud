@@ -4,6 +4,8 @@ using Ethereal_Cloud.Models.Upload.CreateFolder;
 using Ethereal_Cloud.Models.Upload.Get;
 using Ethereal_Cloud.Models.Upload.Get.File;
 using Ethereal_Cloud.Models.Upload.Get.Folder;
+using Ethereal_Cloud.Models.Upload.Rename;
+using Ethereal_Cloud.Models.Upload.Share;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using JsonSerializer = System.Text.Json.JsonSerializer;
@@ -18,22 +20,26 @@ namespace Ethereal_Cloud.Pages
 
         public List<FolderDataRecieve> FolderPath = new List<FolderDataRecieve>();
 
+        public bool sortDisplay = false;
+
         public void FolderPathForDisplay()
         {
             //Sets the filepath list to be displayed on the interface
-            FolderPath = PathManagement.Get(HttpContext);
+            FolderPath = CookieManagement.GetFolderPath(HttpContext);
         }
 
         public async Task OnGet()
         {
+
+            sortDisplay = CookieManagement.GetSorting(HttpContext);
+
             FolderPathForDisplay();
 
             int? folderId = PathManagement.GetCurrentFolderId(HttpContext);
 
-            //Logger.LogToConsole(ViewData, "Current Folder: " + folderId);
 
             //Make request
-            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/folder/files/" + folderId, true, null);
+            var response = await ApiRequestV2.Files(HttpContext, "v2/folder/files/" + folderId, true, null);
 
             if (response != null)
             {
@@ -70,43 +76,45 @@ namespace Ethereal_Cloud.Pages
                     DisplayList.Add(newFile);
                 }
 
-                //Logger.LogToConsole(ViewData, "Successful get of files: " + JsonSerializer.Serialize(DisplayList) + " FolderId: " + folderId);
+
+                //Sort list
+                DisplayList = SortHelper.SortDisplay(HttpContext, DisplayList);
+
             }
             else
             {
-                Logger.LogToConsole(ViewData, "Failed Get");
 
                 ViewData["FailureMessage"] = "Failed to get files & folders. Please try again.";
             }
         }
 
-
-        public async Task<IActionResult> OnGetDownload(DownNavDetails details)
+        public async Task OnPostSort()
         {
-            if (!ModelState.IsValid)
-            {
-                Logger.LogToConsole(ViewData, "Invalid: Model error");
-                return RedirectToPage("/Upload");
-            }
+            bool sortAlpha = CookieManagement.GetSorting(HttpContext);
+
+            CookieManagement.SetCookie(HttpContext, "Sort", (!sortAlpha).ToString());
+
+            sortDisplay = !sortAlpha;
+
+            Response.Redirect("/Upload");
+        }
 
 
+        public async Task<IActionResult> OnPostDownload(int fileId)
+        {
             //create object
             var dataObject = new Dictionary<string, object?>
             {
-                { "authtoken", AuthTokenManagement.GetToken(HttpContext)}
+                { "authtoken", CookieManagement.GetAuthToken(HttpContext)}
             };
 
             //Make request
-            var response = await ApiRequest.Files(ViewData, HttpContext, "v1/file/" + details.Id, dataObject);
+            var response = await ApiRequest.Files( HttpContext, "v1/file/" + fileId, dataObject);
 
             if (response != null)
             {
                 string jsonString = response.ToString();
                 FileModel file = JsonSerializer.Deserialize<FileModel>(jsonString);
-
-                Logger.LogToConsole(ViewData, "Successfull download: " + file.Content + " " + file.Filetype + " " + file.Filename);
-
-                //Response.Redirect("/Upload");
 
                 byte[] bytes = Convert.FromHexString(file.Content);
 
@@ -114,23 +122,15 @@ namespace Ethereal_Cloud.Pages
             }
             else
             {
-                Logger.LogToConsole(ViewData, "Fail: " + details.Id);
-
                 return RedirectToPage("/Upload");
             }
 
 
         }
 
-        public async Task OnGetNavigate(DownNavDetails details)
+        public async Task OnPostNavigate(int Id, string Name)
         {
-            if (!ModelState.IsValid)
-            {
-                Logger.LogToConsole(ViewData, "Invalid: Model error");
-                return;
-            }
-
-            var path = PathManagement.Get(HttpContext);
+            var path = CookieManagement.GetFolderPath(HttpContext);
 
             List<FolderDataRecieve> folderPath = new List<FolderDataRecieve>();
 
@@ -141,15 +141,15 @@ namespace Ethereal_Cloud.Pages
 
             FolderDataRecieve navigateTo = new()
             {
-                FolderID = details.Id,
-                Foldername = details.Name
+                FolderID = Id,
+                Foldername = Name
             };
 
             folderPath.Add(navigateTo);
 
             var serializedFolderPath = JsonSerializer.Serialize(folderPath);
 
-            PathManagement.Set(HttpContext, serializedFolderPath);
+            CookieManagement.SetCookie(HttpContext, "FolderPath", serializedFolderPath);
 
             Response.Redirect("/Upload");
 
@@ -157,18 +157,7 @@ namespace Ethereal_Cloud.Pages
 
         public async Task OnGetGoToFolderInPathAsync(GotoDetails details)
         {
-            bool success = PathManagement.GoBackInFolderPath(HttpContext, details.Id, ViewData);
-
-            if (success)
-            {
-                Logger.LogToConsole(ViewData, "Navigated to folder with id: " + details.Id);
-
-            }
-            else
-            {
-                Logger.LogToConsole(ViewData, "Failed navigation to: " + details.Id);
-
-            }
+            PathManagement.GoBackInFolderPath(HttpContext, details.Id);
 
             Response.Redirect("/Upload");
 
@@ -176,55 +165,61 @@ namespace Ethereal_Cloud.Pages
 
 
 
-        public async Task OnPostUploadAsync(IFormFile uploadedFile)
+        public async Task OnPostUploadAsync(List<IFormFile> uploadedFiles)
         {
-            if (uploadedFile != null && uploadedFile.Length > 0)
+            foreach (IFormFile singleFile in uploadedFiles)
             {
-                using (var stream = new MemoryStream())
+                if (singleFile != null && singleFile.Length > 0)
                 {
-                    //Where folder the user is in
-                    int? currentFolder = PathManagement.GetCurrentFolderId(HttpContext);
-
-                    //Hold the file contents in the stream
-                    await uploadedFile.CopyToAsync(stream);
-
-                    byte[] bytes = stream.ToArray();
-                    string hexBytes = Convert.ToHexString(bytes);
-
-                    //create file object
-                    var dataObject = new Dictionary<string, object?>
+                    using (var stream = new MemoryStream())
                     {
-                        { "AuthToken", AuthTokenManagement.GetToken(HttpContext) },
-                        { "Filename", uploadedFile.FileName },
-                        { "Filetype", MimeType.GetMimeType(uploadedFile.FileName) },
-                        { "Content", hexBytes }
-                    };
-                    //If the user isnt in the root
-                    if (currentFolder != null)
-                    {
-                        dataObject.Add("FolderId", currentFolder);
+                        //Where folder the user is in
+                        int? currentFolder = PathManagement.GetCurrentFolderId(HttpContext);
+
+                        //Hold the file contents in the stream
+                        await singleFile.CopyToAsync(stream);
+
+                        byte[] bytes = stream.ToArray();
+                        string hexBytes = Convert.ToHexString(bytes);
+
+                        //create file object
+                        var dataObject = new Dictionary<string, object?>
+                        {
+                            { "AuthToken", CookieManagement.GetAuthToken(HttpContext) },
+                            { "Filename", singleFile.FileName },
+                            { "Filetype", MimeType.GetMimeType(singleFile.FileName) },
+                            { "Content", hexBytes }
+                        };
+                        //If the user isnt in the root
+                        if (currentFolder != null)
+                        {
+                            dataObject.Add("FolderId", currentFolder);
+                        }
+
+
+                        //Make request
+                        var response = await ApiRequest.Files(HttpContext, "v1/file", dataObject);
+
+                        if (response != null)
+                        {
+                            // Success
+                        }
+                        else
+                        {
+                            // Failure
+                        }
                     }
 
-
-                    //Make request
-                    var response = await ApiRequest.Files(ViewData, HttpContext, "v1/file", dataObject);
-
-                    if (response != null)
-                    {
-                        Logger.LogToConsole(ViewData, "Successfull file upload: " + response);
-                        Response.Redirect("/Upload");
-                    }
-                    else
-                    {
-                        //Logger.LogToConsole(ViewData, "Bad upload response");
-                    }
                 }
+                else
+                {
+                    // Invalid File
+                }
+            }
 
-            }
-            else
-            {
-                Logger.LogToConsole(ViewData, "Invalid file upload");
-            }
+
+
+            Response.Redirect("/Upload");
 
         }
 
@@ -237,31 +232,33 @@ namespace Ethereal_Cloud.Pages
         {
             if (!ModelState.IsValid)
             {
-                Logger.LogToConsole(ViewData, "Invalid: Model error");
+                Response.Redirect("/Upload");
                 return;
             }
 
             //create file object
             var dataObject = new Dictionary<string, object?>
             {
-                { "AuthToken", AuthTokenManagement.GetToken(HttpContext) },
+                { "AuthToken", CookieManagement.GetAuthToken(HttpContext) },
                 { "FolderName", createFolderDetails.FolderName },
                 { "ParentFolder", PathManagement.GetCurrentFolderId(HttpContext) }
             };
 
             //Make request
-            var response = await ApiRequest.Files(ViewData, HttpContext, "v1/folder", dataObject);
+            var response = await ApiRequest.Files(HttpContext, "v1/folder", dataObject);
 
             if (response != null)
             {
-                Logger.LogToConsole(ViewData, "Successfull folder creation: " + response);
-                Response.Redirect("/Upload");
+                // Success
+
             }
             else
             {
-                Logger.LogToConsole(ViewData, "Bad folder response");
-                return;
+                // Failure
+
             }
+
+            Response.Redirect("/Upload");
 
         }
 
@@ -271,14 +268,8 @@ namespace Ethereal_Cloud.Pages
             // Check fileId validity
             if (fileId == null || type == null)
             {
-                Logger.LogToConsole(ViewData, "Invalid: Model error");
                 return;
             }
-
-
-
-
-            Logger.LogToConsole(ViewData, "Deleted: " + fileId + type);
 
             string uriFileType;
             if (type.ToLower() == "folder")
@@ -291,20 +282,92 @@ namespace Ethereal_Cloud.Pages
             }
 
             //Make request
-            var response = await ApiRequestV2.Files(ViewData, HttpContext, "v2/" + uriFileType + "/remove/" + fileId, true, null);
+            var response = await ApiRequestV2.Files(HttpContext, "v2/" + uriFileType + "/remove/" + fileId, true, null);
 
             if (response != null)
             {
-                //Logger.LogToConsole(ViewData, "Successfull Deletion: " + fileId + " : " + type);
-                Logger.LogToConsole(ViewData, "After: " + fileId + type);
                 Response.Redirect("/Upload");
             }
             else
             {
-                //Logger.LogToConsole(ViewData, "Bad delete response");
+                Response.Redirect("/Upload");
                 return;
             }
         }
+
+
+
+        public async Task OnPostShare(ShareDetails shareDetails)
+        {
+
+            if (shareDetails.Username == null || shareDetails.Username.Trim() == "")
+            {
+                Response.Redirect("/Upload");
+                return;
+            }
+
+            //create file object
+            var dataObject = new Dictionary<string, object?>
+            {
+                { "ShareUsername", shareDetails.Username }
+            };
+
+
+
+            //Make request
+            var response = await ApiRequestV2.Files(HttpContext, "v2/file/share/" + shareDetails.Id, true, dataObject);
+
+            if (response != null)
+            {
+                Response.Redirect("/Upload");
+            }
+            else
+            {
+
+
+                Response.Redirect("/Upload");
+            }
+        }
+
+
+
+
+        public async Task OnPostRename(RenameDetails renameDetails)
+        {
+
+            //create file object
+            var dataObject = new Dictionary<string, object?>
+            {
+                { "Name", renameDetails.Name }
+            };
+
+            string uriFileType;
+            if (renameDetails.Type.ToLower() == "folder")
+            {
+                uriFileType = "folder";
+            }
+            else
+            {
+                uriFileType = "file";
+            }
+
+
+            //Make request
+            var response = await ApiRequestV2.Files( HttpContext, "v2/" + uriFileType + "/rename/" + renameDetails.Id, true, dataObject);
+
+            if (response != null)
+            {
+                Response.Redirect("/Upload");
+            }
+            else
+            {
+                Response.Redirect("/Upload");
+                return;
+            }
+        }
+
+
+
 
     }
 }

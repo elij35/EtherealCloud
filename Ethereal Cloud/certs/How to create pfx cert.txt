@@ -1,0 +1,17 @@
+INSTRUCTIONS::
+
+Create sssan config and populate it:
+sssan.conf	//wherever the openssl bin is (our conf is provided)
+
+Set config:
+SET OPENSSL_CONF=c:\OpenSSL-Win64\bin\openssl.cfg	//Wherever the openssl is
+
+Create key and crt:
+openssl.exe req -new -x509 -newkey rsa:4096 -sha256 -nodes -keyout "C:LOCATION\server.key" -days 3560 -out "C:LOCATION\.crt" -config "sssan.conf"	//LOCATION = where you want to put the file
+
+Put together to get pfx file:
+openssl pkcs12 -export -out cert.pfx -inkey server.key -in .crt -password pass:EtherealDatabaseStorage!!
+
+
+CertPassword is::
+EtherealDatabaseStorage!!

@@ -51,6 +51,8 @@ namespace StorageController.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("ethereal");
+
+            modelBuilder.Entity<User>().HasMany(user => user.UserFiles).WithOne(userFile => userFile.UserData).OnDelete(DeleteBehavior.NoAction);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -31,7 +31,6 @@
     cursor: pointer;
 }
 
-    /* Hover effect on the submit button */
     .auth-submit-btn:hover {
         background-color: #0056b3;
     }
@@ -41,5 +40,5 @@
     margin-top: 10px;
     font-size: 14px;
     color: #555;
-    text-align: center; /* Add this line to center the text */
+    text-align: center;
 }

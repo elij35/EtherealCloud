@@ -65,9 +65,8 @@
 
                     <!-- Password field -->
                     <div class="form-floating">
-                        <input type="password" id="Password" asp-for="signupDetails.Password" class="form-control" placeholder=" ">
+                        <input type="password" id="Password" asp-for="signupDetails.Password" class="form-control" placeholder=" " oninput="passStrengthCheck()">
                         <label for="password">Password</label>
-                        <span class="password-toggle" onclick="togglePassword()">Show</span>
                     </div>
                     <div class="password-strength-indicator">
                         <div></div>
@@ -80,7 +79,7 @@
                     <div class="form-floating">
                         <input type="password" id="PasswordConf" asp-for="signupDetails.PasswordConf" class="form-control" placeholder=" ">
                         <label for="password">Confirm Password</label>
-                        <span class="password-toggle" onclick="togglePassword2()">Show</span>
+                        <span class="password-toggle" onclick="togglePassword()">Show</span>
                     </div>
                     <div class="error-text">
                         <span asp-validation-for="signupDetails.PasswordConf" class="text-danger"></span>
@@ -100,7 +99,7 @@
 
                     <!-- Submit button -->
                     <div class="mb-3">
-                        <button type="submit" id="login-btn" class="btn btn-primary" onclick="return validateForm();" disabled>Register</button>
+                        <button type="submit" id="login-btn" class="btn btn-primary" disabled>Register</button>
                     </div>
 
                     <div class="mb-3 links">
@@ -115,18 +114,9 @@
     <script>
         function togglePassword() {
             const passwordInput1 = document.getElementById('Password');
-            passwordInput1.type = (passwordInput1.type === 'password') ? 'text' : 'password';
-        }
-
-        function togglePassword2() {
             const passwordInput2 = document.getElementById('PasswordConf');
+            passwordInput1.type = (passwordInput1.type === 'password') ? 'text' : 'password';
             passwordInput2.type = (passwordInput2.type === 'password') ? 'text' : 'password';
-        }
-
-        // Logger for errors
-        var logger = '@ViewData["logger"]';
-        if (logger !== null) {
-            console.log(logger);
         }
 
         function openTermsWindow() {
@@ -140,43 +130,34 @@
         }
 
         // Password strength checker
-        $('#Password').on('input', function () {
-            var password = $(this).val();
-            var strength = 0;
-
-            if (password.length >= 10) {
-                strength += 1;
-            }
-
-            if (password.match(/[a-z]/)) {
-                strength += 1;
-            }
-
-            if (password.match(/[A-Z]/)) {
-                strength += 1;
-            }
-
-            if (password.match(/[0-9]/)) {
-                strength += 1;
-            }
-
-            if (password.match(/[!#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/)) {
-                strength += 1;
-            }
+        function passStrengthCheck() {
+            var password = document.getElementById('Password').value;
 
             var indicator = $('.password-strength-indicator div');
 
-            if (strength <= 1) {
+            var low = /(?=.*[a-zA-Z\d!#$%^&()_+\-=[\]{};':"\\|,.<>\/?])/;
+            var med = /(?=.*[a-z])(?=.*[A-Z\d!#$%^&()_+\-=[\]{};':"\\|,.<>\/?])/;
+            var high = /(?=.*[a-z])(?=.*[A-Z])(?=.*[\d!#$%^&()_+\-=[\]{};':"\\|,.<>\/?])/;
+            var highest = /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%^&()_+\-=[\]{};':"\\|,.<>\/?]).{10,}/;
+
+
+            if (password.match(low)) {
                 indicator.removeClass().addClass('strength-weak');
-            } else if (strength === 2) {
-                indicator.removeClass().addClass('strength-weak');
-            } else if (strength === 3) {
+            }
+
+            if (password.match(med)) {
                 indicator.removeClass().addClass('strength-moderate');
-            } else if (strength === 4) {
+
+            }
+
+            if (password.match(high)) {
                 indicator.removeClass().addClass('strength-strong');
-            } else if (strength === 5) {
+            }
+
+            if (password.match(highest)) {
                 indicator.removeClass().addClass('strength-very-strong');
             }
-        });
+
+        };
     </script>
 }

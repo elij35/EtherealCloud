@@ -4,7 +4,26 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 
-builder.Services.AddSession();
+builder.Services.AddSession(options =>
+{
+    options.Cookie.Name = ".MySession";
+    options.IdleTimeout = TimeSpan.FromSeconds(3600);
+});
+
+// Configure Kestrel to use HTTPS
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    // Set up the HTTP listener
+    serverOptions.ListenAnyIP(8080);
+
+    // Set up the HTTPS listener
+    serverOptions.ListenAnyIP(8081, listenOptions =>
+    {
+        // Point to the actual path where the certificate and key are stored
+        listenOptions.UseHttps("/home/app/certs/cert.pfx", "EtherealDatabaseStorage!!");
+    });
+});
+
 
 var app = builder.Build();
 
