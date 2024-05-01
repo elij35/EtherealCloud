@@ -9,7 +9,7 @@
 
 Ethereal Cloud is a cloud storage solutions in which users can upload, share and download files from anywhere and on any device.
 
-As a group that believes in accessibility and ease of use for our users. Our vision for this project was to allow everyone to quickly and efficiently access, store and share files with a user friendly interface. We achieved this by hosting our cloud storage on a web application which gives it the capacity to run on any device. With the global shift towards online technology and the internet becoming a crucial
+As a group that believes in accessibility and ease of use for our users; Our vision for this project was to allow everyone to quickly and efficiently access, store and share files with a user friendly interface. We achieved this by hosting our cloud storage on a web application which gives it the capacity to run on any device. With the global shift towards online technology and the internet becoming a crucial
 part of the everyday world for both companies and individuals, as a team we wanted to
 tap into the growing demand for secure cloud storage solutions. Our goal was to make this product accessible, affordable, and useful for all of our users.
 ## How it works
@@ -43,7 +43,7 @@ The solution uses docker to help solve the age old problem of "it works on my ma
 
 - **Delete files / folders -** *Folders and files can both be deleted and will be moved into the bin.*
 
-- **Restore within 30 days -** *The bin will get removed after 30 days and files can be restored within that time.*
+- **Restore files -** *Files that have been deleted can be restored from the bin.*
 
 - **Sorting -** *The files and folders in the upload, bin and sharing can be sorted in alphabetical or reverse alphabetical.*
 
