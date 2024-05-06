@@ -1,8 +1,9 @@
 using Ethereal_Cloud.Helpers;
+using Ethereal_Cloud.Models;
 using Ethereal_Cloud.Models.Upload.Get;
 using Ethereal_Cloud.Models.Upload.Get.Folder;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace Ethereal_Cloud.Pages
 {
@@ -15,6 +16,23 @@ namespace Ethereal_Cloud.Pages
 
         public async Task OnGet()
         {
+            // Send user feedback
+            if (TempData.ContainsKey("UserFeedback"))
+            {
+                UserFeedbackMessage message = JsonConvert.DeserializeObject<UserFeedbackMessage>(TempData["UserFeedback"].ToString());
+
+                if (message.ResultSuccess)
+                {
+                    ViewData["SuccessMessage"] = message.Message;
+                }
+                else
+                {
+                    ViewData["FailureMessage"] = message.Message;
+                }
+
+            }
+
+
             sortDisplay = CookieManagement.GetSorting(HttpContext);
 
             //Make request
@@ -24,7 +42,7 @@ namespace Ethereal_Cloud.Pages
             {
                 //Put response in form of FolderContentRecieve
                 string jsonString = response.ToString();
-                FolderContentRecieve folderContent = JsonSerializer.Deserialize<FolderContentRecieve>(jsonString);
+                FolderContentRecieve folderContent = System.Text.Json.JsonSerializer.Deserialize<FolderContentRecieve>(jsonString);
 
                 DisplayList = new List<FolderContentDisplay>();
 
@@ -85,6 +103,15 @@ namespace Ethereal_Cloud.Pages
             // Check fileId validity
             if (Id == null || fileType == null)
             {
+                // Failure
+                UserFeedbackMessage feedbackMessage = new UserFeedbackMessage
+                {
+                    ResultSuccess = false,
+                    Message = "An error occured when trying to restore. Please try again later."
+                };
+
+                TempData["UserFeedback"] = JsonConvert.SerializeObject(feedbackMessage);
+
                 return;
             }
 
@@ -106,11 +133,31 @@ namespace Ethereal_Cloud.Pages
             if (response != null)
             {
                 // Valid
+                // Success
+                UserFeedbackMessage feedbackMessage = new UserFeedbackMessage
+                {
+                    ResultSuccess = true,
+                    Message = uriFileType + " was restored."
+                };
+
+                TempData["UserFeedback"] = JsonConvert.SerializeObject(feedbackMessage);
+
+
                 Response.Redirect("/Bin");
             }
             else
             {
                 // Invalid
+                // Failure
+                UserFeedbackMessage feedbackMessage = new UserFeedbackMessage
+                {
+                    ResultSuccess = false,
+                    Message = "An error occured when trying to restore. Please try again later."
+                };
+
+                TempData["UserFeedback"] = JsonConvert.SerializeObject(feedbackMessage);
+
+
                 Response.Redirect("/Bin");
                 return;
             }

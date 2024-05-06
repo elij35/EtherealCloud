@@ -1,9 +1,11 @@
 using Ethereal_Cloud.Helpers;
+using Ethereal_Cloud.Models;
 using Ethereal_Cloud.Models.Upload.Get;
 using Ethereal_Cloud.Models.Upload.Get.File;
 using Ethereal_Cloud.Models.Upload.Get.Folder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Ethereal_Cloud.Pages
@@ -18,10 +20,27 @@ namespace Ethereal_Cloud.Pages
         public bool sharedTab = true;
 
 
-        //FileMetaRecieve[]?
 
         public async Task OnGet()
         {
+            // Send user feedback
+            if (TempData.ContainsKey("UserFeedback"))
+            {
+                UserFeedbackMessage message = JsonConvert.DeserializeObject<UserFeedbackMessage>(TempData["UserFeedback"].ToString());
+
+                if (message.ResultSuccess)
+                {
+                    ViewData["SuccessMessage"] = message.Message;
+                }
+                else
+                {
+                    ViewData["FailureMessage"] = message.Message;
+                }
+
+            }
+
+
+
             sortDisplay = CookieManagement.GetSorting(HttpContext);
 
             bool sharedWithMe = CookieManagement.GetActiveShare(HttpContext);
@@ -107,6 +126,14 @@ namespace Ethereal_Cloud.Pages
             }
             else
             {
+                // Failure
+                UserFeedbackMessage feedbackMessage = new UserFeedbackMessage
+                {
+                    ResultSuccess = false,
+                    Message = "An error occured when trying to download a file. Please try again later."
+                };
+
+                TempData["UserFeedback"] = JsonConvert.SerializeObject(feedbackMessage);
 
                 return RedirectToPage("/SharedWithMe");
             }
