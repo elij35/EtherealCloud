@@ -1,4 +1,5 @@
 using Ethereal_Cloud.Helpers;
+using Ethereal_Cloud.Models;
 using Ethereal_Cloud.Models.Upload.Get;
 using Ethereal_Cloud.Models.Upload.Get.File;
 using Ethereal_Cloud.Models.Upload.Get.Folder;
@@ -6,6 +7,7 @@ using Ethereal_Cloud.Models.Upload.Rename;
 using Ethereal_Cloud.Models.Upload.Share;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Ethereal_Cloud.Pages
@@ -20,10 +22,25 @@ namespace Ethereal_Cloud.Pages
         public bool sharedTab = true;
 
 
-        //FileMetaRecieve[]?
-
         public async Task OnGet()
         {
+            // Send user feedback
+            if (TempData.ContainsKey("UserFeedback"))
+            {
+                UserFeedbackMessage message = JsonConvert.DeserializeObject<UserFeedbackMessage>(TempData["UserFeedback"].ToString());
+
+                if (message.ResultSuccess)
+                {
+                    ViewData["SuccessMessage"] = message.Message;
+                }
+                else
+                {
+                    ViewData["FailureMessage"] = message.Message;
+                }
+
+            }
+
+
             sortDisplay = CookieManagement.GetSorting(HttpContext);
 
             bool sharedWithMe = CookieManagement.GetActiveShare(HttpContext);
@@ -101,6 +118,14 @@ namespace Ethereal_Cloud.Pages
             }
             else
             {
+                // Failure
+                UserFeedbackMessage feedbackMessage = new UserFeedbackMessage
+                {
+                    ResultSuccess = false,
+                    Message = "An error occured when trying to download a file. Please try again later."
+                };
+
+                TempData["UserFeedback"] = JsonConvert.SerializeObject(feedbackMessage);
 
                 return RedirectToPage("/SharedWithOthers");
             }
@@ -114,6 +139,15 @@ namespace Ethereal_Cloud.Pages
             // Check fileId validity
             if (fileId == null || type == null)
             {
+                // Failure
+                UserFeedbackMessage feedbackMessage = new UserFeedbackMessage
+                {
+                    ResultSuccess = false,
+                    Message = "An error occured when trying to delete a file. Please try again later."
+                };
+
+                TempData["UserFeedback"] = JsonConvert.SerializeObject(feedbackMessage);
+
                 return;
             }
 
@@ -133,10 +167,29 @@ namespace Ethereal_Cloud.Pages
 
             if (response != null)
             {
+                // Success
+                UserFeedbackMessage feedbackMessage = new UserFeedbackMessage
+                {
+                    ResultSuccess = true,
+                    Message = "File was deleted."
+                };
+
+                TempData["UserFeedback"] = JsonConvert.SerializeObject(feedbackMessage);
+
+
                 Response.Redirect("/SharedWithOthers");
             }
             else
             {
+                // Failure
+                UserFeedbackMessage feedbackMessage = new UserFeedbackMessage
+                {
+                    ResultSuccess = false,
+                    Message = "An error occured when trying to delete a file. Please try again later."
+                };
+
+                TempData["UserFeedback"] = JsonConvert.SerializeObject(feedbackMessage);
+
                 Response.Redirect("/SharedWithOthers");
                 return;
             }
@@ -168,10 +221,29 @@ namespace Ethereal_Cloud.Pages
 
             if (response != null)
             {
+                // Success
+                UserFeedbackMessage feedbackMessage = new UserFeedbackMessage
+                {
+                    ResultSuccess = true,
+                    Message = "File was renamed."
+                };
+
+                TempData["UserFeedback"] = JsonConvert.SerializeObject(feedbackMessage);
+
                 Response.Redirect("/SharedWithOthers");
             }
             else
             {
+                // Failure
+                UserFeedbackMessage feedbackMessage = new UserFeedbackMessage
+                {
+                    ResultSuccess = false,
+                    Message = "An error occured when trying to rename a file. Please try again later."
+                };
+
+                TempData["UserFeedback"] = JsonConvert.SerializeObject(feedbackMessage);
+
+
                 Response.Redirect("/SharedWithOthers");
                 return;
             }
@@ -193,10 +265,28 @@ namespace Ethereal_Cloud.Pages
 
             if (response != null)
             {
+                // Success
+                UserFeedbackMessage feedbackMessage = new UserFeedbackMessage
+                {
+                    ResultSuccess = true,
+                    Message = "File was shared"
+                };
+
+                TempData["UserFeedback"] = JsonConvert.SerializeObject(feedbackMessage);
+
+
                 Response.Redirect("/SharedWithOthers");
             }
             else
             {
+                // Failure
+                UserFeedbackMessage feedbackMessage = new UserFeedbackMessage
+                {
+                    ResultSuccess = false,
+                    Message = "An error occured when trying to share a file. Please try again later."
+                };
+
+                TempData["UserFeedback"] = JsonConvert.SerializeObject(feedbackMessage);
 
 
                 Response.Redirect("/SharedWithOthers");
