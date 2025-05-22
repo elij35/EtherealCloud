@@ -1,6 +1,0 @@
-All in attendance smb109
-
-Eli - working on phone interface
-Ben - working on "sort" button 
-Riley - Meeting minutes and review database constraints
-Will - working on endpoint improvements
